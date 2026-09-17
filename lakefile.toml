@@ -1,0 +1,22 @@
+name = "SSPLean"
+version = "0.1.0"
+keywords = ["math"]
+defaultTargets = ["SSPLean"]
+
+[leanOptions]
+pp.unicode.fun = true # pretty-prints `fun a ↦ b`
+relaxedAutoImplicit = false
+weak.linter.mathlibStandardSet = true
+maxSynthPendingDepth = 3
+linter.style.header =   false
+linter.style.whitespace = false
+linter.style.longLine = false
+linter.style.maxHeartbeats = false
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.32.0-rc1"
+
+[[lean_lib]]
+name = "SSPLean"

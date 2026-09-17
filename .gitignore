@@ -1,0 +1,45 @@
+# Lean build artifacts
+.lake/
+*.olean
+*.ilean
+*.c
+*.o
+
+# Lake
+lake-packages/
+
+# Editor: Emacs
+*~
+\#*\#
+.\#*
+*.elc
+.dir-locals.el
+
+# Editor: VSCode
+.vscode/
+*.code-workspace
+
+# Editor: Vim/Neovim
+*.swp
+*.swo
+*~
+.netrwhist
+Session.vim
+
+# OS: macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# OS: Linux
+.directory
+
+# OS: Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
