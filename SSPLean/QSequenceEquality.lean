@@ -426,11 +426,12 @@ theorem exists_positive_absorbing_path
 
 /-- A finite relational route can be cycle-erased without changing its first or last vertex.
 The resulting route is a sublist, remains a chain, and has no repeated vertices. -/
-theorem exists_nodup_chain_sublist {alpha : Type*} [DecidableEq alpha]
+theorem exists_nodup_chain_sublist {alpha : Type*}
     (R : alpha → alpha → Prop) (l : List alpha) (hne : l ≠ []) (hchain : l.IsChain R) :
     ∃ l' : List alpha,
       List.Sublist l' l ∧ l'.Nodup ∧ l'.IsChain R ∧
         l'.head? = l.head? ∧ l'.getLast? = l.getLast? := by
+  classical
   induction hn : l.length using Nat.strong_induction_on generalizing l with
   | h n ih =>
       cases l with
@@ -904,8 +905,8 @@ theorem nat_path_energy_eq_imp_last {m : ℕ} (L : Fin (m + 1) → ℕ)
 positive weighted path. -/
 theorem positive_chain_to_weighted_path
     (s : ℕ) (Q : ℕ → ℕ → ℝ)
-    (hQ : ∀ a b, 0 ≤ Q a b)
-    (hsub : ∀ a < s, ∑ b ∈ range s, Q a b ≤ 1)
+    (_hQ : ∀ a b, 0 ≤ Q a b)
+    (_hsub : ∀ a < s, ∑ b ∈ range s, Q a b ≤ 1)
     (a : Fin s) (tail : List (Fin s))
     (hchain : (a :: tail).IsChain
       (fun u w : Fin s => 0 < Q (u : ℕ) (w : ℕ)))
@@ -1040,7 +1041,7 @@ theorem exists_positive_path_through_edge
         rw [List.get_ofFn] at heq
         have hrpref : r.val < pref.length := by simp [pref]
         have happ : (pref ++ l).get ⟨r.val, hright⟩ = pref.get ⟨r.val, hrpref⟩ := by
-          simp [List.getElem_append, hrpref]
+          simp [hrpref]
         have hpval : pref.get ⟨r.val, hrpref⟩ = v r := by
           simp only [pref, List.get_ofFn]
           congr 1
@@ -1066,7 +1067,7 @@ theorem exists_positive_path_through_edge
           rw [List.getElem?_eq_getElem hlpos] at hheadl
           exact Option.some.inj hheadl
         have happ : (pref ++ l).get ⟨r.val + 1, hright⟩ = l.get ⟨0, hlpos⟩ := by
-          simp [List.getElem_append, pref]
+          simp [pref]
         rw [happ] at heq
         have heq' := heq.trans hl0
         simpa [k] using heq'
@@ -1307,10 +1308,11 @@ theorem equality_ordering_support
   rw [hplast, Equiv.symm_apply_apply] at hterminal
   omega
 
-theorem sum_eq_two_of_support {alpha : Type*} [Fintype alpha] [DecidableEq alpha]
+theorem sum_eq_two_of_support {alpha : Type*} [Fintype alpha]
     (f : alpha → ℝ) (a b : alpha) (hab : a ≠ b)
     (hsupp : ∀ c, c ≠ a → c ≠ b → f c = 0) :
     ∑ c, f c = f a + f b := by
+  classical
   have hbmem : b ∈ (Finset.univ : Finset alpha).erase a := by
     exact Finset.mem_erase.mpr ⟨hab.symm, Finset.mem_univ b⟩
   have hrest : ∑ c ∈ (Finset.univ : Finset alpha).erase a, f c = f b := by
@@ -1319,9 +1321,10 @@ theorem sum_eq_two_of_support {alpha : Type*} [Fintype alpha] [DecidableEq alpha
   rw [← Finset.sum_erase_add (Finset.univ : Finset alpha) f (Finset.mem_univ a), hrest]
   ring
 
-theorem sum_eq_one_of_support {alpha : Type*} [Fintype alpha] [DecidableEq alpha]
+theorem sum_eq_one_of_support {alpha : Type*} [Fintype alpha]
     (f : alpha → ℝ) (a : alpha) (hsupp : ∀ c, c ≠ a → f c = 0) :
     ∑ c, f c = f a := by
+  classical
   exact Finset.sum_eq_single a (fun c _ hca => hsupp c hca) (by simp)
 
 /-- The reverse equality case: a sharp component forces the common-rate serial chain, up to
@@ -1515,7 +1518,7 @@ theorem yVec_eq_resolvent_second_apply
   intro l _
   rw [SSP.Nmat_eq_invMat s Q hRho j l j.isLt l.isLt]
   simp only [SSP.invMat,
-    dif_pos (⟨j.isLt, l.isLt⟩ : (j : ℕ) < s ∧ (l : ℕ) < s), mul_one]
+    dif_pos (⟨j.isLt, l.isLt⟩ : (j : ℕ) < s ∧ (l : ℕ) < s)]
 
 /-- **Equality characterization for the q-sequence component bound.** -/
 theorem component_eq_iff_isSerialErlang

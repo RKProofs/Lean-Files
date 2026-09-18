@@ -49,7 +49,6 @@ The statement is `12a₁a₃ ≥ 10a₂²`, where `aⱼ = α(−T)^{-j}𝟙 = E[
 Only step 1 is an external input.  Steps 2–4 are proved.
 -/
 
-set_option maxHeartbeats 1000000
 set_option autoImplicit false
 set_option linter.style.whitespace false
 
@@ -161,7 +160,7 @@ For the canonical `A` the resolvent is rational with the single denominator
 below are the numerators; they come straight from `(−A)^{-j}𝟙`. -/
 
 /-- Numerator of `a1` from canonical start `1`, over `(x₂x₃(x₁−x₁₃))^1`. -/
-noncomputable def canA1_1 (x₁ x₂ x₃ x₁₃ : ℝ) : ℝ :=
+noncomputable def canA1_1 (_x₁ x₂ x₃ x₁₃ : ℝ) : ℝ :=
     x₁₃*x₂ + x₁₃*x₃ + x₂*x₃
 
 /-- Numerator of `a2` from canonical start `1`, over `(x₂x₃(x₁−x₁₃))^2`. -/
@@ -193,7 +192,7 @@ noncomputable def canA2_3 (x₁ x₂ x₃ x₁₃ : ℝ) : ℝ :=
       + x₂^3*x₃^3
 
 /-- Numerator of `a1` from canonical start `3`, over `(x₂x₃(x₁−x₁₃))^1`. -/
-noncomputable def canA3_1 (x₁ x₂ x₃ x₁₃ : ℝ) : ℝ :=
+noncomputable def canA3_1 (x₁ x₂ x₃ _x₁₃ : ℝ) : ℝ :=
     x₁*x₂ + x₁*x₃ + x₂*x₃
 
 /-- Numerator of `a2` from canonical start `3`, over `(x₂x₃(x₁−x₁₃))^2`. -/
@@ -270,10 +269,9 @@ noncomputable def canW3 (x₁ x₂ x₃ x₁₃ : ℝ) : Fin 3 → ℝ :=
 theorem negA_mulVec_W1 (x₁ x₂ x₃ x₁₃ : ℝ) (i : Fin 3) :
     (negA x₁ x₂ x₃ x₁₃).mulVec (canW1 x₁ x₂ x₃ x₁₃) i = canDen x₁ x₂ x₃ x₁₃ * 1 := by
   fin_cases i <;>
-    · show (∑ j, negA x₁ x₂ x₃ x₁₃ _ j * _) = _
+    · change (∑ j, negA x₁ x₂ x₃ x₁₃ _ j * _) = _
       rw [Fin.sum_univ_three]
-      simp only [negA, canDen, canW1, canW2, canW3, Matrix.of_apply,
-        canA1_1, canA2_1, canA3_1, canA1_2, canA2_2, canA3_2, canA1_3, canA2_3, canA3_3]
+      simp only [negA, canDen, canW1, Matrix.of_apply, canA1_1, canA2_1, canA3_1]
       ring
 
 /-- **`(−A)·w₂ = den·w₁`.** -/
@@ -281,10 +279,10 @@ theorem negA_mulVec_W2 (x₁ x₂ x₃ x₁₃ : ℝ) (i : Fin 3) :
     (negA x₁ x₂ x₃ x₁₃).mulVec (canW2 x₁ x₂ x₃ x₁₃) i
       = canDen x₁ x₂ x₃ x₁₃ * canW1 x₁ x₂ x₃ x₁₃ i := by
   fin_cases i <;>
-    · show (∑ j, negA x₁ x₂ x₃ x₁₃ _ j * _) = _
+    · change (∑ j, negA x₁ x₂ x₃ x₁₃ _ j * _) = _
       rw [Fin.sum_univ_three]
-      simp only [negA, canDen, canW1, canW2, canW3, Matrix.of_apply,
-        canA1_1, canA2_1, canA3_1, canA1_2, canA2_2, canA3_2, canA1_3, canA2_3, canA3_3]
+      simp only [negA, canDen, canW1, canW2, Matrix.of_apply,
+        canA1_1, canA2_1, canA3_1, canA1_2, canA2_2, canA3_2]
       ring
 
 /-- **`(−A)·w₃ = den·w₂`.** -/
@@ -292,10 +290,10 @@ theorem negA_mulVec_W3 (x₁ x₂ x₃ x₁₃ : ℝ) (i : Fin 3) :
     (negA x₁ x₂ x₃ x₁₃).mulVec (canW3 x₁ x₂ x₃ x₁₃) i
       = canDen x₁ x₂ x₃ x₁₃ * canW2 x₁ x₂ x₃ x₁₃ i := by
   fin_cases i <;>
-    · show (∑ j, negA x₁ x₂ x₃ x₁₃ _ j * _) = _
+    · change (∑ j, negA x₁ x₂ x₃ x₁₃ _ j * _) = _
       rw [Fin.sum_univ_three]
-      simp only [negA, canDen, canW1, canW2, canW3, Matrix.of_apply,
-        canA1_1, canA2_1, canA3_1, canA1_2, canA2_2, canA3_2, canA1_3, canA2_3, canA3_3]
+      simp only [negA, canDen, canW2, canW3, Matrix.of_apply,
+        canA1_2, canA2_2, canA3_2, canA1_3, canA2_3, canA3_3]
       ring
 
 
@@ -350,7 +348,7 @@ theorem canW3_eq_inv (x₁ x₂ x₃ x₁₃ : ℝ) (hden : canDen x₁ x₂ x�
   rw [← h, Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hu, Matrix.one_mulVec]
 
 /-- **`den ≠ 0` on the admissible region.** -/
-theorem canDen_pos (x₁ x₂ x₃ x₁₃ : ℝ) (hx₁ : 0 < x₁) (hx₂ : 0 < x₂) (hx₃ : 0 < x₃)
+theorem canDen_pos (x₁ x₂ x₃ x₁₃ : ℝ) (_hx₁ : 0 < x₁) (hx₂ : 0 < x₂) (hx₃ : 0 < x₃)
     (hlt : x₁₃ < x₁) : 0 < canDen x₁ x₂ x₃ x₁₃ := by
   unfold canDen
   have h : (0:ℝ) < x₁ - x₁₃ := by linarith
@@ -514,10 +512,19 @@ theorem canonical_hierarchy_s3 (x₁ x₂ x₃ x₁₃ : ℝ) (π : Fin 3 → �
   · intro i _; subst hA₁; fin_cases i <;> simp <;> linarith
   · intro i _; subst hA₂; fin_cases i <;> simp <;> linarith
   · intro i _; subst hA₃; fin_cases i <;> simp <;> linarith
-  · intro i _; subst hA₁; subst hA₂; subst hA₃; fin_cases i <;> simp
-    · exact canonical_ineq1 x₁ x₂ x₃ x₁₃ hx₁ hx₂ hx₃ h0 hlt
-    · exact canonical_ineq2 x₁ x₂ x₃ x₁₃ hx₁ hx₂ hx₃ h0 hlt
-    · exact canonical_ineq3 x₁ x₂ x₃ x₁₃ hx₁ hx₂ hx₃ h0 hlt
+  · intro i _; subst hA₁; subst hA₂; subst hA₃; fin_cases i
+    · simp only [Nat.reduceAdd, Fin.zero_eta, Fin.isValue, List.get_eq_getElem,
+        List.length_cons, List.length_nil, Fin.coe_ofNat_eq_mod, Nat.zero_mod,
+        List.getElem_cons_zero]
+      exact canonical_ineq1 x₁ x₂ x₃ x₁₃ hx₁ hx₂ hx₃ h0 hlt
+    · simp only [Nat.reduceAdd, Fin.mk_one, Fin.isValue, List.get_eq_getElem,
+        List.length_cons, List.length_nil, Fin.coe_ofNat_eq_mod, Nat.one_mod,
+        List.getElem_cons_succ, List.getElem_cons_zero]
+      exact canonical_ineq2 x₁ x₂ x₃ x₁₃ hx₁ hx₂ hx₃ h0 hlt
+    · simp only [Nat.reduceAdd, Fin.reduceFinMk, List.get_eq_getElem, List.length_cons,
+        List.length_nil, Fin.isValue, Fin.coe_ofNat_eq_mod, Nat.mod_succ,
+        List.getElem_cons_succ, List.getElem_cons_zero]
+      exact canonical_ineq3 x₁ x₂ x₃ x₁₃ hx₁ hx₂ hx₃ h0 hlt
 
 /-! ### The moment form of the main theorem
 

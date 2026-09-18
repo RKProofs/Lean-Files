@@ -32,9 +32,9 @@ namespace SSP.Bridge
 theorem rowSum_invMat_eq {s : ℕ} (Q : ℕ → ℕ → ℝ) (i : ℕ) (hi : i < s) :
     rowSum s (invMat s Q) i
       = ((1 - toMat s Q)⁻¹.mulVec (fun _ => (1:ℝ))) ⟨i, hi⟩ := by
-  show (∑ j ∈ range s, invMat s Q i j) = _
+  change (∑ j ∈ range s, invMat s Q i j) = _
   rw [← Fin.sum_univ_eq_sum_range (fun j => invMat s Q i j) s]
-  show (∑ j : Fin s, invMat s Q i j) = ∑ j : Fin s, (1 - toMat s Q)⁻¹ ⟨i, hi⟩ j * 1
+  change (∑ j : Fin s, invMat s Q i j) = ∑ j : Fin s, (1 - toMat s Q)⁻¹ ⟨i, hi⟩ j * 1
   refine Finset.sum_congr rfl fun j _ => ?_
   simp only [invMat, dif_pos (⟨hi, j.isLt⟩ : i < s ∧ (j:ℕ) < s), mul_one]
 
@@ -42,10 +42,10 @@ theorem rowSum_invMat_eq {s : ℕ} (Q : ℕ → ℕ → ℝ) (i : ℕ) (hi : i <
 theorem rowSum2_invMat_eq {s : ℕ} (Q : ℕ → ℕ → ℝ) (i : ℕ) (hi : i < s) :
     rowSum2 s (invMat s Q) i
       = ((1 - toMat s Q)⁻¹.mulVec ((1 - toMat s Q)⁻¹.mulVec (fun _ => (1:ℝ)))) ⟨i, hi⟩ := by
-  show (∑ j ∈ range s, ∑ l ∈ range s, invMat s Q i j * invMat s Q j l) = _
+  change (∑ j ∈ range s, ∑ l ∈ range s, invMat s Q i j * invMat s Q j l) = _
   rw [← Fin.sum_univ_eq_sum_range
     (fun j => ∑ l ∈ range s, invMat s Q i j * invMat s Q j l) s]
-  show (∑ j : Fin s, ∑ l ∈ range s, invMat s Q i j * invMat s Q j l)
+  change (∑ j : Fin s, ∑ l ∈ range s, invMat s Q i j * invMat s Q j l)
       = ∑ j : Fin s, (1 - toMat s Q)⁻¹ ⟨i, hi⟩ j * _
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [← Fin.sum_univ_eq_sum_range (fun l => invMat s Q i j * invMat s Q j l) s]
@@ -53,7 +53,7 @@ theorem rowSum2_invMat_eq {s : ℕ} (Q : ℕ → ℕ → ℝ) (i : ℕ) (hi : i 
   rw [← Finset.mul_sum]
   congr 1
   refine Finset.sum_congr rfl fun l _ => ?_
-  simp only [invMat, dif_pos (⟨j.isLt, l.isLt⟩ : (j:ℕ) < s ∧ (l:ℕ) < s), mul_one]
+  simp only [dif_pos (⟨j.isLt, l.isLt⟩ : (j:ℕ) < s ∧ (l:ℕ) < s), mul_one]
 
 /-! ## The moment identities in the `rowSum` interface
 
@@ -92,14 +92,14 @@ is the form `SSP.componentBound_unconditional` produces. -/
 theorem rowSum_Nmat_eq_invMat {s : ℕ} (Q : ℕ → ℕ → ℝ)
     (hρ : spectralRadius ℂ ((toMat s Q).map (algebraMap ℝ ℂ)) < 1) (i : ℕ) (hi : i < s) :
     rowSum s (Nmat s Q) i = rowSum s (invMat s Q) i := by
-  show (∑ j ∈ range s, Nmat s Q i j) = ∑ j ∈ range s, invMat s Q i j
+  change (∑ j ∈ range s, Nmat s Q i j) = ∑ j ∈ range s, invMat s Q i j
   refine Finset.sum_congr rfl fun j hj => Nmat_eq_invMat s Q hρ i j hi (mem_range.1 hj)
 
 /-- `rowSum2` agrees between the Neumann series and the resolvent. -/
 theorem rowSum2_Nmat_eq_invMat {s : ℕ} (Q : ℕ → ℕ → ℝ)
     (hρ : spectralRadius ℂ ((toMat s Q).map (algebraMap ℝ ℂ)) < 1) (i : ℕ) (hi : i < s) :
     rowSum2 s (Nmat s Q) i = rowSum2 s (invMat s Q) i := by
-  show (∑ j ∈ range s, ∑ l ∈ range s, Nmat s Q i j * Nmat s Q j l)
+  change (∑ j ∈ range s, ∑ l ∈ range s, Nmat s Q i j * Nmat s Q j l)
       = ∑ j ∈ range s, ∑ l ∈ range s, invMat s Q i j * invMat s Q j l
   refine Finset.sum_congr rfl fun j hj => ?_
   refine Finset.sum_congr rfl fun l hl => ?_

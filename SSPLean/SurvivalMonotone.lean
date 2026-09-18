@@ -51,7 +51,7 @@ theorem exp_nonneg_entry {s : ℕ} (Q : Matrix (Fin s) (Fin s) ℝ) (hQ : ∀ i 
     show (A.mulVec (Pi.single j (1:ℝ))) i = A i j
     simp [Matrix.mulVec_single]
   rw [NormedSpace.exp_eq_tsum ℝ]
-  show 0 ≤ (∑' n : ℕ, ((n.factorial : ℝ)⁻¹) • (t • Q) ^ n) i j
+  change 0 ≤ (∑' n : ℕ, ((n.factorial : ℝ)⁻¹) • (t • Q) ^ n) i j
   rw [← hentry (∑' n : ℕ, ((n.factorial : ℝ)⁻¹) • (t • Q) ^ n), hmap]
   refine tsum_nonneg fun n => ?_
   rw [hentry]
@@ -73,7 +73,7 @@ theorem exp_sub_one_nonneg_entry {s : ℕ} (Q : Matrix (Fin s) (Fin s) ℝ)
 /-- If `M ≥ 0` entrywise and `v ≤ 0` pointwise then `(Mv)ᵢ ≤ 0`. -/
 lemma mulVec_nonpos {s : ℕ} (M : Matrix (Fin s) (Fin s) ℝ) (v : Fin s → ℝ)
     (hM : ∀ i j, 0 ≤ M i j) (hv : ∀ j, v j ≤ 0) (i : Fin s) : (M.mulVec v) i ≤ 0 := by
-  show (∑ j, M i j * v j) ≤ 0
+  change (∑ j, M i j * v j) ≤ 0
   refine Finset.sum_nonpos fun j _ => ?_
   exact mul_nonpos_of_nonneg_of_nonpos (hM i j) (hv j)
 
@@ -83,11 +83,11 @@ lemma sub_one_mulVec_one_nonpos {s : ℕ} (Q : Matrix (Fin s) (Fin s) ℝ)
     (hrow : ∀ i, ∑ j, Q i j ≤ 1) (j : Fin s) :
     ((Q - 1).mulVec (fun _ => (1:ℝ))) j ≤ 0 := by
   have hexp : ((Q - 1).mulVec (fun _ => (1:ℝ))) j = (∑ l, Q j l) - 1 := by
-    show (∑ l, (Q - 1) j l * 1) = _
+    change (∑ l, (Q - 1) j l * 1) = _
     simp only [mul_one, Matrix.sub_apply]
     rw [Finset.sum_sub_distrib]
     congr 1
-    show (∑ l, (1 : Matrix (Fin s) (Fin s) ℝ) j l) = 1
+    change (∑ l, (1 : Matrix (Fin s) (Fin s) ℝ) j l) = 1
     simp [Matrix.one_apply]
   rw [hexp]
   linarith [hrow j]
@@ -133,7 +133,7 @@ theorem survival_at_zero {s : ℕ} (Q : Matrix (Fin s) (Fin s) ℝ) (i : Fin s) 
 theorem survival_nonneg {s : ℕ} (Q : Matrix (Fin s) (Fin s) ℝ)
     (hQ : ∀ i j, 0 ≤ Q i j) (t : ℝ) (ht : 0 ≤ t) (i : Fin s) :
     0 ≤ ((NormedSpace.exp (t • (Q - 1))).mulVec (fun _ => (1:ℝ))) i := by
-  show 0 ≤ ∑ j, (NormedSpace.exp (t • (Q - 1))) i j * 1
+  change 0 ≤ ∑ j, (NormedSpace.exp (t • (Q - 1))) i j * 1
   refine Finset.sum_nonneg fun j _ => ?_
   rw [mul_one]
   exact exp_sub_one_nonneg_entry Q hQ t ht i j

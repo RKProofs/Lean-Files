@@ -29,7 +29,7 @@ theorem measure_Ioi_eq_survival {s : ℕ} (Q : Matrix (Fin s) (Fin s) ℝ) (θ :
       = ENNReal.ofReal (((NormedSpace.exp (x • (Q - 1))).mulVec (fun _ => (1:ℝ))) i) := by
   rw [StieltjesFunction.measure_Ioi _ (cdfF_tendsto_atTop Q θ hnorm hθ i) x]
   congr 1
-  show (1:ℝ) - cdfF Q i x = _
+  change (1:ℝ) - cdfF Q i x = _
   rw [cdfF_eqOn_Ici Q i (mem_Ici.mpr hx)]
   ring
 
@@ -100,7 +100,7 @@ theorem integrable_id {s : ℕ} (Q : Matrix (Fin s) (Fin s) ℝ) (θ : ℝ)
       = ∫⁻ x, ENNReal.ofReal (id x) ∂(survivalStieltjes Q hQ hrow i).measure := by
     refine lintegral_congr_ae ?_
     filter_upwards [hae] with x hx
-    rw [← ofReal_norm_eq_enorm, Real.norm_eq_abs, abs_of_nonneg hx]
+    rw [← ofReal_norm, Real.norm_eq_abs, abs_of_nonneg hx]
   rw [heq]
   exact lt_of_le_of_ne le_top (lintegral_finite Q θ hQ hrow hnorm hθ i)
 
@@ -254,7 +254,7 @@ here: `t·e^{−ct} ≤ (2/c)e^{−1}·e^{−(c/2)t}`, the constant being the ex
 `u·e^{−u}`. -/
 
 /-- `u·e^{−u} ≤ e^{−1}`, from `x + 1 ≤ eˣ` at `x = u − 1`. -/
-theorem mul_exp_le (u : ℝ) (hu : 0 ≤ u) : u * Real.exp (-u) ≤ Real.exp (-1) := by
+theorem mul_exp_le (u : ℝ) (_hu : 0 ≤ u) : u * Real.exp (-u) ≤ Real.exp (-1) := by
   have h := Real.add_one_le_exp (u - 1)
   have h2 : u ≤ Real.exp u * Real.exp (-1) := by
     calc u = (u - 1) + 1 := by ring
@@ -336,7 +336,7 @@ theorem integral_weighted {s : ℕ} (Q : Matrix (Fin s) (Fin s) ℝ) (θ : ℝ)
     tendsto_weighted_antiderivative Q θ hnorm hθ i
   have hftc := MeasureTheory.integral_Ioi_of_hasDerivAt_of_tendsto hcont hderiv hint hlim
   have hH0 : H 0 = -(((1 - Q)⁻¹.mulVec ((1 - Q)⁻¹.mulVec (fun _ => (1:ℝ)))) i) := by
-    simp [hHdef, NormedSpace.exp_zero, Matrix.one_mulVec]
+    simp [hHdef, NormedSpace.exp_zero]
   rw [hH0] at hftc
   linarith [hftc]
 
@@ -395,7 +395,7 @@ theorem second_moment_eq {s : ℕ} (Q : Matrix (Fin s) (Fin s) ℝ) (θ : ℝ)
     have heq : (∫⁻ x, ‖(id x)^2‖ₑ ∂(survivalStieltjes Q hQ hrow i).measure)
         = ∫⁻ x, ENNReal.ofReal ((id x)^2) ∂(survivalStieltjes Q hQ hrow i).measure := by
       refine lintegral_congr fun x => ?_
-      rw [← ofReal_norm_eq_enorm, Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]
+      rw [← ofReal_norm, Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]
     rw [heq, h1]
     exact ENNReal.ofReal_lt_top
   have h3 := ofReal_integral_eq_lintegral_ofReal hint2 hae2

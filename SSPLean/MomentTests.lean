@@ -91,15 +91,15 @@ degenerate. -/
 theorem exp_one_isProbabilityMeasure :
     MeasureTheory.IsProbabilityMeasure
       (SSP.Survival.survivalStieltjes (0 : Matrix (Fin 1) (Fin 1) ℝ)
-        (fun i j => le_refl 0) (fun i => by norm_num) 0).measure :=
-  SSP.Survival.isProbabilityMeasure 0 0 (fun i j => le_refl 0) (fun i => by norm_num)
+        (fun _ _ => le_refl 0) (fun _ => by norm_num) 0).measure :=
+  SSP.Survival.isProbabilityMeasure 0 0 (fun _ _ => le_refl 0) (fun _ => by norm_num)
     (by rw [norm_zero]) (by norm_num) 0
 
 /-- **The `Exp(1)` law gives no mass to `(−∞,0]`.** -/
 theorem exp_one_measure_Iic_zero :
     (SSP.Survival.survivalStieltjes (0 : Matrix (Fin 1) (Fin 1) ℝ)
-      (fun i j => le_refl 0) (fun i => by norm_num) 0).measure (Set.Iic 0) = 0 :=
-  SSP.Survival.measure_Iic_zero 0 (fun i j => le_refl 0) (fun i => by norm_num) 0
+      (fun _ _ => le_refl 0) (fun _ => by norm_num) 0).measure (Set.Iic 0) = 0 :=
+  SSP.Survival.measure_Iic_zero 0 (fun _ _ => le_refl 0) (fun _ => by norm_num) 0
 
 /-! ## The unconditional Aldous–Shepp theorem
 

@@ -23,12 +23,12 @@ concave — the minimum over `u ∈ [s,1]` is again at an endpoint, namely `w = 
 Throughout, `d₁, d₂, d₃ > 0`: they are the diagonal entries of the invertible rate matrix `D`.
 -/
 
-set_option maxHeartbeats 4000000
 set_option autoImplicit false
 set_option linter.style.whitespace false
 
 namespace SSP.Chain
 
+set_option maxHeartbeats 4000000 in
 /-- Numerator of `12a₁a₃ − 10a₂²` for pattern F started at state `1`, cleared of the
 denominator `d₁⁴d₂⁴d₃⁴(uwv−1)⁴`. -/
 noncomputable def cycFN (d₁ d₂ d₃ u w v : ℝ) : ℝ :=
@@ -76,7 +76,7 @@ theorem cycFL_decomp (d₁ d₂ d₃ u w : ℝ) :
 
 /-- `L > 0` on the admissible box. -/
 theorem cycF_L_pos (d₁ d₂ d₃ u w : ℝ) (hd₁ : 0 < d₁) (hd₂ : 0 < d₂) (hd₃ : 0 < d₃)
-    (hu : 0 ≤ u) (hw0 : 0 ≤ w) (hw1 : w ≤ 1) : 0 < cycFL d₁ d₂ d₃ u w := by
+    (hu : 0 ≤ u) (_hw0 : 0 ≤ w) (hw1 : w ≤ 1) : 0 < cycFL d₁ d₂ d₃ u w := by
   rw [cycFL_decomp]
   have h1w : (0:ℝ) ≤ 1 - w := by linarith
   have e1 : 0 ≤ 6*d₁*d₂*u*(1 - w) := by positivity

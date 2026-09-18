@@ -473,7 +473,7 @@ theorem corner_gap_identity (n : ℝ) (hn : 0 < n + 1) :
 `κ > 4(n+2)²/(9(n+1)²)` and `h₁ > 0`, then `3(n+1)(h₂ + t²) − 4(n+2)h₁t > 0` for every `t`:
 the quadratic in `t` has positive leading coefficient and negative discriminant. -/
 theorem cornerL1_bracket_pos (n h₁ h₂ t : ℝ) (hn : 0 ≤ n)
-    (hh₁ : 0 < h₁) (hdisc : 4*(n + 2)^2 * h₁^2 < 9*(n + 1)^2 * h₂) :
+    (_hh₁ : 0 < h₁) (hdisc : 4*(n + 2)^2 * h₁^2 < 9*(n + 1)^2 * h₂) :
     0 < 3*(n + 1) * (h₂ + t^2) - 4*(n + 2) * h₁ * t := by
   have hlead : 0 < 3*(n + 1) := by linarith
   -- complete the square: 3(n+1)(t − 2(n+2)h₁/(3(n+1)))² + (9(n+1)²h₂ − 4(n+2)²h₁²)/(3(n+1))

@@ -29,7 +29,6 @@ corner polynomial occurring in the state-return renewal step.
 -/
 
 set_option autoImplicit false
-set_option maxHeartbeats 2000000
 
 namespace SSP.K2AllStages
 
@@ -628,6 +627,7 @@ theorem sBeta_affine (n r t b z : ℝ) :
   unfold SBeta
   ring
 
+set_option maxHeartbeats 2000000 in
 /-- Nonnegativity of the stationary-value certificate on the feasible part of `A=A₀`. -/
 theorem kBeta_nonneg (n : ℕ) (hn : 4 ≤ n) (r b z : ℝ)
     (hr0 : 0 ≤ r) (hrb : r ≤ b) (hb1 : b ≤ 1) (hz : 0 ≤ z)
@@ -1154,7 +1154,7 @@ noncomputable def hAlphaAlpha (n r b z : ℝ) : ℝ :=
     * (n*(n+2)*r+b+(n+1)^2*z)
 
 /-- The normalized `AB` entry of the Hessian. -/
-noncomputable def hAlphaBeta (n r b z : ℝ) : ℝ :=
+noncomputable def hAlphaBeta (n r b _z : ℝ) : ℝ :=
   -2*(n+2)*(b-r)*(1-b)/(1-r)^2
 
 /-- The normalized `BB` entry of the Hessian. -/
@@ -2154,7 +2154,8 @@ theorem no_return_equality_iff (n : ℕ) (hn : 4 ≤ n)
     have hsumzero : renewalGapSub nr x u v 0 1 A B
         +(nr+1)*(x+v)*(D-(nr+1)*B^2/(nr*v)) = 0 := by
       rw [hgapid] at hrenew
-      convert hrenew using 1 <;> ring
+      convert hrenew using 1
+      all_goals ring
     have hdu' : 0 ≤ D-(nr+1)*B^2/(nr*v) := by
       have hid : (nr+1)/nr*B^2/v = (nr+1)*B^2/(nr*v) := by
         field_simp [ne_of_gt hnr0, ne_of_gt hv]
@@ -2203,7 +2204,7 @@ theorem no_return_equality_iff (n : ℕ) (hn : 4 ≤ n)
 forces the return probability to vanish. -/
 theorem renewal_equality_iff (n : ℕ) (hn : 4 ≤ n)
     (x u v p q A B C D : ℝ)
-    (hx : 0 < x) (hu : 0 ≤ u) (hv : 0 ≤ v)
+    (hx : 0 < x) (_hu : 0 ≤ u) (hv : 0 ≤ v)
     (hp : 0 ≤ p) (hq : 0 < q) (hpq : p+q=1)
     (hreturn : 0 < p → 0 < u)
     (hvzero : v=0 → B=0 ∧ D=0)
@@ -2296,8 +2297,8 @@ def StageBound (s : ℕ) (m₁ m₂ m₃ : ℝ) : Prop :=
 
 /-- A bound proved with a smaller stage count remains true with any larger stage count. -/
 theorem stageBound_mono {s N : ℕ} {m₁ m₂ m₃ : ℝ}
-    (hs : 1 ≤ s) (hsN : s ≤ N) (hm₁ : 0 ≤ m₁) (hm₂ : 0 ≤ m₂)
-    (hm₃ : 0 ≤ m₃) (h : StageBound s m₁ m₂ m₃) :
+    (hs : 1 ≤ s) (hsN : s ≤ N) (_hm₁ : 0 ≤ m₁) (_hm₂ : 0 ≤ m₂)
+    (_hm₃ : 0 ≤ m₃) (h : StageBound s m₁ m₂ m₃) :
     StageBound N m₁ m₂ m₃ := by
   let d : ℝ := ((N-s : ℕ) : ℝ)
   have hd : 0 ≤ d := by dsimp [d]; positivity
@@ -2312,7 +2313,6 @@ theorem stageBound_mono {s N : ℕ} {m₁ m₂ m₃ : ℝ}
     rw [Nat.cast_sub hsN]
     ring
   unfold StageBound at h ⊢
-  push_cast at h ⊢
   rw [hcast]
   nlinarith
 
@@ -2378,7 +2378,6 @@ theorem all_stages_of_renewal
         have hUc : (n+1)*(mom₂ c.su c.U)^2
             ≤ (n:ℝ)*(mom₁ c.su c.U)*(mom₃ c.su c.U) := by
           unfold StageBound at hU
-          push_cast at hU
           have hncast : ((n-1:ℕ):ℝ)=(n:ℝ)-1 := by rw [Nat.cast_sub (by omega)]; norm_num
           rw [hncast] at hU
           norm_num at hU
@@ -2386,7 +2385,6 @@ theorem all_stages_of_renewal
         have hVc : (n+1)*(mom₂ c.sv c.V)^2
             ≤ (n:ℝ)*(mom₁ c.sv c.V)*(mom₃ c.sv c.V) := by
           unfold StageBound at hV
-          push_cast at hV
           have hncast : ((n-1:ℕ):ℝ)=(n:ℝ)-1 := by rw [Nat.cast_sub (by omega)]; norm_num
           rw [hncast] at hV
           norm_num at hV
@@ -2548,25 +2546,21 @@ theorem erlang_components_gap (s : ℕ) (t : Finset ι) (w θ : ι → ℝ) :
     rw [Finset.mul_sum]
     apply Finset.sum_congr rfl
     intro i hi
-    push_cast
     ring
   have e2 : (∑ i ∈ t, w i*s*(s+1)*(θ i)^2)
       =(s:ℝ)*(s+1)*(∑ i ∈ t, w i*(θ i)^2) := by
     rw [Finset.mul_sum]
     apply Finset.sum_congr rfl
     intro i hi
-    push_cast
     ring
   have e3 : (∑ i ∈ t, w i*s*(s+1)*(s+2)*(θ i)^3)
       =(s:ℝ)*(s+1)*(s+2)*(∑ i ∈ t, w i*(θ i)^3) := by
     rw [Finset.mul_sum]
     apply Finset.sum_congr rfl
     intro i hi
-    push_cast
     ring
   unfold gap
   rw [e1, e2, e3]
-  push_cast
   ring
 
 theorem erlang_components_equality_scales (s : ℕ) (hs : 1 ≤ s)
