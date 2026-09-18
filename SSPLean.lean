@@ -13,6 +13,9 @@ import SSPLean.SpectralRadiusLtOne
 import SSPLean.SSPBound
 import SSPLean.ThreeStageClaim
 import SSPLean.TwoStageClaim
+import SSPLean.AldousShepp
+import SSPLean.AldousSheppFinal
+import SSPLean.AldousSheppConverse
 import SSPLean.CycleThree
 import SSPLean.ChainInequality
 import SSPLean.CanonicalS3
@@ -28,6 +31,7 @@ import SSPLean.K2Concrete
 import SSPLean.K2ConcreteInitial
 import SSPLean.K2ErlangSharp
 import SSPLean.K2S3Direct
-
-
+import SSPLean.QSequenceEquality
+import SSPLean.SSPBoundEquality
+import SSPLean.MomentTests
 
