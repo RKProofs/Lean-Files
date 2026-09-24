@@ -19,3 +19,5 @@ jobs:
       # Step 2: Set up Elan, download the correct Lean toolchain, and build the project
       - name: Build Lean Project
         uses: leanprover/lean-action@v1
+        env:
+          LEAN_NUM_THREADS: "1"
