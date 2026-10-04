@@ -3,6 +3,7 @@ import SSPLean.MomentHierarchy
 import SSPLean.QSequenceCrossing
 import SSPLean.SpectralRadiusLtOne
 import SSPLean.BStability
+import SSPLean.K2S3Direct
 
 /-!
 # Sections 1–6 of `main_revised.tex`, in Lean
@@ -136,10 +137,16 @@ theorem substochastic_spectralRadius {s : ℕ} (Q : Matrix (Fin s) (Fin s) ℝ)
     spectralRadius ℂ (Q.map (algebraMap ℝ ℂ)) < 1 :=
   SSP.Elementary.spectralRadius_lt_one_elementary Q hQ hrow hinv
 
-/-- **Lemma `neumann2`, coefficient identity.**  The content of the lemma is that squaring
-`∑ Qᵏ` produces the weights `k+1`; the paper obtains this by differentiating a Neumann
-series, and remarks that a counting proof is available.  Here is the counting statement:
-the number of pairs `(j,k)` with `j + k = n` is `n + 1`. -/
+/-- **Lemma `neumann2`, coefficient identity — counting form only.**
+
+The paper's Lemma `neumann2` is the analytic identity `(I−Q)⁻² = ∑ₖ (k+1) Qᵏ`, obtained by
+differentiating a Neumann series (the paper also remarks that a counting proof is available).
+
+What is formalized *here* is only the combinatorial core of that remark: the number of pairs
+`(j,k)` with `j + k = n` is `n + 1`, so the `Qⁿ` coefficient of `(∑ₖ Qᵏ)²` is `n + 1`.  The
+analytic identity itself — the `tsum` rearrangement of the Cauchy product, with the summability
+needed to justify it — is **not** proved here; see `neumann2_weighted_series` below, which
+supplies exactly that and is what Lemma `AS` needs. -/
 theorem neumann_square_coeff (n : ℕ) :
     (Finset.range (n + 1)).card = n + 1 := by
   simp
@@ -155,15 +162,123 @@ theorem neumann_square_pairs (n : ℕ) :
   rw [Finset.card_image_of_injective _ hinj]
   simp
 
-/-- **Lemma `AS` (substochastic sequence inequality) and Lemma `componentbound`.**
+/-! ## The analytic half of Lemma `neumann2`
 
-The paper's Lemma `AS` states
-`(∑ₖ pₖ)² ≤ (2s/(s+1)) ∑ₖ (k+1) pₖ` for `pₖ = (Qᵏ1)ᵢ`, and Lemma `componentbound` is its
-matrix form `((N1)ᵢ)² ≤ (2s/(s+1)) (N²1)ᵢ`.  In this repository the matrix form is proved
-directly, unconditionally, by the path/crossing argument of `SSPLean.QSequenceCrossing`:
-`SSP.componentBound_unconditional`.  That development also supplies the Aldous–Shepp
-statement the paper's remark refers to. -/
-theorem componentBound (s : ℕ) (hs : 0 < s) (N : Matrix (Fin s) (Fin s) ℝ)
+The paper's Lemma `neumann2` is the identity `(I−Q)⁻² = ∑ₖ (k+1) Qᵏ`.  Its combinatorial core
+is `neumann_square_coeff` above; the analytic content is the `tsum` rearrangement below, which
+is what Lemma `AS` needs in order to be *stated* at all (its right-hand side is
+`∑ₖ (k+1) pₖ`).
+
+The hypothesis is geometric decay, not bare summability.  That is essential and not a
+convenience: `pₙ = 1/(n+1)²` is summable while `∑ₙ (n+1)pₙ = ∑ₙ 1/(n+1)` diverges, so the
+identity is *false* under `Summable p` alone.  Geometric decay is exactly what the repository
+supplies (`SSP.rowSum_decay_of_spectralRadius`, feeding the `hdecay` hypotheses throughout
+`SSPLean.QSequencePaths`). -/
+
+/-- The fibre of `(k,j) ↦ k+j` over `n`, equivalent to `Fin (n+1)`.  This is
+`neumann_square_pairs` upgraded from a cardinality count to a bijection, which is what the
+`tsum` rearrangement consumes. -/
+noncomputable def fibreEquiv (n : ℕ) :
+    ((fun kj : ℕ × ℕ => kj.1 + kj.2) ⁻¹' {n}) ≃ Fin (n + 1) := by
+  refine ⟨fun b => ⟨(b : ℕ × ℕ).1, ?_⟩, fun i => ⟨(i.val, n - i.val), ?_⟩, ?_, ?_⟩
+  · have : (b : ℕ × ℕ).1 + (b : ℕ × ℕ).2 = n := b.2
+    omega
+  · change (i.val, n - i.val).1 + (i.val, n - i.val).2 = n
+    simp only []; omega
+  · intro b
+    have hb : (b : ℕ × ℕ).1 + (b : ℕ × ℕ).2 = n := b.2
+    apply Subtype.ext
+    change ((b : ℕ × ℕ).1, n - (b : ℕ × ℕ).1) = (b : ℕ × ℕ)
+    have : n - (b : ℕ × ℕ).1 = (b : ℕ × ℕ).2 := by omega
+    rw [this]
+  · intro i; apply Fin.ext; rfl
+
+/-- **Lemma `neumann2`, analytic identity.**  For `p` nonnegative with geometric decay
+`pₙ ≤ C θⁿ`, `0 ≤ θ < 1`,
+```
+  ∑' (kj : ℕ × ℕ), p (kj.1 + kj.2)  =  ∑' n, (n+1) · pₙ .
+```
+Applied to `pₖ = (Qᵏ1)ᵢ` this is the `i`-th entry of `(I−Q)⁻² = ∑ₖ (k+1) Qᵏ`: the left side is
+the Cauchy product `(∑ⱼQʲ)(∑ₖQᵏ)` read entrywise, the right side the weighted series.
+
+The proof groups the plane sum over the fibres of `(k,j) ↦ k+j`; on the fibre over `n` the
+summand is constant at `pₙ`, and the fibre has `n+1` elements by `fibreEquiv`. -/
+theorem neumann2_weighted_series (p : ℕ → ℝ) (C θ : ℝ) (hp : ∀ n, 0 ≤ p n)
+    (hθ0 : 0 ≤ θ) (hθ1 : θ < 1) (hC : 0 ≤ C) (hd : ∀ n, p n ≤ C * θ ^ n) :
+    ∑' (kj : ℕ × ℕ), p (kj.1 + kj.2) = ∑' (n : ℕ), ((n : ℝ) + 1) * p n := by
+  have hsum : Summable (fun kj : ℕ × ℕ => p (kj.1 + kj.2)) := by
+    have hmaj : Summable (fun kj : ℕ × ℕ => (C * θ ^ kj.1) * θ ^ kj.2) :=
+      Summable.mul_of_nonneg ((summable_geometric_of_lt_one hθ0 hθ1).mul_left C)
+        (summable_geometric_of_lt_one hθ0 hθ1)
+        (fun n => by positivity) (fun n => by positivity)
+    refine hmaj.of_nonneg_of_le (fun kj => hp _) (fun kj => ?_)
+    calc p (kj.1 + kj.2) ≤ C * θ ^ (kj.1 + kj.2) := hd _
+      _ = (C * θ ^ kj.1) * θ ^ kj.2 := by rw [pow_add]; ring
+  have hfib := hsum.hasSum.tsum_fiberwise (fun kj : ℕ × ℕ => kj.1 + kj.2)
+  rw [← hfib.tsum_eq]
+  refine tsum_congr fun n => ?_
+  have hconst : ∀ b : ((fun kj : ℕ × ℕ => kj.1 + kj.2) ⁻¹' {n}),
+      p ((b : ℕ × ℕ).1 + (b : ℕ × ℕ).2) = p n := by
+    intro b
+    have : (b : ℕ × ℕ).1 + (b : ℕ × ℕ).2 = n := b.2
+    rw [this]
+  rw [tsum_congr hconst, tsum_const, nsmul_eq_mul]
+  congr 1
+  rw [Nat.card_congr (fibreEquiv n), Nat.card_eq_fintype_card, Fintype.card_fin]
+  push_cast; ring
+
+/-! ### Lemma `AS` (substochastic sequence inequality)
+
+The paper: for `Q ≥ 0`, `Q1 ≤ 1`, `ρ(Q) < 1`, fix `i` and set `pₖ = (Qᵏ1)ᵢ`; then
+`(∑ₖ pₖ)² ≤ (2s/(s+1)) ∑ₖ (k+1) pₖ`.
+
+This has **no standalone theorem here, deliberately.**  With `neumann2_weighted_series` in hand
+its two sides are `(N1)ᵢ` and `(N²1)ᵢ` (the left by `SSP.xVec_eq_tsum`), so `AS` and Lemma
+`componentbound` are the *same* inequality in series and matrix clothing.  This repository
+proves the matrix form directly and unconditionally — `componentwise_bound` below — so `AS` is
+never an intermediate step, and restating it would only re-export that theorem through the two
+bridges.
+
+What is *not* replicated is the paper's route to it: `pₖ` are survival probabilities of an
+absorbing chain, making the series `𝔼ᵢ[T]` and `𝔼ᵢ[T²]/2`, whereupon the bound is the
+Aldous–Shepp least-variability theorem `Varᵢ(T) ≥ (𝔼ᵢ[T])²/s`.  That analytic input is exactly
+what `SSPLean.QSequenceCrossing` replaces. -/
+
+/-- **Lemma `componentbound` (componentwise bound), verbatim.**
+
+The paper: if `Q ≥ 0`, `Q1 ≤ 1` and `I − Q` is invertible, then `N = (I−Q)⁻¹` satisfies, for
+every `i`,
+```
+  ((N1)ᵢ)² ≤ (2s/(s+1)) · (N²1)ᵢ .
+```
+Here `(N1)ᵢ` is `SSP.rowSum s (SSP.invMat s Q) i` and `(N²1)ᵢ` is `SSP.rowSum2 s …`, both
+explicit finite sums, and `SSP.invMat s Q` is the entrywise view of `(I−Q)⁻¹`.
+
+The paper derives this from Lemma `AS` via the Neumann series of Lemma `neumann2`, i.e. from
+`(∑ₖ pₖ)² ≤ (2s/(s+1)) ∑ₖ (k+1) pₖ` with `pₖ = (Qᵏ1)ᵢ`.  This repository instead proves the
+matrix form directly and unconditionally, by the weighted-paths/crossing argument of
+`SSPLean.QSequenceCrossing`; that development also yields the Aldous–Shepp statement the
+paper's remark refers to, and Appendix A's Lemma (`targetstatement`) is this same inequality
+with an independent elementary proof. -/
+theorem componentwise_bound (s : ℕ) (hs : 0 < s) (Q : ℕ → ℕ → ℝ)
+    (hQ : ∀ i j, 0 ≤ Q i j)
+    (hsub : ∀ i < s, ∑ j ∈ range s, Q i j ≤ 1)
+    (hinv : IsUnit (1 - SSP.toMat s Q)) :
+    ∀ i < s, (SSP.rowSum s (SSP.invMat s Q) i) ^ 2
+      ≤ (2 * s / (s + 1)) * SSP.rowSum2 s (SSP.invMat s Q) i :=
+  SSP.componentBound_unconditional_of_invertible' s Q hQ hsub hinv hs
+
+/-- **Theorem `alt` (§`altproof`), the restatement of Theorem `SSPbound` with minimal
+hypotheses.**
+
+The paper's Theorem `alt`: let `N` be an invertible real `s × s` matrix with `M = N⁻¹`
+satisfying `M1 ≥ 0` and `M ≤ I` entrywise; let `w ≥ 0` with `wᵀ1 ≤ 1`, and let `r ≥ 0` satisfy
+`wᵀN1 = r` and `wᵀN²1 = r + r²/2`.  Then `r ≤ 2s`.
+
+`M ≤ I` entrywise is `Q := I − N⁻¹ ≥ 0` (`hQ`), and `M1 ≥ 0` is `hNrow`.  Formerly named
+`componentBound`, which misdescribed it: the conclusion is `r ≤ 2s`, not the componentwise
+inequality of Lemma `componentbound` — that is `componentwise_bound` above. -/
+theorem ssp_bound_of_invMat (s : ℕ) (hs : 0 < s) (N : Matrix (Fin s) (Fin s) ℝ)
     (hNunit : IsUnit N) (hQ : ∀ i j, 0 ≤ SSP.subFromInv s N i j)
     (hNrow : ∀ i : Fin s, 0 ≤ ∑ j, N⁻¹ i j)
     (w : ℕ → ℝ) (r : ℝ) (hw : ∀ i, 0 ≤ w i) (hw1 : ∑ i ∈ range s, w i ≤ 1)
@@ -309,6 +424,84 @@ theorem order3_bound (s : ℕ) (hs : 0 < s) (N : ℕ → ℕ → ℝ) (w : ℕ �
     r ≤ (s : ℝ) - 1 + Real.sqrt ((s : ℝ) ^ 2 - 1) :=
   SSP.order3_ssp_bound s hs N w r hr hLC hoc.1.1 hoc.1.2 hoc.2
 
+open scoped Matrix.Norms.Operator in
+/-- **Conjecture `hierarchy` at `k = 2`, unconditionally.**  The `k = 2` instance of the
+log-convexity hierarchy, in exactly the `SSP.LogConvexBound` form consumed by
+`order3_bound`, for the phase-type law of an arbitrary nonnegative substochastic `Q` in the
+strict-contraction chart with an arbitrary subprobability initial weight vector `w`
+(missing mass is the permitted atom at `0`).
+
+This discharges the hypothesis `hLC` of `order3_bound`: see `order3_bound_unconditional`
+below.  The proof is `SSP.K2Concrete.all_absorption_initial_laws_direct`, which is
+unconditional — in particular it uses **no** canonical-representation theorem (He–Zhang /
+Horváth–Telek) and no assumed state-return certificate, both of which are constructed in
+`SSPLean.K2ConcreteInitial` and `SSPLean.K2S3Direct`.  The `rowSumᵏ`-to-resolvent
+translation is `SSP.Bridge`. -/
+theorem hierarchy_k2 (s : ℕ) (hs : 1 ≤ s) (Q : ℕ → ℕ → ℝ)
+    (hQ : ∀ i j, 0 ≤ (SSP.toMat s Q) i j)
+    (hrow : ∀ i : Fin s, ∑ j, (SSP.toMat s Q) i j ≤ 1)
+    (hu : IsUnit (1 - SSP.toMat s Q))
+    (θ : ℝ) (hnorm : ‖SSP.toMat s Q‖ ≤ θ) (hθ : θ < 1)
+    (w : ℕ → ℝ) (hw : ∀ i, 0 ≤ w i)
+    (hw1 : ∑ i : Fin s, w (i : ℕ) ≤ 1) :
+    SSP.LogConvexBound s (SSP.invMat s Q) w := by
+  have hspos : 0 < s := hs
+  -- the concrete law: deterministic-start model plus the initial weights
+  let X : SSP.K2Concrete.AbsorptionInitial s :=
+    { model :=
+        { Q := SSP.toMat s Q, θ := θ, hQ := hQ, hrow := hrow, hu := hu
+          hnorm := hnorm, hθ := hθ, i := ⟨0, hspos⟩ }
+      weight := fun i => w (i : ℕ)
+      weight_nonneg := fun i => hw _
+      weight_sum_le_one := hw1 }
+  have h := SSP.K2Concrete.all_initial_resolvent_bound_direct hs X
+  -- translate the `rowSumᵏ` sums into the resolvent `mulVec` form
+  unfold SSP.LogConvexBound
+  have e1 : ∀ i : Fin s, SSP.rowSum s (SSP.invMat s Q) (i : ℕ)
+      = ((1 - SSP.toMat s Q)⁻¹.mulVec (fun _ => (1 : ℝ))) i := by
+    intro i
+    simpa using SSP.Bridge.rowSum_invMat_eq Q (i : ℕ) i.isLt
+  have e2 : ∀ i : Fin s, SSP.rowSum2 s (SSP.invMat s Q) (i : ℕ)
+      = ((1 - SSP.toMat s Q)⁻¹.mulVec
+          ((1 - SSP.toMat s Q)⁻¹.mulVec (fun _ => (1 : ℝ)))) i := by
+    intro i
+    simpa using SSP.Bridge.rowSum2_invMat_eq Q (i : ℕ) i.isLt
+  have e3 : ∀ i : Fin s, SSP.rowSum3 s (SSP.invMat s Q) (i : ℕ)
+      = ((1 - SSP.toMat s Q)⁻¹.mulVec ((1 - SSP.toMat s Q)⁻¹.mulVec
+          ((1 - SSP.toMat s Q)⁻¹.mulVec (fun _ => (1 : ℝ))))) i := by
+    intro i
+    simpa using SSP.Bridge.rowSum3_invMat_eq Q (i : ℕ) i.isLt
+  rw [← Fin.sum_univ_eq_sum_range (fun i => w i * SSP.rowSum2 s (SSP.invMat s Q) i) s,
+      ← Fin.sum_univ_eq_sum_range (fun i => w i * SSP.rowSum s (SSP.invMat s Q) i) s,
+      ← Fin.sum_univ_eq_sum_range (fun i => w i * SSP.rowSum3 s (SSP.invMat s Q) i) s]
+  simp_rw [e1, e2, e3]
+  have hs1 : (0 : ℝ) < (s : ℝ) + 1 := by positivity
+  -- pull the constants 2 and 6 out of the weighted sums appearing in `h`
+  have c2 : ∑ i : Fin s, X.weight i *
+        (2 * ((1 - X.model.Q)⁻¹.mulVec
+          ((1 - X.model.Q)⁻¹.mulVec (fun _ => (1 : ℝ)))) i)
+      = 2 * ∑ i : Fin s, w (i : ℕ) *
+        ((1 - SSP.toMat s Q)⁻¹.mulVec
+          ((1 - SSP.toMat s Q)⁻¹.mulVec (fun _ => (1 : ℝ)))) i := by
+    rw [Finset.mul_sum]
+    exact Finset.sum_congr rfl fun i _ => by simp [X]; ring
+  have c6 : ∑ i : Fin s, X.weight i *
+        (6 * ((1 - X.model.Q)⁻¹.mulVec ((1 - X.model.Q)⁻¹.mulVec
+          ((1 - X.model.Q)⁻¹.mulVec (fun _ => (1 : ℝ))))) i)
+      = 6 * ∑ i : Fin s, w (i : ℕ) *
+        ((1 - SSP.toMat s Q)⁻¹.mulVec ((1 - SSP.toMat s Q)⁻¹.mulVec
+          ((1 - SSP.toMat s Q)⁻¹.mulVec (fun _ => (1 : ℝ))))) i := by
+    rw [Finset.mul_sum]
+    exact Finset.sum_congr rfl fun i _ => by simp [X]; ring
+  have c1 : ∑ i : Fin s, X.weight i *
+        ((1 - X.model.Q)⁻¹.mulVec (fun _ => (1 : ℝ))) i
+      = ∑ i : Fin s, w (i : ℕ) *
+        ((1 - SSP.toMat s Q)⁻¹.mulVec (fun _ => (1 : ℝ))) i := by
+    exact Finset.sum_congr rfl fun i _ => by simp [X]
+  rw [c1, c2, c6] at h
+  rw [div_mul_eq_mul_div, div_le_iff₀ hs1]
+  nlinarith [h]
+
 /-! ## §5. An order barrier for algebraic stability -/
 
 /-- **Definition (Algebraic Stability).**  `B ⪰ 0` and `M = BA + AᵗB − bbᵗ ⪰ 0`, with
@@ -421,13 +614,16 @@ def AStabilityBarrier (s : ℕ) : Prop :=
 | eq. `NemethOrderConditions` | `OrderTwo`, `OrderThree` | definition |
 | Thm. `sspthm` (Kraaijevanger; Ferracina–Spijker) | `KFSTransfer` | analytic; isolated as hypothesis |
 | Lem. `wcs` | `weighted_cauchy_schwarz` | `SSP.weighted_cauchy_schwarz` |
-| Lem. `substochastic` | `substochastic_rowSum_le`, `substochastic_entry_mem`, `substochastic_spectralRadius` | new / `SSP.entry_le_one_of_substochastic` / `SSP.spectralRadius_lt_one_elementary` |
-| Lem. `neumann2` | `neumann_square_coeff`, `neumann_square_pairs` | new (counting form) |
-| Lem. `AS`, Lem. `componentbound` | `componentBound` | `SSP.qsequence_ssp_bound_unconditional_of_invMat` |
+| Lem. `substochastic` | `substochastic_rowSum_le`, `substochastic_entry_mem`, `substochastic_spectralRadius` | new / `SSP.entry_le_one_of_substochastic` / `SSP.Elementary.spectralRadius_lt_one_elementary` |
+| Lem. `neumann2` | `neumann_square_coeff`, `neumann_square_pairs` (counting core); `neumann2_weighted_series` (analytic identity) | new |
+| Lem. `AS` | — (absorbed) | subsumed by the matrix form below |
+| Lem. `componentbound` | `componentwise_bound` | `SSP.componentBound_unconditional_of_invertible'` |
 | Thm. `SSPbound` | `ssp_bound` | `SSP.ssp_coefficient_bound` |
+| Thm. `alt` (§`altproof`, restatement of `SSPbound`) | `ssp_bound_of_invMat` | `SSP.qsequence_ssp_bound_unconditional_of_invMat` |
 | Cor. `unconditional` | `unconditional_bound` | new, from `ssp_bound` + `KFSTransferCB` |
 | Cor. `sharp` | `sharp_two_stage_ssp`, `sharp_two_stage_componentBound` | new (`s = 2` instance; equality at `i = 2`) |
-| Conj. `hierarchy` | `MomentHierarchy` | open; not proved |
+| Conj. `hierarchy` | `MomentHierarchy` | general `k`: open; not proved |
+| Conj. `hierarchy`, `k = 2` | `hierarchy_k2` | **proved unconditionally**; `SSP.K2Concrete.all_absorption_initial_laws_direct` (no canonical-representation theorem) |
 | Lem. `mixture` | `mixture_closure` | new |
 | Thm. `order3` | `order3_bound` | `SSP.order3_ssp_bound` |
 | Def. (Algebraic Stability) | `AlgebraicallyStable` | definition |
@@ -436,6 +632,7 @@ def AStabilityBarrier (s : ℕ) : Prop :=
 | Def. (A-stability conditions) | `AStabilityData` | definition |
 | Lem. `collapse` | `collapse_sum_identity` | new (algebraic core) |
 | Conj. `astability` | `AStabilityBarrier` | open at `s = 4`; false for `s ≥ 5` |
+| Lem. `targetstatement` (App. A, elementary proof of Lem. `componentbound`) | — | `SSP.componentBound_unconditional` |
 -/
 
 end SSP.MainRevised
