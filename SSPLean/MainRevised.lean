@@ -36,9 +36,10 @@ one-line restatements.  The genuinely new content of this file is:
 
 Three statements in these sections are not theorems of the hypotheses as stated:
 
-* `Conjecture hierarchy` (§4) is an open conjecture; only `k = 1` is a theorem
-  (Aldous–Shepp, which in this repository is `SSP.componentBound_unconditional`).  It is
-  recorded as a `Prop`-valued definition, not proved.
+* `Conjecture hierarchy` (§4) remains open in full generality.  Its cases `k = 1`
+  (Aldous–Shepp), `k = 2`, and `k = 3` are theorems in this repository.  The latter two
+  are exposed as `hierarchy_k2` below and `hierarchy_k3` in `SSPLean.K3Complete` for every
+  finite transient substochastic matrix.
 * `Conjecture astability` (§6) is likewise open.
 * Theorem `sspthm` (§2, Kraaijevanger / Ferracina–Spijker) and Definition `sspc` concern
   monotonicity of numerical solutions of an IVP in an arbitrary (semi)norm.  Formalizing
@@ -424,15 +425,14 @@ theorem order3_bound (s : ℕ) (hs : 0 < s) (N : ℕ → ℕ → ℝ) (w : ℕ �
     r ≤ (s : ℝ) - 1 + Real.sqrt ((s : ℝ) ^ 2 - 1) :=
   SSP.order3_ssp_bound s hs N w r hr hLC hoc.1.1 hoc.1.2 hoc.2
 
-open scoped Matrix.Norms.Operator in
 /-- **Conjecture `hierarchy` at `k = 2`, unconditionally.**  The `k = 2` instance of the
 log-convexity hierarchy, in exactly the `SSP.LogConvexBound` form consumed by
 `order3_bound`, for the phase-type law of an arbitrary nonnegative substochastic `Q` in the
-strict-contraction chart with an arbitrary subprobability initial weight vector `w`
+general invertible transient chart with an arbitrary subprobability initial weight vector `w`
 (missing mass is the permitted atom at `0`).
 
 This discharges the hypothesis `hLC` of `order3_bound`: see `order3_bound_unconditional`
-below.  The proof is `SSP.K2Concrete.all_absorption_initial_laws_direct`, which is
+below.  The proof is `SSP.K2Concrete.all_transient_initial_laws_direct`, which is
 unconditional — in particular it uses **no** canonical-representation theorem (He–Zhang /
 Horváth–Telek) and no assumed state-return certificate, both of which are constructed in
 `SSPLean.K2ConcreteInitial` and `SSPLean.K2S3Direct`.  The `rowSumᵏ`-to-resolvent
@@ -441,20 +441,19 @@ theorem hierarchy_k2 (s : ℕ) (hs : 1 ≤ s) (Q : ℕ → ℕ → ℝ)
     (hQ : ∀ i j, 0 ≤ (SSP.toMat s Q) i j)
     (hrow : ∀ i : Fin s, ∑ j, (SSP.toMat s Q) i j ≤ 1)
     (hu : IsUnit (1 - SSP.toMat s Q))
-    (θ : ℝ) (hnorm : ‖SSP.toMat s Q‖ ≤ θ) (hθ : θ < 1)
     (w : ℕ → ℝ) (hw : ∀ i, 0 ≤ w i)
     (hw1 : ∑ i : Fin s, w (i : ℕ) ≤ 1) :
     SSP.LogConvexBound s (SSP.invMat s Q) w := by
   have hspos : 0 < s := hs
-  -- the concrete law: deterministic-start model plus the initial weights
-  let X : SSP.K2Concrete.AbsorptionInitial s :=
+  -- Work in the general transient model.  Unlike `AbsorptionInitial`, this requires only
+  -- substochasticity and invertibility, not a one-step operator-norm contraction.
+  let X : SSP.K2Concrete.TransientInitial s :=
     { model :=
-        { Q := SSP.toMat s Q, θ := θ, hQ := hQ, hrow := hrow, hu := hu
-          hnorm := hnorm, hθ := hθ, i := ⟨0, hspos⟩ }
+        { Q := SSP.toMat s Q, hQ := hQ, hrow := hrow, hu := hu, i := ⟨0, hspos⟩ }
       weight := fun i => w (i : ℕ)
       weight_nonneg := fun i => hw _
       weight_sum_le_one := hw1 }
-  have h := SSP.K2Concrete.all_initial_resolvent_bound_direct hs X
+  have h := SSP.K2Concrete.all_transient_initial_laws_direct hs X
   -- translate the `rowSumᵏ` sums into the resolvent `mulVec` form
   unfold SSP.LogConvexBound
   have e1 : ∀ i : Fin s, SSP.rowSum s (SSP.invMat s Q) (i : ℕ)
@@ -476,31 +475,75 @@ theorem hierarchy_k2 (s : ℕ) (hs : 1 ≤ s) (Q : ℕ → ℕ → ℝ)
       ← Fin.sum_univ_eq_sum_range (fun i => w i * SSP.rowSum3 s (SSP.invMat s Q) i) s]
   simp_rw [e1, e2, e3]
   have hs1 : (0 : ℝ) < (s : ℝ) + 1 := by positivity
-  -- pull the constants 2 and 6 out of the weighted sums appearing in `h`
+  -- Pull the constants 2 and 6 out of the transient raw moments appearing in `h`.
   have c2 : ∑ i : Fin s, X.weight i *
-        (2 * ((1 - X.model.Q)⁻¹.mulVec
-          ((1 - X.model.Q)⁻¹.mulVec (fun _ => (1 : ℝ)))) i)
+        (2 * ((1 - (X.component i).Q)⁻¹.mulVec
+          ((1 - (X.component i).Q)⁻¹.mulVec (fun _ => (1 : ℝ)))) (X.component i).i)
       = 2 * ∑ i : Fin s, w (i : ℕ) *
         ((1 - SSP.toMat s Q)⁻¹.mulVec
           ((1 - SSP.toMat s Q)⁻¹.mulVec (fun _ => (1 : ℝ)))) i := by
     rw [Finset.mul_sum]
-    exact Finset.sum_congr rfl fun i _ => by simp [X]; ring
+    exact Finset.sum_congr rfl fun i _ => by
+      simp [X, SSP.K2Concrete.TransientInitial.component]
+      ring
   have c6 : ∑ i : Fin s, X.weight i *
-        (6 * ((1 - X.model.Q)⁻¹.mulVec ((1 - X.model.Q)⁻¹.mulVec
-          ((1 - X.model.Q)⁻¹.mulVec (fun _ => (1 : ℝ))))) i)
+        (6 * ((1 - (X.component i).Q)⁻¹.mulVec ((1 - (X.component i).Q)⁻¹.mulVec
+          ((1 - (X.component i).Q)⁻¹.mulVec (fun _ => (1 : ℝ))))) (X.component i).i)
       = 6 * ∑ i : Fin s, w (i : ℕ) *
         ((1 - SSP.toMat s Q)⁻¹.mulVec ((1 - SSP.toMat s Q)⁻¹.mulVec
           ((1 - SSP.toMat s Q)⁻¹.mulVec (fun _ => (1 : ℝ))))) i := by
     rw [Finset.mul_sum]
-    exact Finset.sum_congr rfl fun i _ => by simp [X]; ring
+    exact Finset.sum_congr rfl fun i _ => by
+      simp [X, SSP.K2Concrete.TransientInitial.component]
+      ring
   have c1 : ∑ i : Fin s, X.weight i *
-        ((1 - X.model.Q)⁻¹.mulVec (fun _ => (1 : ℝ))) i
+        ((1 - (X.component i).Q)⁻¹.mulVec (fun _ => (1 : ℝ))) (X.component i).i
       = ∑ i : Fin s, w (i : ℕ) *
         ((1 - SSP.toMat s Q)⁻¹.mulVec (fun _ => (1 : ℝ))) i := by
-    exact Finset.sum_congr rfl fun i _ => by simp [X]
+    exact Finset.sum_congr rfl fun i _ => by
+      simp [X, SSP.K2Concrete.TransientInitial.component]
+  unfold SSP.K2AllStages.StageBound SSP.K2Concrete.transientInitialMoment1
+    SSP.K2Concrete.transientInitialMoment2 SSP.K2Concrete.transientInitialMoment3
+    SSP.K2Concrete.transientMoment1 SSP.K2Concrete.transientMoment2
+    SSP.K2Concrete.transientMoment3 at h
   rw [c1, c2, c6] at h
   rw [div_mul_eq_mul_div, div_le_iff₀ hs1]
   nlinarith [h]
+
+/-- **Theorem `order3`, unconditionally.**  For an arbitrary finite nonnegative
+substochastic transient matrix, the order-three moment identities imply the sharp bound
+`r ≤ s - 1 + √(s² - 1)`.  This is the paper's conditional theorem with its `k = 2`
+hierarchy premise discharged by `hierarchy_k2`. -/
+theorem order3_bound_unconditional (s : ℕ) (hs : 1 ≤ s) (Q : ℕ → ℕ → ℝ)
+    (hQ : ∀ i j, 0 ≤ (SSP.toMat s Q) i j)
+    (hrow : ∀ i : Fin s, ∑ j, (SSP.toMat s Q) i j ≤ 1)
+    (hu : IsUnit (1 - SSP.toMat s Q))
+    (w : ℕ → ℝ) (hw : ∀ i, 0 ≤ w i)
+    (hw1 : ∑ i : Fin s, w (i : ℕ) ≤ 1)
+    (r : ℝ) (hr : 0 ≤ r) (hoc : OrderThree s (SSP.invMat s Q) w r) :
+    r ≤ (s : ℝ) - 1 + Real.sqrt ((s : ℝ) ^ 2 - 1) := by
+  exact order3_bound s (by omega) (SSP.invMat s Q) w r hr
+    (hierarchy_k2 s hs Q hQ hrow hu w hw hw1) hoc
+
+/-! ### Equality in Theorem `SSPbound` / `alt` (paper Remark `uniqueness`)
+
+The paper records the `r = 2s` equality case as an open question.  It is proved, as an
+equivalence, in `SSPLean.SSPBoundEquality` — which imports this file, so the results cannot
+be restated here without a cycle.  The entry points are:
+
+* `SSP.orderTwo_two_mul_iff_halfRateSerialErlang` — equality holds iff `wᵀ𝟙 = 1` and every
+  positively weighted state is the head of a serial Erlang chain of common rate `1/2`
+  (`IsHalfRateSerialErlang`), up to a relabeling of the transient states.
+* `SSP.orderTwo_two_mul_iff_halfRateSerialMat` — the same statement with the chain given as
+  the explicit matrix `SSP.halfRateSerialMat s = (1/2)(I + S)`, `S` the forward shift, with
+  `SSP.halfRateSerialMat_inv` identifying `(I - Q)⁻¹` as `2` on and above the diagonal.
+* `SSP.orderTwo_two_mul_iff_attainsSSPBound` — the abstract half, conditional on
+  `ComponentBound`, before the matrix structure is extracted.
+
+The rate `1/2` is forced by the endpoint `r = 2s`, not assumed; the general serial-chain
+predicate `IsSerialErlang` allows any rate in `(0, 1]`.  Note this characterizes the
+`(Q, w)` / q-sequence side; transporting it to Butcher coefficients `(A, b)` goes through
+`KFSTransfer`, which is a hypothesis here rather than a theorem. -/
 
 /-! ## §5. An order barrier for algebraic stability -/
 
@@ -623,9 +666,11 @@ def AStabilityBarrier (s : ℕ) : Prop :=
 | Cor. `unconditional` | `unconditional_bound` | new, from `ssp_bound` + `KFSTransferCB` |
 | Cor. `sharp` | `sharp_two_stage_ssp`, `sharp_two_stage_componentBound` | new (`s = 2` instance; equality at `i = 2`) |
 | Conj. `hierarchy` | `MomentHierarchy` | general `k`: open; not proved |
-| Conj. `hierarchy`, `k = 2` | `hierarchy_k2` | **proved unconditionally**; `SSP.K2Concrete.all_absorption_initial_laws_direct` (no canonical-representation theorem) |
+| Conj. `hierarchy`, `k = 2` | `hierarchy_k2` | **proved unconditionally**; `SSP.K2Concrete.all_transient_initial_laws_direct` (no canonical-representation theorem) |
+| Conj. `hierarchy`, `k = 3` | `hierarchy_k3` (in `SSPLean.K3Complete`) | **proved unconditionally**; `SSP.K2Concrete.all_transient_initial_k3` |
 | Lem. `mixture` | `mixture_closure` | new |
-| Thm. `order3` | `order3_bound` | `SSP.order3_ssp_bound` |
+| Thm. `order3` | `order3_bound_unconditional` | `hierarchy_k2` + `SSP.order3_ssp_bound` |
+| Rem. `uniqueness` (equality at `r = 2s`) | — | **proved**: `SSP.orderTwo_two_mul_iff_halfRateSerialErlang`, `SSP.orderTwo_two_mul_iff_halfRateSerialMat` (in `SSPLean.SSPBoundEquality`) |
 | Def. (Algebraic Stability) | `AlgebraicallyStable` | definition |
 | Lem. `partialsums` | `partial_sums` | `SSP.partial_sum_lemma` |
 | Thm. `barrier` | `barrier` | `SSP.no_order3_algebraically_stable` |

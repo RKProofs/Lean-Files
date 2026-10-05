@@ -1,6 +1,5 @@
 import Mathlib
 import SSPLean.AlgStabCounterexample
-set_option linter.style.setOption false
 
 /-!
 # A five-stage counterexample, with a degree-6 parameter
@@ -130,8 +129,6 @@ namespace SSP
 namespace Counterexample
 
 namespace Five
-
-set_option maxHeartbeats 4000000
 
 /-! ## The parameter -/
 

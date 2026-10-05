@@ -1,5 +1,6 @@
 import SSPLean.K3AllStagesPositiveSlopeLargeB3
 import SSPLean.K3AllStagesPositiveSlopeLargeB1Complete
+import SSPLean.K3AllStagesPositiveSlopeLargeB0
 
 /-!
 # Completion of the large-ratio positive-slope chart

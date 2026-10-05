@@ -342,4 +342,89 @@ theorem orderTwo_two_mul_iff_halfRateSerialErlang
     · rw [rowSum2_eq_yVec]
       exact hmom.2
 
+/-! ## Matrix form of the equality case
+
+`orderTwo_two_mul_iff_halfRateSerialErlang` is stated in the `Nmat`/`rowSum` interface.
+This section records the same content as a statement about matrices: the extremal transient
+matrix is `(1/2)(I + S)` with `S` the nilpotent forward shift, its resolvent is `2` on and
+above the diagonal, and the two extremal moments at the head are `2s` and `2s(s+1)`. -/
+
+/-- The extremal transient matrix for `r = 2s`, in closed form: the bidiagonal matrix with
+`1/2` on the diagonal and `1/2` on the superdiagonal.  This is
+`QSequenceEquality.serialErlangQ s (1/2)`. -/
+noncomputable def halfRateSerialMat (s : ℕ) : Matrix (Fin s) (Fin s) ℝ :=
+  QSequenceEquality.serialErlangQ s (1 / 2)
+
+/-- Entrywise description of the extremal matrix. -/
+theorem halfRateSerialMat_apply (s : ℕ) (i j : Fin s) :
+    halfRateSerialMat s i j =
+      if j = i then 1 / 2 else if j.val = i.val + 1 then 1 / 2 else 0 := by
+  unfold halfRateSerialMat
+  rw [QSequenceEquality.serialErlangQ_apply]
+  norm_num
+
+/-- The resolvent `(I - Q)⁻¹` of the extremal matrix is `2` on and above the diagonal and
+`0` strictly below it. -/
+theorem halfRateSerialMat_inv (s : ℕ) :
+    (1 - halfRateSerialMat s)⁻¹
+      = (2 : ℝ) • (Matrix.of fun i j => if i ≤ j then (1 : ℝ) else 0) := by
+  unfold halfRateSerialMat
+  rw [QSequenceEquality.serialErlangQ_inverse (by norm_num : (1:ℝ)/2 ≠ 0)]
+  ext i j
+  simp [SSP.K2Concrete.erlangResolvent, Matrix.smul_apply]
+
+/-- The two extremal resolvent moments of the extremal matrix, read at the head of the
+chain: `(N𝟙)₀ = 2s` and `(N²𝟙)₀ = 2s(s+1)`. -/
+theorem halfRateSerialMat_moments (s : ℕ) (hs : 0 < s) :
+    ((1 - halfRateSerialMat s)⁻¹.mulVec (fun _ => (1 : ℝ))) ⟨0, hs⟩ = 2 * s ∧
+      ((1 - halfRateSerialMat s)⁻¹.mulVec
+        ((1 - halfRateSerialMat s)⁻¹.mulVec (fun _ => (1 : ℝ)))) ⟨0, hs⟩
+        = 2 * s * (s + 1) := by
+  unfold halfRateSerialMat
+  constructor
+  · rw [QSequenceEquality.serialErlangQ_fundamental (by norm_num : (1:ℝ)/2 ≠ 0) ⟨0, hs⟩]
+    norm_num
+  · rw [QSequenceEquality.serialErlangQ_second (by norm_num : (1:ℝ)/2 ≠ 0) ⟨0, hs⟩]
+    simp [K2Concrete.erlangV2, K2Concrete.erlangV1]
+    ring
+
+/-- **Matrix form of the `r = 2s` equality case.**
+
+Let `Q` be a nonnegative substochastic matrix with `ρ(Q) < 1`, let `w ≥ 0` with
+`wᵀ𝟙 ≤ 1`, and let `N = (I - Q)⁻¹`.  Then the order-two conditions hold at the extremal
+value `r = 2s`, that is `wᵀN𝟙 = 2s` and `wᵀN²𝟙 = 2s + 2s²`, if and only if
+
+* `wᵀ𝟙 = 1`, and
+* every state carrying positive weight is, after a relabeling of the transient states by a
+  permutation, the first stage of the matrix `halfRateSerialMat s`.
+
+This is `orderTwo_two_mul_iff_halfRateSerialErlang` with the serial-chain condition spelled
+out through `halfRateSerialMat`; the rate `1/2` is forced by the endpoint, not assumed. -/
+theorem orderTwo_two_mul_iff_halfRateSerialMat
+    (s : ℕ) (hs : 0 < s) (Q : ℕ → ℕ → ℝ)
+    (hQ : ∀ i j, 0 ≤ Q i j)
+    (hsub : ∀ i < s, ∑ j ∈ range s, Q i j ≤ 1)
+    (hRho : spectralRadius ℂ ((toMat s Q).map (algebraMap ℝ ℂ)) < 1)
+    (w : ℕ → ℝ) (hw : ∀ i, 0 ≤ w i)
+    (hw1 : ∑ i ∈ range s, w i ≤ 1) :
+    MainRevised.OrderTwo s (Nmat s Q) w (2 * s) ↔
+      (∑ i ∈ range s, w i = 1 ∧
+        ∀ i (hi : i < s), 0 < w i →
+          ∃ v : Fin s ≃ Fin s, v ⟨0, hs⟩ = ⟨i, hi⟩ ∧
+            toMat s Q = (Matrix.reindex v v) (halfRateSerialMat s)) := by
+  rw [orderTwo_two_mul_iff_halfRateSerialErlang s hs Q hQ hsub hRho w hw hw1]
+  unfold AttainsQSequenceSSPBound
+  constructor
+  · rintro ⟨hW, hsupp⟩
+    refine ⟨hW, fun i hi hwi => ?_⟩
+    obtain ⟨v, hv0, hQeq⟩ := halfRateSerial_matrix_eq (hsupp i hi hwi)
+    exact ⟨v, hv0, hQeq⟩
+  · rintro ⟨hW, hsupp⟩
+    refine ⟨hW, fun i hi hwi => ?_⟩
+    obtain ⟨v, hv0, hQeq⟩ := hsupp i hi hwi
+    refine ⟨v, hv0, fun r c => ?_⟩
+    rw [hQeq]
+    simp only [Matrix.reindex_apply, Matrix.submatrix_apply, Equiv.symm_apply_apply]
+    rw [halfRateSerialMat_apply]
+
 end SSP
