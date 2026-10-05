@@ -1,6 +1,5 @@
 import Mathlib
 import SSPLean.AlgStabCounterexample
-set_option linter.style.setOption false
 
 /-!
 # A six-stage counterexample with a cubic parameter

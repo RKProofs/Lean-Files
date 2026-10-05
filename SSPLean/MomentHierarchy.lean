@@ -44,7 +44,9 @@ def rowSum3 (s : ℕ) (N : ℕ → ℕ → ℝ) (i : ℕ) : ℝ :=
 /-- The `k = 2` instance of the **log-convexity hierarchy conjecture** for the
 phase-type distribution attached to `(N, w)`: with raw moments `m₁ = h₁`,
 `m₂ = 2h₂`, `m₃ = 6h₃` where `h_k = wᵀNᵏ𝟙`, it reads
-`(s+2)/(s+1) · m₂² ≤ m₁ · m₃`.  Assumed input (conjectured; verified numerically). -/
+`(s+2)/(s+1) · m₂² ≤ m₁ · m₃`.  This file treats it as an input predicate; the
+unconditional all-stage theorem is `SSP.MainRevised.hierarchy_k2`, built from the direct
+state-return proof without creating an import cycle here. -/
 def LogConvexBound (s : ℕ) (N : ℕ → ℕ → ℝ) (w : ℕ → ℝ) : Prop :=
   ((s : ℝ) + 2) / ((s : ℝ) + 1) * (2 * ∑ i ∈ range s, w i * rowSum2 s N i) ^ 2
     ≤ (∑ i ∈ range s, w i * rowSum s N i)
@@ -91,11 +93,12 @@ theorem order3_poly_bound (s : ℕ) (hs : 0 < s) (r : ℝ) (hr : 0 ≤ r)
 /-- **Conditional sharp order-3 SSP bound.**  Given the SSP weight conditions, the
 order-3 tall-tree moment conditions
 `wᵀN𝟙 = r`, `wᵀN²𝟙 = r + r²/2`, `wᵀN³𝟙 = r + r² + r³/6`,
-and the k = 2 log-convexity conjecture for `(N, w)`, the SSP value satisfies
+and the k = 2 log-convexity bound for `(N, w)`, the SSP value satisfies
 `r ≤ s − 1 + √(s² − 1)`.
 
-This is the moment-hierarchy analogue of `ssp_coefficient_bound`: the conjectured
-probabilistic input is isolated as a hypothesis, everything else is verified.
+This is the moment-hierarchy analogue of `ssp_coefficient_bound`: the probabilistic input is
+isolated as a hypothesis in this module, and is discharged unconditionally by
+`SSP.MainRevised.hierarchy_k2`.
 Together with the known methods attaining this value (Ketcheson–Macdonald–Gottlieb),
 it would identify the optimal order-3 implicit SSP coefficient exactly. -/
 theorem order3_ssp_bound (s : ℕ) (hs : 0 < s)

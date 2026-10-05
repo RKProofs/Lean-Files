@@ -585,7 +585,7 @@ With `g = (1/3 − c₁)/(1 − 2c₁)`, the quantity
 For `0 ≤ c₁ ≤ 1/3` and `u > 1 − c₁` the first factor and the denominator are positive while
 the last factor is negative, so the whole expression is negative — contradicting the necessary
 condition `≥ 0` that `Δ ≥ 0` and the sharpened diagonal bound together force. -/
-lemma rank_two_key (c1 u : ℝ) (_ : 0 ≤ c1) (hc3 : c1 ≤ 1/3) (hu : 1 - c1 < u) :
+lemma rank_two_key (c1 u : ℝ) (_hc0 : 0 ≤ c1) (hc3 : c1 ≤ 1/3) (hu : 1 - c1 < u) :
     ((1/3 - c1)/(1 - 2*c1)) * (u - (1/3 - c1)/(1 - 2*c1))
       - ((c1 + u)/2 - 1/6 - c1*u) < 0 := by
   have hden : (0:ℝ) < 1 - 2*c1 := by linarith
@@ -1129,9 +1129,9 @@ lemma Kb_ne_zero :
     show (3:ℕ)=2+1 from rfl, Finset.sum_range_succ, Finset.sum_range_zero] at hK k0 k1 k2 ⊢
   norm_num at hK k0 k1 k2 ⊢
   linear_combination hK + (-5*d.c 0^2/9 - 4*d.c 0*d.c 1/9 - 4*d.c 0*d.c 2/9 + d.c 1^2/9 + 2*d.c 1*d.c 2/9 + d.c 2^2/9)*k0 + (d.c 0^2/9 - 4*d.c 0*d.c 1/9 + 2*d.c 0*d.c 2/9 - 5*d.c 1^2/9 - 4*d.c 1*d.c 2/9 + d.c 2^2/9)*k1 + (d.c 0^2/9 + 2*d.c 0*d.c 1/9 - 4*d.c 0*d.c 2/9 + d.c 1^2/9 - 4*d.c 1*d.c 2/9 - 5*d.c 2^2/9)*k2
-    + (5*d.c 0^2/9 + d.c 0*d.c 1/9 - 2*d.c 0*d.c 2/9 - 4*d.c 1^2/9 - 2*d.c 1*d.c 2/9
-        + 2*d.c 2^2/9)*s01 + (d.c 0^2/9 + 2*d.c 0*d.c 1/9 + 5*d.c 0*d.c 2/9 + d.c 1^2/9
-        - 4*d.c 1*d.c 2/9 - 5*d.c 2^2/9)*s02 + (2*d.c 0^2/9 + 4*d.c 0*d.c 1/9
+    + (5*d.c 0^2/9 + d.c 0*d.c 1/9 - 2*d.c 0*d.c 2/9 - 4*d.c 1^2/9 - 2*d.c 1*d.c 2/9 
+        + 2*d.c 2^2/9)*s01 + (d.c 0^2/9 + 2*d.c 0*d.c 1/9 + 5*d.c 0*d.c 2/9 + d.c 1^2/9 
+        - 4*d.c 1*d.c 2/9 - 5*d.c 2^2/9)*s02 + (2*d.c 0^2/9 + 4*d.c 0*d.c 1/9 
         - 8*d.c 0*d.c 2/9 + 2*d.c 1^2/9 + d.c 1*d.c 2/9 - d.c 2^2/9)*s12
 
 
@@ -1275,37 +1275,37 @@ lemma Mform_quotient (t1 t2 : ℝ) :
     show (3:ℕ)=2+1 from rfl, Finset.sum_range_succ, Finset.sum_range_zero]
     at be0 be1 be2 ke0 ke1 ke2 ⊢
   norm_num at be0 be1 be2 ke0 ke1 ke2 ⊢
-  linear_combination (-2*(Km d 0 0)*t1*t2 + (Km d 0 1)*t1*t2 - (Km d 0 1)*t2^2 + (Km d 0 2)*t2^2
+  linear_combination (-2*(Km d 0 0)*t1*t2 + (Km d 0 1)*t1*t2 - (Km d 0 1)*t2^2 + (Km d 0 2)*t2^2 
       + (Km d 1 0)*t1*t2 - (Km d 1 0)*t2^2 + (Km d 2 0)*t2^2)*be0
-    + (-(Km d 0 1)*t1*t2 - (Km d 1 0)*t1*t2 + 2*(Km d 1 1)*t1*t2 - 2*(Km d 1 1)*t2^2
+    + (-(Km d 0 1)*t1*t2 - (Km d 1 0)*t1*t2 + 2*(Km d 1 1)*t1*t2 - 2*(Km d 1 1)*t2^2 
         + (Km d 1 2)*t2^2 + (Km d 2 1)*t2^2)*be1
-    + (-(Km d 0 2)*t1*t2 + (Km d 1 2)*t1*t2 - (Km d 1 2)*t2^2 - (Km d 2 0)*t1*t2
+    + (-(Km d 0 2)*t1*t2 + (Km d 1 2)*t1*t2 - (Km d 1 2)*t2^2 - (Km d 2 0)*t1*t2 
         + (Km d 2 1)*t1*t2 - (Km d 2 1)*t2^2 + 2*(Km d 2 2)*t2^2)*be2
-    + (2*(Bm d 0 0)*t1^2/3 + 2*(Bm d 0 0)*t1*t2/3 - 2*(Bm d 0 1)*t1^2/3
-        + 4*(Bm d 0 1)*t1*t2/3 + 2*(Bm d 1 0)*t1^2/3 + 2*(Bm d 1 0)*t1*t2/3
-        - 2*(Bm d 1 1)*t1^2/3 + 4*(Bm d 1 1)*t1*t2/3 + 2*(Bm d 2 0)*t1^2/3
+    + (2*(Bm d 0 0)*t1^2/3 + 2*(Bm d 0 0)*t1*t2/3 - 2*(Bm d 0 1)*t1^2/3 
+        + 4*(Bm d 0 1)*t1*t2/3 + 2*(Bm d 1 0)*t1^2/3 + 2*(Bm d 1 0)*t1*t2/3 
+        - 2*(Bm d 1 1)*t1^2/3 + 4*(Bm d 1 1)*t1*t2/3 + 2*(Bm d 2 0)*t1^2/3 
         + 2*(Bm d 2 0)*t1*t2/3 - 2*(Bm d 2 1)*t1^2/3 + 4*(Bm d 2 1)*t1*t2/3)*ke0
-    + (-2*(Bm d 0 0)*t1^2/3 + 2*(Bm d 0 0)*t2^2/3 + 2*(Bm d 0 1)*t1^2/3
-        - 2*(Bm d 0 1)*t1*t2 + 4*(Bm d 0 1)*t2^2/3 - 2*(Bm d 1 0)*t1^2/3
-        + 2*(Bm d 1 0)*t2^2/3 + 2*(Bm d 1 1)*t1^2/3 - 2*(Bm d 1 1)*t1*t2
-        + 4*(Bm d 1 1)*t2^2/3 - 2*(Bm d 2 0)*t1^2/3 + 2*(Bm d 2 0)*t2^2/3
+    + (-2*(Bm d 0 0)*t1^2/3 + 2*(Bm d 0 0)*t2^2/3 + 2*(Bm d 0 1)*t1^2/3 
+        - 2*(Bm d 0 1)*t1*t2 + 4*(Bm d 0 1)*t2^2/3 - 2*(Bm d 1 0)*t1^2/3 
+        + 2*(Bm d 1 0)*t2^2/3 + 2*(Bm d 1 1)*t1^2/3 - 2*(Bm d 1 1)*t1*t2 
+        + 4*(Bm d 1 1)*t2^2/3 - 2*(Bm d 2 0)*t1^2/3 + 2*(Bm d 2 0)*t2^2/3 
         + 2*(Bm d 2 1)*t1^2/3 - 2*(Bm d 2 1)*t1*t2 + 4*(Bm d 2 1)*t2^2/3)*ke1
-    + (-2*(Bm d 0 0)*t1*t2/3 - 2*(Bm d 0 0)*t2^2/3 + 2*(Bm d 0 1)*t1*t2/3
-        - 4*(Bm d 0 1)*t2^2/3 - 2*(Bm d 1 0)*t1*t2/3 - 2*(Bm d 1 0)*t2^2/3
-        + 2*(Bm d 1 1)*t1*t2/3 - 4*(Bm d 1 1)*t2^2/3 - 2*(Bm d 2 0)*t1*t2/3
+    + (-2*(Bm d 0 0)*t1*t2/3 - 2*(Bm d 0 0)*t2^2/3 + 2*(Bm d 0 1)*t1*t2/3 
+        - 4*(Bm d 0 1)*t2^2/3 - 2*(Bm d 1 0)*t1*t2/3 - 2*(Bm d 1 0)*t2^2/3 
+        + 2*(Bm d 1 1)*t1*t2/3 - 4*(Bm d 1 1)*t2^2/3 - 2*(Bm d 2 0)*t1*t2/3 
         - 2*(Bm d 2 0)*t2^2/3 + 2*(Bm d 2 1)*t1*t2/3 - 4*(Bm d 2 1)*t2^2/3)*ke2
-    + (-(Bm d 0 0)*t1^2 - 4*(Bm d 0 0)*t1*t2/3 - (Bm d 0 0)*t2^2/3 + (Bm d 0 1)*t1^2
-        - 5*(Bm d 0 1)*t1*t2/3 - 2*(Bm d 0 1)*t2^2/3 - (Bm d 1 0)*t1^2 - (Bm d 1 0)*t1*t2/3
-        + 2*(Bm d 1 0)*t2^2/3 + (Bm d 1 1)*t1^2 - 8*(Bm d 1 1)*t1*t2/3 + 4*(Bm d 1 1)*t2^2/3
-        + 2*(Bm d 2 0)*t1*t2/3 + 2*(Bm d 2 0)*t2^2/3 - 2*(Bm d 2 1)*t1*t2/3
+    + (-(Bm d 0 0)*t1^2 - 4*(Bm d 0 0)*t1*t2/3 - (Bm d 0 0)*t2^2/3 + (Bm d 0 1)*t1^2 
+        - 5*(Bm d 0 1)*t1*t2/3 - 2*(Bm d 0 1)*t2^2/3 - (Bm d 1 0)*t1^2 - (Bm d 1 0)*t1*t2/3 
+        + 2*(Bm d 1 0)*t2^2/3 + (Bm d 1 1)*t1^2 - 8*(Bm d 1 1)*t1*t2/3 + 4*(Bm d 1 1)*t2^2/3 
+        + 2*(Bm d 2 0)*t1*t2/3 + 2*(Bm d 2 0)*t2^2/3 - 2*(Bm d 2 1)*t1*t2/3 
         + 4*(Bm d 2 1)*t2^2/3)*ks01
-    + ((Bm d 0 0)*t1*t2/3 + (Bm d 0 0)*t2^2/3 - (Bm d 0 1)*t1*t2/3 + 2*(Bm d 0 1)*t2^2/3
-        - 2*(Bm d 1 0)*t1*t2/3 - 2*(Bm d 1 0)*t2^2/3 + 2*(Bm d 1 1)*t1*t2/3
-        - 4*(Bm d 1 1)*t2^2/3 - (Bm d 2 0)*t1^2 - 5*(Bm d 2 0)*t1*t2/3 - 2*(Bm d 2 0)*t2^2/3
+    + ((Bm d 0 0)*t1*t2/3 + (Bm d 0 0)*t2^2/3 - (Bm d 0 1)*t1*t2/3 + 2*(Bm d 0 1)*t2^2/3 
+        - 2*(Bm d 1 0)*t1*t2/3 - 2*(Bm d 1 0)*t2^2/3 + 2*(Bm d 1 1)*t1*t2/3 
+        - 4*(Bm d 1 1)*t2^2/3 - (Bm d 2 0)*t1^2 - 5*(Bm d 2 0)*t1*t2/3 - 2*(Bm d 2 0)*t2^2/3 
         + (Bm d 2 1)*t1^2 - 4*(Bm d 2 1)*t1*t2/3 - 4*(Bm d 2 1)*t2^2/3)*ks02
-    + (-4*(Bm d 0 0)*t1*t2/3 - 4*(Bm d 0 0)*t2^2/3 + 4*(Bm d 0 1)*t1*t2/3
-        - 8*(Bm d 0 1)*t2^2/3 - (Bm d 1 0)*t1*t2/3 - (Bm d 1 0)*t2^2/3 + (Bm d 1 1)*t1*t2/3
-        - 2*(Bm d 1 1)*t2^2/3 + (Bm d 2 0)*t1^2 + 2*(Bm d 2 0)*t1*t2/3 - (Bm d 2 0)*t2^2/3
+    + (-4*(Bm d 0 0)*t1*t2/3 - 4*(Bm d 0 0)*t2^2/3 + 4*(Bm d 0 1)*t1*t2/3 
+        - 8*(Bm d 0 1)*t2^2/3 - (Bm d 1 0)*t1*t2/3 - (Bm d 1 0)*t2^2/3 + (Bm d 1 1)*t1*t2/3 
+        - 2*(Bm d 1 1)*t2^2/3 + (Bm d 2 0)*t1^2 + 2*(Bm d 2 0)*t1*t2/3 - (Bm d 2 0)*t2^2/3 
         - (Bm d 2 1)*t1^2 + 7*(Bm d 2 1)*t1*t2/3 - 2*(Bm d 2 1)*t2^2/3)*ks12
 
 
@@ -2108,7 +2108,7 @@ lemma sharp_bound (h01 : d.c 0 ≤ d.c 1) (h12 : d.c 1 ≤ d.c 2) :
   linarith [h4, hid, s1, s2, s3]
 
 /-- `β₁ + β₂ = 1/2 − c₀`, from `bᵗc = 1/2` and `bᵗe = 1`. -/
-lemma beta_sum (_ : d.c 0 ≤ d.c 1) (_ : d.c 1 ≤ d.c 2) :
+lemma beta_sum (_h01 : d.c 0 ≤ d.c 1) (_h12 : d.c 1 ≤ d.c 2) :
     d.b 1 * (d.c 1 - d.c 0) + d.b 2 * (d.c 2 - d.c 0) = 1/2 - d.c 0 := by
   have h1 := d.h1; have h2 := d.h2
   rw [sum3] at h1 h2

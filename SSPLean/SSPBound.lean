@@ -13,18 +13,25 @@ The proof structure mirrors the paper:
   finding §3.4) and is exactly what the final argument consumes.
 * `entry_le_one_of_substochastic` — the finite content of the paper's Lemma 3.
 * `ComponentBound` — the paper's Lemma 5, i.e. `((Ne)ᵢ)² ≤ (2s/(s+1))·(N²e)ᵢ`.
-  This is the **assumed input**: in the paper it is derived from the Aldous–Shepp
-  least-variable-phase-type theorem (1987) via Lemmas 1 and 4.  Formalizing
-  Aldous–Shepp (or finding an elementary finite proof — see review §5-E6) is the
-  single missing piece between this development and a fully verified paper.
+  Within *this* file it is a hypothesis, kept abstract so that the endgame below depends
+  only on the inequality and not on how it is obtained.  It is **no longer an unverified
+  input of the development**: it is discharged for `N = (I−Q)⁻¹` with `Q` substochastic by
+  the weighted-paths/crossing argument — `SSP.componentBound_holds` in
+  `SSPLean.QSequencePaths` (modulo a crossing hypothesis), and
+  `SSP.componentBound_unconditional` in `SSPLean.QSequenceCrossing` with that hypothesis
+  discharged too.  So the elementary finite proof once called for
+  here (review §5-E6) exists, and the route through the Aldous–Shepp
+  least-variable-phase-type theorem (1987) is not needed; that development in fact yields
+  an elementary proof of Aldous–Shepp as a by-product.  See
+  `SSP.qsequence_ssp_bound_unconditional_of_invMat` for the end-to-end `r ≤ 2s`.
 * `ssp_coefficient_bound` — the paper's Theorem 3 endgame: `ComponentBound` + SSP
   weight conditions + order-2 moment conditions ⟹ `r ≤ 2s`.
   Handles the `r = 0` edge case and derives `r ≥ 0` (both glossed over in the draft).
 
 `N` is an arbitrary function `ℕ → ℕ → ℝ` restricted to indices `< s`; `(Ne)ᵢ` and
 `(N²e)ᵢ` are written as explicit finite sums, so no matrix inverses, spectral radii,
-or infinite series enter the statements — those live only in the (assumed) proof of
-`ComponentBound`.
+or infinite series enter the statements — those live only in the proof of `ComponentBound`,
+which is carried out in `SSPLean.QSequencePaths` and `SSPLean.QSequenceCrossing`.
 -/
 
 open Finset
@@ -95,9 +102,12 @@ def rowSum2 (s : ℕ) (N : ℕ → ℕ → ℝ) (i : ℕ) : ℝ :=
 
 In the paper this is proved for `N = (I−Q)⁻¹`, `Q` substochastic with `ρ(Q) < 1`,
 via the Neumann series (Lemma 4) and the Aldous–Shepp least-variable-phase-type
-theorem (Lemma 1).  That derivation is analytic/probabilistic and is **assumed** here;
-it is the only unverified input of this development.  An elementary finite proof
-(review §5-E6) would make the whole paper machine-checkable end to end. -/
+theorem (Lemma 1).  That analytic/probabilistic route is **not** what this repository
+uses: the predicate is a hypothesis *here*, so that `ssp_coefficient_bound` depends only
+on the inequality, but it is discharged elsewhere by a finite, elementary argument —
+`SSP.componentBound_holds` (`SSPLean.QSequencePaths`) and
+`SSP.componentBound_unconditional` (`SSPLean.QSequenceCrossing`).  Nothing in the chain to
+`r ≤ 2s` is assumed. -/
 def ComponentBound (s : ℕ) (N : ℕ → ℕ → ℝ) : Prop :=
   ∀ i < s, (rowSum s N i) ^ 2 ≤ (2 * s / (s + 1)) * rowSum2 s N i
 

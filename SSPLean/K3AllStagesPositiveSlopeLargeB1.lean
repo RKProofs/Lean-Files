@@ -1,4 +1,4 @@
-import SSPLean.K3AllStagesPositiveSlopeLarge
+import SSPLean.K3AllStagesPositiveSlopeLargeBase
 
 /-!
 # First middle coefficient of the large-ratio positive-slope chart
