@@ -13,9 +13,9 @@ theorem uniformFaceANonposMiddleLowB3_bernstein_v (m s v : ℝ) :
   have hfun : (fun u => uniformFaceANonposMiddleLowB3 m s u) =
       (fun u => uniformFaceANonposScaled m s u (m^2 + 39)) := by
     funext u
-    unfold uniformFaceANonposMiddleLowB3 uniformFaceANonposMiddleLow
-    simp only [uniformCubicSampleB3]
-    congr 2 <;> ring
+    simp [uniformFaceANonposMiddleLowB3, uniformFaceANonposMiddleLow,
+      uniformCubicSampleB3]
+    ring_nf
   change (fun u => uniformFaceANonposMiddleLowB3 m s u) v =
     cornerBern3
       (uniformCubicSampleB0 (fun u => uniformFaceANonposMiddleLowB3 m s u))
