@@ -185,3 +185,4 @@ theorem fullCurvatureCoefficient_chart_6_nonneg
   exact fullCurvatureCoefficient_chart_6_certificate s d
 
 end SSP.K3CyclicRealTail
+

@@ -3,7 +3,7 @@ import SSPLean.MomentHierarchy
 import SSPLean.QSequenceCrossing
 import SSPLean.SpectralRadiusLtOne
 import SSPLean.BStability
-import SSPLean.K2S3Direct
+import SSPLean.K2ShortProof
 
 /-!
 # Sections 1–6 of `main_revised.tex`, in Lean
@@ -432,11 +432,12 @@ general invertible transient chart with an arbitrary subprobability initial weig
 (missing mass is the permitted atom at `0`).
 
 This discharges the hypothesis `hLC` of `order3_bound`: see `order3_bound_unconditional`
-below.  The proof is `SSP.K2Concrete.all_transient_initial_laws_direct`, which is
-unconditional — in particular it uses **no** canonical-representation theorem (He–Zhang /
-Horváth–Telek) and no assumed state-return certificate, both of which are constructed in
-`SSPLean.K2ConcreteInitial` and `SSPLean.K2S3Direct`.  The `rowSumᵏ`-to-resolvent
-translation is `SSP.Bridge`. -/
+below.  The proof is `SSP.K2Concrete.all_transient_initial_laws_short`, which is
+the shorter renewal induction in `phase_type_moment_inequality.tex`. It starts at one
+state and uses the terminal Aldous--Shepp bound and the lower-order third-moment
+inequalities. The excursion construction is proved in `SSPLean.K2ConcreteInitial`;
+`SSPLean.K2ShortProof` supplies the induction without a canonical-representation
+hypothesis. The `rowSumᵏ`-to-resolvent translation is `SSP.Bridge`. -/
 theorem hierarchy_k2 (s : ℕ) (hs : 1 ≤ s) (Q : ℕ → ℕ → ℝ)
     (hQ : ∀ i j, 0 ≤ (SSP.toMat s Q) i j)
     (hrow : ∀ i : Fin s, ∑ j, (SSP.toMat s Q) i j ≤ 1)
@@ -453,7 +454,7 @@ theorem hierarchy_k2 (s : ℕ) (hs : 1 ≤ s) (Q : ℕ → ℕ → ℝ)
       weight := fun i => w (i : ℕ)
       weight_nonneg := fun i => hw _
       weight_sum_le_one := hw1 }
-  have h := SSP.K2Concrete.all_transient_initial_laws_direct hs X
+  have h := SSP.K2Concrete.all_transient_initial_laws_short hs X
   -- translate the `rowSumᵏ` sums into the resolvent `mulVec` form
   unfold SSP.LogConvexBound
   have e1 : ∀ i : Fin s, SSP.rowSum s (SSP.invMat s Q) (i : ℕ)
@@ -666,7 +667,7 @@ def AStabilityBarrier (s : ℕ) : Prop :=
 | Cor. `unconditional` | `unconditional_bound` | new, from `ssp_bound` + `KFSTransferCB` |
 | Cor. `sharp` | `sharp_two_stage_ssp`, `sharp_two_stage_componentBound` | new (`s = 2` instance; equality at `i = 2`) |
 | Conj. `hierarchy` | `MomentHierarchy` | general `k`: open; not proved |
-| Conj. `hierarchy`, `k = 2` | `hierarchy_k2` | **proved unconditionally**; `SSP.K2Concrete.all_transient_initial_laws_direct` (no canonical-representation theorem) |
+| Conj. `hierarchy`, `k = 2` | `hierarchy_k2` | **proved unconditionally**; `SSP.K2Concrete.all_transient_initial_laws_short` (no canonical-representation theorem) |
 | Conj. `hierarchy`, `k = 3` | `hierarchy_k3` (in `SSPLean.K3Complete`) | **proved unconditionally**; `SSP.K2Concrete.all_transient_initial_k3` |
 | Lem. `mixture` | `mixture_closure` | new |
 | Thm. `order3` | `order3_bound_unconditional` | `hierarchy_k2` + `SSP.order3_ssp_bound` |

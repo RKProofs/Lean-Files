@@ -1,4 +1,4 @@
-import SSPLean.K3AllStagesPositiveSlopeLargeBase
+import SSPLean.K3AllStagesPositiveSlopeLargeCubic
 
 /-!
 # First middle coefficient of the large-ratio positive-slope chart
@@ -36,17 +36,16 @@ theorem uniformFaceAPositiveHighVWLargeB1_bernstein_r (m s r : ℝ) :
         (uniformFaceAPositiveHighVWLargeB1T1 m s)
         (uniformFaceAPositiveHighVWLargeB1T2 m s)
         (uniformFaceAPositiveHighVWLargeB1T3 m s) r := by
-  unfold uniformFaceAPositiveHighVWLargeB1T0
-  unfold uniformFaceAPositiveHighVWLargeB1T1
-  unfold uniformFaceAPositiveHighVWLargeB1T2
-  unfold uniformFaceAPositiveHighVWLargeB1T3
-  unfold uniformFaceAPositiveHighVWLargeB1R
-  unfold uniformFaceAPositiveHighVWLargeB1
-  unfold uniformCubicSampleB0 uniformCubicSampleB1
-  unfold uniformCubicSampleB2 uniformCubicSampleB3
-  unfold uniformFaceAPositiveHighVWLargeEndpoint
-  unfold uniformFaceAPositiveQ cornerBern3
-  unfold uniformFaceACurrentK uniformReturnK
-  ring
+  have hc := (uniformFaceAPositiveHighVWLargeB1_isCubic m s).comp_affine (1/2) (1/2)
+  have hid : (fun r => uniformFaceAPositiveHighVWLargeB1 m s (1/2+1/2*r)) =
+      uniformFaceAPositiveHighVWLargeB1R m s := by
+    funext r
+    congr 1
+    ring
+  rw [hid] at hc
+  simpa only [uniformFaceAPositiveHighVWLargeB1T0,
+    uniformFaceAPositiveHighVWLargeB1T1,uniformFaceAPositiveHighVWLargeB1T2,
+    uniformFaceAPositiveHighVWLargeB1T3,uniformCubicSampleB0,uniformCubicSampleB1,
+    uniformCubicSampleB2,uniformCubicSampleB3,cornerBern3] using hc.interpolate r
 
 end SSP.K3AllStages

@@ -16,6 +16,9 @@ import SSPLean.K2ConcreteInitial
 import SSPLean.K2ErlangSharp
 import SSPLean.K2S3Direct
 import SSPLean.K2S4Renewal
+import SSPLean.K2ShortQuadratic
+import SSPLean.K2ShortRenewal
+import SSPLean.K2ShortProof
 import SSPLean.K3AllStages
 import SSPLean.K3AllStagesComplete
 import SSPLean.K3AllStagesCore
@@ -123,3 +126,5 @@ import SSPLean.ThirdMomentBridge
 import SSPLean.ThirdMomentLaw
 import SSPLean.ThreeStageClaim
 import SSPLean.TwoStageClaim
+import SSPLean.ThreeStateConjectures
+import SSPLean.BlockTriangularMoments
