@@ -119,6 +119,8 @@ import SSPLean.SSPBound
 import SSPLean.SSPBoundEquality
 import SSPLean.SemigroupMoments
 import SSPLean.SixStageWitness
+import SSPLean.SmallBlockTriangular
+import SSPLean.SmallBlockTriangularPartition
 import SSPLean.SpectralDecay
 import SSPLean.SpectralRadiusLtOne
 import SSPLean.SurvivalMonotone
