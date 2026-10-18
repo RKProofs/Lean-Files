@@ -1,4 +1,6 @@
-import Mathlib
+import Mathlib.Analysis.Normed.Field.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic
 
 /-!
 # The three-cycle support pattern at `s = 3`

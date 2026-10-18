@@ -1,4 +1,7 @@
-import Mathlib
+import Mathlib.Algebra.Order.Archimedean.Real.Hom
+import Mathlib.Analysis.ODE.ExistUnique
+import Mathlib.AlgebraicTopology.SimplexCategory.Basic
+import Mathlib.Tactic
 
 /-! # Uniqueness for scalar constant-coefficient cubic ODEs -/
 
@@ -15,10 +18,12 @@ noncomputable def fieldLinearMap (c0 c1 c2 : ℝ) : State →ₗ[ℝ] State wher
   toFun x := ![x 1, x 2, c0 * x 0 + c1 * x 1 + c2 * x 2]
   map_add' x y := by
     ext i
-    fin_cases i <;> simp <;> ring
+    fin_cases i <;> simp
+    all_goals ring
   map_smul' q x := by
     ext i
-    fin_cases i <;> simp <;> ring
+    fin_cases i <;> simp
+    all_goals ring
 
 noncomputable def field (c0 c1 c2 : ℝ) : State →L[ℝ] State :=
   ⟨fieldLinearMap c0 c1 c2,

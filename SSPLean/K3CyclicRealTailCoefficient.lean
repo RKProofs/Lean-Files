@@ -260,10 +260,14 @@ noncomputable def fallingBasis (r : ℕ) (x : ℝ) : ℝ :=
 
 lemma cast_descFactorial_le_four (j r : ℕ) (hr : r ≤ 4) :
     ((j.descFactorial r : ℕ) : ℝ) = fallingBasis r j := by
-  interval_cases r <;> simp [fallingBasis, Nat.descFactorial_succ]
-  · cases j <;> simp <;> ring
-  · rcases j with (_ | _ | j) <;> simp <;> push_cast <;> ring
-  · rcases j with (_ | _ | _ | j) <;> simp <;> push_cast <;> ring
+  interval_cases r <;> simp only [Nat.descFactorial_succ, tsub_zero,
+    Nat.descFactorial_zero, mul_one, Nat.cast_mul, Nat.cast_one, fallingBasis]
+  · cases j <;> simp
+    all_goals ring
+  · rcases j with (_ | _ | j) <;> simp
+    ring
+  · rcases j with (_ | _ | _ | j) <;> simp
+    ring
 
 /-- The binomial summand before deleting the six endpoint indices. -/
 noncomputable def fullSplitKernel (N j : ℕ) : ℝ :=
@@ -374,7 +378,6 @@ theorem fullSplitKernel_endpoint_sum (M : ℕ) :
           48 * (M + 6 : ℕ) - 64) / 4 := by
   unfold fullSplitKernel
   simp [Nat.choose_zero_right, Nat.choose_one_right, Nat.choose_self]
-  push_cast
   ring
 
 /-- Exact evaluation of the purely binomial baseline sum. -/

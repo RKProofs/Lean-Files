@@ -1,4 +1,6 @@
-import Mathlib
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Ring.Basic
+import Mathlib.Tactic
 
 /-!
 # The `v = 0` (direct-absorption) branch of the order-three `k = 3` base case
@@ -20,7 +22,7 @@ with an all-positive-coefficient remainder in each case.  The two lemmas below a
 coefficients; the remaining `r`-coefficients have no negative terms at all.
 -/
 
-set_option maxHeartbeats 800000
+set_option maxHeartbeats 800000 in
 /-- The `r²` coefficient of the `v = 0` branch: two pairings plus a positive remainder. -/
 theorem vzero_r2_nonneg (x b d f : ℝ) (hx : 0 ≤ x) (hb : 0 ≤ b)
     (hd : 0 ≤ d) (hd1 : d ≤ 1) (hf : 0 ≤ f) (hf1 : f ≤ 1) :
@@ -36,6 +38,7 @@ theorem vzero_r2_nonneg (x b d f : ℝ) (hx : 0 ≤ x) (hb : 0 ≤ b)
       + 96*b^2*d*f*x^3 + 96*b^2*d*f*x^2 + 200*b*x^2 := by positivity
   linarith
 
+set_option maxHeartbeats 800000 in
 /-- The `r³` coefficient of the `v = 0` branch (divided by `3b`). -/
 theorem vzero_r3_nonneg (x b d f : ℝ) (hx : 0 ≤ x) (hb : 0 ≤ b)
     (hd : 0 ≤ d) (hd1 : d ≤ 1) (hf : 0 ≤ f) (hf1 : f ≤ 1) :
@@ -56,6 +59,7 @@ theorem vzero_r3_nonneg (x b d f : ℝ) (hx : 0 ≤ x) (hb : 0 ≤ b)
       + 96*b*d*f*x^3 + 192*b*d*f*x^2 + 96*b*d*f*x + 100*x^2 := by positivity
   linarith
 
+set_option maxHeartbeats 800000 in
 /-- **The `v = 0` branch at order three.**  The gap numerator in the slack-ratio chart,
 normalised to `u = 1`, is nonnegative: its `r`-coefficients split into four with no negative
 terms at all and the two handled by `vzero_r2_nonneg` / `vzero_r3_nonneg`. -/

@@ -73,8 +73,7 @@ theorem tailTerm_summable
   have hxpow : |x| ^ (n + k) ≤ R ^ (n + k) :=
     pow_le_pow_left₀ (abs_nonneg x) (le_max_right _ _) _
   unfold tailTerm
-  simp only [norm_div, norm_mul, norm_pow, Real.norm_eq_abs,
-    Real.norm_natCast]
+  simp only [norm_div, norm_mul, norm_pow, Real.norm_eq_abs]
   rw [abs_of_nonneg (by positivity : 0 ≤ (Nat.factorial (n + k) : ℝ))]
   rw [show 27 * (y ^ (n + k) / (Nat.factorial (n + k) : ℝ)) =
       (27 * y ^ (n + k)) / (Nat.factorial (n + k) : ℝ) by ring]
@@ -258,10 +257,10 @@ theorem recurrenceF_eq_firstF
     (c0 := ω ^ 2) (c1 := -(ω ^ 2)) (c2 := 1) (t0 := 0)
     (fun x => recurrenceF_hasDerivAt hr0 hr1 hτ0 hτ1)
     (fun x => recurrenceF1_hasDerivAt hr0 hr1 hτ0 hτ1)
-    (fun x => by convert hseries2 x using 1 <;> ring)
+    (fun x => by convert hseries2 x using 1; ring)
     (fun x => firstF_hasDerivAt (m := m₀) (ω := ω) (x := x) hω)
     (fun x => firstF1_hasDerivAt (m := m₀) (ω := ω) (x := x) hω)
-    (fun x => by convert hanalytic2 x using 1 <;> ring)
+    (fun x => by convert hanalytic2 x using 1; ring)
   · simp
   · subst r
     simp [scalarM]

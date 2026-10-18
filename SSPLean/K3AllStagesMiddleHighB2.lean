@@ -49,10 +49,8 @@ theorem uniformFaceANonposMiddleHighB2_nonneg
     | simp only [uniformCubicSampleB3]
     unfold uniformFaceANonposMiddleHighB2 uniformFaceANonposMiddleHigh
     simp only [uniformCubicSampleB2]
-    unfold uniformFaceANonposScaled uniformFaceANonposScale
-    unfold uniformFaceANonposQ uniformFaceANonposT
-    unfold uniformFaceANonposZ uniformFaceANonposP
-    unfold uniformFaceACore
+    simp only [NonposCompactPolynomial_eq m s _ _ hm hs]
+    unfold NonposCompactPolynomial uniformFaceANonposP
     field_simp
     ring_nf
     positivity

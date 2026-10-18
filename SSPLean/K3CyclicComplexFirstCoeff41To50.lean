@@ -2,11 +2,14 @@ import SSPLean.K3CyclicComplexFirstCoefficient
 
 /-! # Complex first-start compact certificate: degrees 41--50 -/
 
+-- These finite certificates deliberately use native_decide; the native trust
+-- dependency is documented in README.md. Keep the exception local to the certificates.
 set_option autoImplicit false
 
 namespace SSP.K3CyclicComplex.ComplexCoeff
 
 set_option maxRecDepth 100000 in
+set_option linter.style.nativeDecide false in
 theorem certificate_forty_one_through_fifty :
     ((List.range 10).map (· + 41)).all certificateOK = true := by
   native_decide

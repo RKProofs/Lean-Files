@@ -269,7 +269,7 @@ theorem abs_oscillatorMode_le_three
     rcases n with (_ | _ | n)
     · simp [oscillatorMode, realMode, spectralRadiusSq, scalarM, hz]
     · simp [oscillatorMode, realMode, spectralRadiusSq, scalarM, hz]
-    · simp [oscillatorMode, realMode, spectralRadiusSq, scalarM, hz]
+    · simp [oscillatorMode, spectralRadiusSq, scalarM, hz]
   · have hzpos : 0 < scalarZ r τ := lt_of_le_of_ne hz0 (Ne.symm hz)
     have henergy := oscillatorEnergy_le_six_z hr0 hr1 hτ0 hτ1 n
     have hcomponent :

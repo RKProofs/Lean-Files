@@ -357,7 +357,7 @@ set_option maxRecDepth 100000 in
 set_option maxHeartbeats 2000000 in
 theorem sharpGap_three_scale
     (L r x u A v B : ℝ) (hL : L ≠ 0) (hu : u ≠ 0) (hv : v ≠ 0)
-    (hA : A ≠ 0) (hB : B ≠ 0) :
+    (_hA : A ≠ 0) (_hB : B ≠ 0) :
     sharpGap 3 r (L*x) (L*u) (L^2*A) (L*v) (L^2*B) =
       L^6*sharpGap 3 r x u A v B := by
   unfold sharpGap sharpThird excursionReducedGap stageGap
@@ -365,13 +365,13 @@ theorem sharpGap_three_scale
     SSP.K3S4Renewal.geomM2 SSP.K3S4Renewal.geomM1
   unfold SSP.K3S4Renewal.kernelM1 SSP.K3S4Renewal.kernelM2
     SSP.K3S4Renewal.kernelM3 SSP.K3S4Renewal.kernelM4
-  field_simp [hL, hu, hv, hA, hB]
+  field_simp [hL, hu, hv, _hA, _hB]
 
 set_option maxRecDepth 100000 in
 set_option maxHeartbeats 2000000 in
 theorem sharpGap_three_mixture_coordinates
-    (a T Y p q : ℝ) (hT : T ≠ 0) (hY : Y ≠ 0) (hp : p ≠ 0)
-    (hq : q ≠ 0) (hsum : p*Y+a ≠ 0) (hsum1 : Y+a ≠ 0) :
+    (a T Y p q : ℝ) (_hT : T ≠ 0) (hY : Y ≠ 0) (hp : p ≠ 0)
+    (_hq : q ≠ 0) (hsum : p*Y+a ≠ 0) (hsum1 : Y+a ≠ 0) :
     sharpGap 3 (a/(p*Y)) (p*Y*(1-a)/(p*Y+a))
         (p*Y) (3*p*Y^2/2) (q*T) (3*q*T^2/2) =
       uniformSharpGap 3 a T Y q := by
@@ -380,7 +380,7 @@ theorem sharpGap_three_mixture_coordinates
     SSP.K3S4Renewal.geomM2 SSP.K3S4Renewal.geomM1
   unfold SSP.K3S4Renewal.kernelM1 SSP.K3S4Renewal.kernelM2
     SSP.K3S4Renewal.kernelM3 SSP.K3S4Renewal.kernelM4
-  field_simp [hT, hY, hp, hq, hsum, hsum1]
+  field_simp [_hT, hY, hp, _hq, hsum, hsum1]
   ring
 
 /-- The sharp-corner certificate in the original excursion coordinates at

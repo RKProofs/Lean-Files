@@ -297,20 +297,18 @@ lemma scalarCurvatureCoefficient_one_formula
   simp
   ring
 
-lemma kernel_zero_real {N : ℕ} (hN : 2 ≤ N) :
+lemma kernel_zero_real {N : ℕ} (_hN : 2 ≤ N) :
     (kernel N 0 : ℝ) =
       ((N : ℝ) * ((N : ℝ) - 1) + 2) / 2 := by
   unfold kernel
   simp
-  push_cast
   ring
 
-lemma kernel_one_real {N : ℕ} (hN : 3 ≤ N) :
+lemma kernel_one_real {N : ℕ} (_hN : 3 ≤ N) :
     (kernel N 1 : ℝ) =
       (N : ℝ) * ((N : ℝ) - 2) * ((N : ℝ) - 3) / 2 := by
   unfold kernel
   simp [Nat.choose_one_right]
-  push_cast
   ring
 
 lemma quadratic_le_two_pow {N : ℕ} (hN : 4 ≤ N) :

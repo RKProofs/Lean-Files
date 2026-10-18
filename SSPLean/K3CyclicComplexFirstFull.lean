@@ -18,7 +18,7 @@ theorem shiftedFirstF_correctedCurvature3_eq (m ω x : ℝ) :
         (firstF m ω x) (firstF1 m ω x) (firstF2 m ω x) := by
   unfold shiftedFirstF shiftedFirstF1 shiftedFirstF2
   convert correctedCurvature3_exp_shift m x
-    (firstF m ω x) (firstF1 m ω x) (firstF2 m ω x) using 1 <;> ring
+    (firstF m ω x) (firstF1 m ω x) (firstF2 m ω x) using 1; ring
 
 theorem firstFCurvature_pos_compact
     {m ω x : ℝ} (hdom : FirstDomain m ω)
@@ -116,8 +116,8 @@ theorem firstH_correctedCurvature3_nonneg
     have hscale := correctedCurvature3_nonneg_of_amplitude
       (q := 1 + ω ^ 2) hF
     have hq : 1 + ω ^ 2 ≠ 0 := one_add_sq_ne_zero ω
-    convert hscale using 1 <;>
-      simp [firstF, firstF1, firstF2, hq] <;> field_simp [hq]
+    convert hscale using 1;
+      simp [firstF, firstF1, firstF2]; field_simp [hq]
   · exact firstH_correctedCurvature3_nonneg_tail hdom (by linarith) hω
 
 end SSP.K3CyclicComplex

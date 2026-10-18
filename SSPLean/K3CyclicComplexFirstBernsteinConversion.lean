@@ -44,7 +44,7 @@ theorem triangle_swap {M : Type*} [AddCommMonoid M]
     constructor <;> omega
   · intro x hx
     simp only [Finset.mem_sigma, Finset.mem_range] at hx
-    simpa
+    simp
   · intro x hx
     simp only [Finset.mem_sigma, Finset.mem_range] at hx
     have ha : x.2 ≤ x.1 := by omega
@@ -81,7 +81,6 @@ theorem monomial_bern (n k : ℕ) (hk : k ≤ n) :
       unfold bernsteinPolynomial
       rw [show n - (k + j) = n - k - j by omega,
         show X ^ (k + j) = X ^ k * X ^ j by rw [pow_add]]
-      push_cast
       have hcP :
           C ((Nat.choose (k + j) k : ℚ) / Nat.choose n k) *
               (Nat.choose n (k + j) : ℚ[X]) =

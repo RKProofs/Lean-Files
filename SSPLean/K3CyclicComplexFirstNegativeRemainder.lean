@@ -132,7 +132,7 @@ theorem remainderMajorant_shift_le_geometric (k : ℕ) :
   | succ k ih =>
       calc
         remainderMajorant (71 + (k + 1)) =
-            remainderMajorant ((71 + k) + 1) := by congr 1 <;> omega
+            remainderMajorant ((71 + k) + 1) := by congr 1
         _ ≤ (1 / 2 : ℝ) * remainderMajorant (71 + k) :=
           remainderMajorant_ratio (by omega)
         _ ≤ (1 / 2 : ℝ) *

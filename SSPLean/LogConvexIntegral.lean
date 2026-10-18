@@ -1,4 +1,7 @@
-import Mathlib
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic
 
 /-! # Positive integrals preserve log-convexity
 

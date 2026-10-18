@@ -15,7 +15,7 @@ theorem uniformFaceANonposMiddleHighB3_bernstein_v (m s v : ℝ) :
     funext u
     unfold uniformFaceANonposMiddleHighB3 uniformFaceANonposMiddleHigh
     simp only [uniformCubicSampleB3]
-    congr 2 <;> ring
+    congr 2; ring
   change (fun u => uniformFaceANonposMiddleHighB3 m s u) v =
     cornerBern3
       (uniformCubicSampleB0 (fun u => uniformFaceANonposMiddleHighB3 m s u))
@@ -40,10 +40,8 @@ theorem uniformFaceANonposMiddleHighB3_nonneg
     | simp only [uniformCubicSampleB3]
     unfold uniformFaceANonposMiddleHighB3 uniformFaceANonposMiddleHigh
     simp only [uniformCubicSampleB3]
-    unfold uniformFaceANonposScaled uniformFaceANonposScale
-    unfold uniformFaceANonposQ uniformFaceANonposT
-    unfold uniformFaceANonposZ uniformFaceANonposP
-    unfold uniformFaceACore
+    simp only [NonposCompactPolynomial_eq m s _ _ hm hs]
+    unfold NonposCompactPolynomial uniformFaceANonposP
     field_simp
     ring_nf
     positivity

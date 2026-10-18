@@ -41,7 +41,7 @@ theorem twoRootF_hasDerivAt (u v t : ℝ) :
     convert SSP.Semigroup.hasDerivAt_mulVec_exp (twoRootB u v) ![1,0] 1 t using 1 <;> rfl
   have h : HasDerivAt (twoRootF u v)
       (((NormedSpace.exp (t • twoRootB u v)*twoRootB u v).mulVec ![1,0]) 1) t := by
-    convert hd using 1 <;> rfl
+    convert hd using 1; rfl
   simpa only [twoRootF1, Matrix.mulVec_mulVec] using h
 
 theorem twoRootF1_hasDerivAt (u v t : ℝ) :
@@ -56,7 +56,7 @@ theorem twoRootF1_hasDerivAt (u v t : ℝ) :
   have h : HasDerivAt (twoRootF1 u v)
       (((NormedSpace.exp (t • twoRootB u v)*twoRootB u v).mulVec
         ((twoRootB u v).mulVec ![1,0])) 1) t := by
-    convert hd using 1 <;> rfl
+    convert hd using 1; rfl
   simpa only [twoRootF2, Matrix.mulVec_mulVec, mul_assoc] using h
 
 theorem twoRootB_quadratic (u v : ℝ) :
@@ -82,7 +82,7 @@ theorem twoRootF2_hasDerivAt_cubic (u v w t : ℝ) :
         ((twoRootB u v).mulVec ((twoRootB u v).mulVec ![1,0]))) 1) t := by
     convert SSP.Semigroup.hasDerivAt_mulVec_exp (twoRootB u v)
       ((twoRootB u v).mulVec ((twoRootB u v).mulVec ![1,0])) 1 t using 1 <;> rfl
-  convert hd using 1 <;> try rfl
+  convert hd using 1; try rfl
   simp only [twoRootF, twoRootF1, twoRootF2, Matrix.mulVec_mulVec]
   rw [show (NormedSpace.exp (t • twoRootB u v)*twoRootB u v)*
       (twoRootB u v*twoRootB u v) = NormedSpace.exp (t • twoRootB u v)*(twoRootB u v)^3 by
@@ -113,7 +113,8 @@ theorem twoRootF_pos {u v : ℝ} (hu : 0 ≤ u) (hv : 0 ≤ v)
   rw [← heq]
   apply SSP.MatrixTwo.scalar_pos (twoRootB u v) ![0,1] ![1,0] _ _ _ _ t ht
   · intro i j
-    fin_cases i <;> fin_cases j <;> simp [twoRootB] <;> assumption
+    fin_cases i <;> fin_cases j <;> dsimp [twoRootB]
+    all_goals positivity
   · intro i; fin_cases i <;> norm_num
   · intro i; fin_cases i <;> norm_num
   · rwa [heq]
@@ -128,7 +129,10 @@ theorem twoRootF_log_quotient_convex {u v : ℝ} (hu : 0 ≤ u) (hv : 0 ≤ v) :
     rw [h] at he
     simp [← he] at hp
   have hc := SSP.MatrixTwo.conjecture_two_two_by_two (twoRootB u v) ![0,1] ![1,0]
-    (by intro i j; fin_cases i <;> fin_cases j <;> simp [twoRootB] <;> assumption)
+    (by
+      intro i j
+      fin_cases i <;> fin_cases j <;> dsimp [twoRootB]
+      all_goals positivity)
     (by intro i; fin_cases i <;> norm_num) (by intro i; fin_cases i <;> norm_num) hne
   simpa only [SSP.MatrixTwo.scalar, dotProduct, Fin.sum_univ_two,
     Matrix.cons_val_zero, Matrix.cons_val_one, zero_mul, one_mul, zero_add, twoRootF] using hc
@@ -151,7 +155,7 @@ theorem canonicalMiddle_eq_twoRoot_combination
   · exact canonicalMiddle_hasDerivAt a b c x2 x3
   · exact canonicalMiddleDeriv_hasDerivAt a b c x2 x3
   · intro t
-    convert canonicalMiddleDeriv2_hasDerivAt a b c x2 x3 t using 1 <;> try rfl
+    convert canonicalMiddleDeriv2_hasDerivAt a b c x2 x3 t using 1; try rfl
     ring
   · intro t
     exact (((twoRootF_hasDerivAt u v t).const_mul theta).add
@@ -240,7 +244,7 @@ theorem canonicalMiddle_orderedRealRoots_log_quotient_convex
   have htheta : b = theta*w+(1-theta)*u := by
     dsimp [theta]
     field_simp [ne_of_gt (sub_pos.mpr huw)]
-    <;> ring
+    ring
   exact canonicalMiddle_log_quotient_convex_of_twoRoot_combination hu hv hw.le
     h2 htheta0 htheta1 hsum hpair hprod htheta
 

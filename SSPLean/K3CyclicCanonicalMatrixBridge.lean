@@ -114,7 +114,7 @@ theorem canonicalFirstDeriv2_hasDerivAt (a b c x2 x3 t : ℝ) :
 @[simp] theorem canonicalFirstDeriv2_zero (a b c x2 x3 : ℝ) :
     canonicalFirstDeriv2 a b c x2 x3 0 = 0 := by
   norm_num [canonicalFirstDeriv2, canonicalB, firstBasis,
-    NormedSpace.exp_zero, Matrix.mul_apply, Fin.sum_univ_three] <;>
+    NormedSpace.exp_zero, Matrix.mul_apply, Fin.sum_univ_three];
     simp [Matrix.vecHead, Matrix.vecTail]
 
 /-- For an ordered nonnegative real spectrum, the actual first coordinate

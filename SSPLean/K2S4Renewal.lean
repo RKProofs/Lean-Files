@@ -1,4 +1,9 @@
-import Mathlib
+import Mathlib.Data.Real.Basic
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
 
 /-!
 # Algebraic certificates for the `k = 2`, `s = 4` renewal proof

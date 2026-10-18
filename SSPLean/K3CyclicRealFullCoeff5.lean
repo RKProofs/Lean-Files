@@ -4,10 +4,10 @@ import SSPLean.K3CyclicRealFullCoefficient
 
 set_option autoImplicit false
 set_option maxRecDepth 10000
-set_option maxHeartbeats 0
 
 namespace SSP.K3CyclicRealTail
 
+set_option maxHeartbeats 0 in
 noncomputable def fullCoeff5Q : ℕ → ℕ → ℚ
   | 0, 0 => 0
   | 0, 1 => 0
@@ -132,6 +132,7 @@ noncomputable def fullCoeff5Q : ℕ → ℕ → ℚ
   | 10, 10 => 0
   | _, _ => 0
 
+set_option maxHeartbeats 0 in
 noncomputable def fullCoeff5 (i j : ℕ) : ℝ := fullCoeff5Q i j
 
 set_option maxHeartbeats 0 in
@@ -152,6 +153,7 @@ theorem fullCurvatureCoefficient_chart_5_certificate (s d : ℝ) :
       bernsteinBasis, Finset.sum_range_succ, Nat.choose]
   ring
 
+set_option maxHeartbeats 0 in
 theorem fullCurvatureCoefficient_chart_5_nonneg
     {s d : ℝ} (hs0 : 0 ≤ s) (hs1 : s ≤ 1)
     (hd0 : 0 ≤ d) (hd1 : d ≤ 1) :

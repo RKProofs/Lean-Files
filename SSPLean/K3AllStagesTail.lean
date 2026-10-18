@@ -1,4 +1,4 @@
-import SSPLean.K3AllStages
+import SSPLean.K3AllStagesTailCertificate
 
 /-!
 # The far-tail certificate for the uniform `k = 3` return face
@@ -43,7 +43,8 @@ theorem uniformFaceANonposTailSlope_bernstein_v (m s v : ℝ) :
   unfold uniformFaceANonposTailSlope
   unfold uniformFaceANonposXC1 uniformFaceANonposXC2
   unfold uniformFaceACoreXC1 uniformFaceACoreXC2
-  unfold uniformFaceANonposQ uniformFaceACore cornerBern3
+  simp_rw [uniformFaceACore_bernstein_q]
+  unfold uniformFaceANonposQ cornerBern3
   ring
 
 set_option maxRecDepth 100000 in
@@ -51,64 +52,56 @@ set_option maxHeartbeats 6000000 in
 theorem uniformFaceANonposTailSlopeB0_nonneg
     (m s : ℝ) (hm : 0 ≤ m) (hs : 0 ≤ s) :
     0 ≤ uniformFaceANonposTailSlopeB0 m s := by
-  unfold uniformFaceANonposTailSlopeB0 uniformCubicSampleB0
-  unfold uniformFaceANonposTailSlope
-  unfold uniformFaceANonposXC1 uniformFaceANonposXC2
-  unfold uniformFaceACoreXC1 uniformFaceACoreXC2
-  unfold uniformFaceANonposScale uniformFaceANonposQ
-  unfold uniformFaceANonposT uniformFaceANonposZ uniformFaceANonposP
-  unfold uniformFaceACore
-  field_simp
-  ring_nf
-  positivity
+  have heq : uniformFaceANonposTailSlopeB0 m s = TailCompactB0 m s := by
+    unfold uniformFaceANonposTailSlopeB0 uniformCubicSampleB0
+    unfold uniformFaceANonposTailSlope
+    simp only [TailCompact_identity m s _ hm hs]
+    unfold cornerBern3
+    ring
+  rw [heq]
+  exact TailCompactB0_nonneg m s hm hs
 
 set_option maxRecDepth 100000 in
 set_option maxHeartbeats 6000000 in
 theorem uniformFaceANonposTailSlopeB1_nonneg
     (m s : ℝ) (hm : 0 ≤ m) (hs : 0 ≤ s) :
     0 ≤ uniformFaceANonposTailSlopeB1 m s := by
-  unfold uniformFaceANonposTailSlopeB1 uniformCubicSampleB1
-  unfold uniformFaceANonposTailSlope
-  unfold uniformFaceANonposXC1 uniformFaceANonposXC2
-  unfold uniformFaceACoreXC1 uniformFaceACoreXC2
-  unfold uniformFaceANonposScale uniformFaceANonposQ
-  unfold uniformFaceANonposT uniformFaceANonposZ uniformFaceANonposP
-  unfold uniformFaceACore
-  field_simp
-  ring_nf
-  positivity
+  have heq : uniformFaceANonposTailSlopeB1 m s = TailCompactB1 m s := by
+    unfold uniformFaceANonposTailSlopeB1 uniformCubicSampleB1
+    unfold uniformFaceANonposTailSlope
+    simp only [TailCompact_identity m s _ hm hs]
+    unfold cornerBern3
+    ring
+  rw [heq]
+  exact TailCompactB1_nonneg m s hm hs
 
 set_option maxRecDepth 100000 in
 set_option maxHeartbeats 6000000 in
 theorem uniformFaceANonposTailSlopeB2_nonneg
     (m s : ℝ) (hm : 0 ≤ m) (hs : 0 ≤ s) :
     0 ≤ uniformFaceANonposTailSlopeB2 m s := by
-  unfold uniformFaceANonposTailSlopeB2 uniformCubicSampleB2
-  unfold uniformFaceANonposTailSlope
-  unfold uniformFaceANonposXC1 uniformFaceANonposXC2
-  unfold uniformFaceACoreXC1 uniformFaceACoreXC2
-  unfold uniformFaceANonposScale uniformFaceANonposQ
-  unfold uniformFaceANonposT uniformFaceANonposZ uniformFaceANonposP
-  unfold uniformFaceACore
-  field_simp
-  ring_nf
-  positivity
+  have heq : uniformFaceANonposTailSlopeB2 m s = TailCompactB2 m s := by
+    unfold uniformFaceANonposTailSlopeB2 uniformCubicSampleB2
+    unfold uniformFaceANonposTailSlope
+    simp only [TailCompact_identity m s _ hm hs]
+    unfold cornerBern3
+    ring
+  rw [heq]
+  exact TailCompactB2_nonneg m s hm hs
 
 set_option maxRecDepth 100000 in
 set_option maxHeartbeats 6000000 in
 theorem uniformFaceANonposTailSlopeB3_nonneg
     (m s : ℝ) (hm : 0 ≤ m) (hs : 0 ≤ s) :
     0 ≤ uniformFaceANonposTailSlopeB3 m s := by
-  unfold uniformFaceANonposTailSlopeB3 uniformCubicSampleB3
-  unfold uniformFaceANonposTailSlope
-  unfold uniformFaceANonposXC1 uniformFaceANonposXC2
-  unfold uniformFaceACoreXC1 uniformFaceACoreXC2
-  unfold uniformFaceANonposScale uniformFaceANonposQ
-  unfold uniformFaceANonposT uniformFaceANonposZ uniformFaceANonposP
-  unfold uniformFaceACore
-  field_simp
-  ring_nf
-  positivity
+  have heq : uniformFaceANonposTailSlopeB3 m s = TailCompactB3 m s := by
+    unfold uniformFaceANonposTailSlopeB3 uniformCubicSampleB3
+    unfold uniformFaceANonposTailSlope
+    simp only [TailCompact_identity m s _ hm hs]
+    unfold cornerBern3
+    ring
+  rw [heq]
+  exact TailCompactB3_nonneg m s hm hs
 
 /-- The far-tail slope condition follows from a cubic Bernstein certificate in
 the normalized terminal weight. -/

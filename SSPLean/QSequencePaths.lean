@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import SSPLean.SSPBound
 import SSPLean.PathEnergy
 
@@ -343,7 +343,7 @@ lemma vVec_eq (s : ℕ) (Q : ℕ → ℕ → ℝ) (θ : ℝ) (C : ℝ)
     (hdecay : ∀ k, ∀ i < s, matVec s (matPow s Q k) eVec i ≤ C * θ ^ k)
     (hsub : ∀ i < s, ∑ j ∈ range s, Q i j ≤ 1) (i : ℕ) (hi : i < s) :
     vVec s Q i = 2 * yVec s Q i - (xVec s Q i) ^ 2 := by
-  -- w := 2y − x² ; show d := v − w is a bounded Q-fixed point, hence 0
+  -- w := 2y − x²; show d := v − w is a bounded Q-fixed point, hence 0
   set w : ℕ → ℝ := fun l => 2 * yVec s Q l - (xVec s Q l) ^ 2 with hw
   set d : ℕ → ℝ := fun l => vVec s Q l - w l with hd
   suffices hzero : ∀ i < s, d i = 0 by

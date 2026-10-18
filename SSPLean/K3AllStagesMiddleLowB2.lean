@@ -1,4 +1,7 @@
-import SSPLean.K3AllStagesMiddleLowBase
+import SSPLean.K3AllStagesMiddleLowB2C0
+import SSPLean.K3AllStagesMiddleLowB2C1
+import SSPLean.K3AllStagesMiddleLowB2C2
+import SSPLean.K3AllStagesMiddleLowB2C3
 
 set_option autoImplicit false
 namespace SSP.K3AllStages
@@ -40,20 +43,13 @@ theorem uniformFaceANonposMiddleLowB2_nonneg
     0 ≤ uniformFaceANonposMiddleLowB2 m s v := by
   rw [uniformFaceANonposMiddleLowB2_bernstein_v]
   apply cornerBern3_nonneg <;> try assumption
-  all_goals
-    first
-    | simp only [uniformCubicSampleB0]
-    | simp only [uniformCubicSampleB1]
-    | simp only [uniformCubicSampleB2]
-    | simp only [uniformCubicSampleB3]
-    unfold uniformFaceANonposMiddleLowB2 uniformFaceANonposMiddleLow
-    simp only [uniformCubicSampleB2]
-    unfold uniformFaceANonposScaled uniformFaceANonposScale
-    unfold uniformFaceANonposQ uniformFaceANonposT
-    unfold uniformFaceANonposZ uniformFaceANonposP
-    unfold uniformFaceACore
-    field_simp
-    ring_nf
-    positivity
+  · rw [MiddleLowB2Positive0_eq m s hm hs]
+    exact MiddleLowB2Positive0_nonneg m s hm hs
+  · rw [MiddleLowB2Positive1_eq m s hm hs]
+    exact MiddleLowB2Positive1_nonneg m s hm hs
+  · rw [MiddleLowB2Positive2_eq m s hm hs]
+    exact MiddleLowB2Positive2_nonneg m s hm hs
+  · rw [MiddleLowB2Positive3_eq m s hm hs]
+    exact MiddleLowB2Positive3_nonneg m s hm hs
 
 end SSP.K3AllStages

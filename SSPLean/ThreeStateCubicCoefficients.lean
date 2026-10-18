@@ -1,7 +1,6 @@
 import SSPLean.ThreeStateCanonicalAssembly
 
 set_option autoImplicit false
-set_option maxHeartbeats 1500000
 open Matrix
 
 namespace SSP.ThreeState
@@ -14,12 +13,14 @@ def detCoeff (N : Mat) : ℝ :=
   N 0 0*N 1 1*N 2 2+N 0 1*N 1 2*N 2 0+N 0 2*N 1 0*N 2 1-
     N 0 2*N 1 1*N 2 0-N 0 1*N 1 0*N 2 2-N 0 0*N 1 2*N 2 1
 
+set_option maxHeartbeats 1500000 in
 theorem matrix_cubic (N : Mat) :
     N^3 = traceCoeff N • N^2-pairCoeff N • N+detCoeff N • (1 : Mat) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [traceCoeff,pairCoeff,detCoeff,pow_succ,Matrix.mul_apply,Fin.sum_univ_three] <;> ring
 
+set_option maxHeartbeats 1500000 in
 theorem shifted_matrix_cubic (N : Mat) (t : ℝ) :
     (N+t • (1 : Mat))^3 =
       (traceCoeff N+3*t) • (N+t • (1 : Mat))^2-
@@ -30,12 +31,14 @@ theorem shifted_matrix_cubic (N : Mat) (t : ℝ) :
     simp [traceCoeff,pairCoeff,detCoeff,pow_succ,Matrix.mul_apply,Fin.sum_univ_three,
       Matrix.add_apply,Matrix.smul_apply,smul_eq_mul] <;> ring
 
+set_option maxHeartbeats 1500000 in
 theorem pairCoeff_le_diagonal_products (N : Mat) (hN : ∀ i j, 0 ≤ N i j) :
     pairCoeff N ≤ N 0 0*N 1 1+N 0 0*N 2 2+N 1 1*N 2 2 := by
   dsimp [pairCoeff]
   nlinarith [mul_nonneg (hN 0 1) (hN 1 0),mul_nonneg (hN 0 2) (hN 2 0),
     mul_nonneg (hN 1 2) (hN 2 1)]
 
+set_option maxHeartbeats 1500000 in
 theorem zeroDiagonal_discriminant_nonneg (N : Mat) (hN : ∀ i j, 0 ≤ N i j)
     (hz : N 0 0 = 0 ∨ N 1 1 = 0 ∨ N 2 2 = 0) :
     0 ≤ (traceCoeff N)^2-4*pairCoeff N := by
@@ -49,6 +52,7 @@ theorem zeroDiagonal_discriminant_nonneg (N : Mat) (hN : ∀ i j, 0 ≤ N i j)
   · rw [h] at hp ⊢
     nlinarith [sq_nonneg (N 0 0-N 1 1)]
 
+set_option maxHeartbeats 1500000 in
 /-- Every diagonal is above the smaller nonnegative quadratic root when
 there is a zero diagonal and the pair coefficient is nonnegative. -/
 theorem zeroDiagonal_projection_nonneg (N : Mat) {a b : ℝ}

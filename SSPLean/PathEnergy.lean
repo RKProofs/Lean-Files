@@ -1,4 +1,9 @@
-import Mathlib
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.AlgebraicTopology.SimplexCategory.Basic
+import Mathlib.Algebra.Order.Chebyshev
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Ring.Basic
+import Mathlib.Tactic
 
 /-!
 # The per-path level-crossing energy bound

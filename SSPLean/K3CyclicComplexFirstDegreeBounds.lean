@@ -41,7 +41,7 @@ theorem umul_length_le (p q : Uni) :
           · cases p with
             | nil =>
                 have hq : 1 ≤ (b :: q).length := by simp
-                simp only [umul, List.length_nil, List.length_cons]
+                simp only [umul, List.length_nil]
                 omega
             | cons c p =>
                 have h := ih (b :: q)
@@ -75,7 +75,7 @@ theorem bmul_length_le (p q : Bi) :
           · cases p with
             | nil =>
                 have hq : 1 ≤ (b :: q).length := by simp
-                simp only [bmul, List.length_nil, List.length_cons]
+                simp only [bmul, List.length_nil]
                 omega
             | cons c p =>
                 have h := ih (b :: q)

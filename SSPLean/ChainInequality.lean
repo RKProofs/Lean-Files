@@ -1,4 +1,8 @@
-import Mathlib
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.AlgebraicTopology.SimplexCategory.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Ring.Basic
+import Mathlib.Tactic
 
 /-!
 # The chain inequality `3(n+1) h₁h₃ ≥ 2(n+2) h₂²`

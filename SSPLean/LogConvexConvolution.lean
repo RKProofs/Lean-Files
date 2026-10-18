@@ -1,4 +1,5 @@
 import SSPLean.LogConvexIntegral
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 
 /-! # Dimension-additive convolution of positive log-convex density quotients -/
 

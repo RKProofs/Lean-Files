@@ -94,7 +94,7 @@ theorem canonicalMiddleDeriv2_hasDerivAt (a b c x2 x3 t : ℝ) :
 @[simp] theorem canonicalMiddleDeriv2_zero (a b c x2 x3 : ℝ) :
     canonicalMiddleDeriv2 a b c x2 x3 0 = a * x2 := by
   norm_num [canonicalMiddleDeriv2, canonicalB, firstBasis,
-    NormedSpace.exp_zero, Matrix.mul_apply, Fin.sum_univ_three] <;>
-    simp [Matrix.vecHead, Matrix.vecTail] <;> ring
+    NormedSpace.exp_zero, Matrix.mul_apply, Fin.sum_univ_three];
+    simp [Matrix.vecHead, Matrix.vecTail]
 
 end SSP.K3Cyclic

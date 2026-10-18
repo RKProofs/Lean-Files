@@ -132,7 +132,7 @@ theorem remainderMajorant_shift_le_geometric (k : ℕ) :
   | succ k ih =>
       calc
         remainderMajorant (71 + (k + 1)) =
-            remainderMajorant ((71 + k) + 1) := by congr 1 <;> omega
+            remainderMajorant ((71 + k) + 1) := by congr 1
         _ ≤ (1 / 2 : ℝ) * remainderMajorant (71 + k) :=
           remainderMajorant_ratio (by omega)
         _ ≤ (1 / 2 : ℝ) *
@@ -188,7 +188,7 @@ theorem compactTaylorFrom_eq_curvatureSeries_prefix
     compactTaylorFrom (powerTableUpTo (order + 1)) r τ u =
       ∑ N ∈ Finset.range 71, curvatureSeriesTerm r τ (10 * u) N := by
   unfold compactTaylorFrom
-  rw [show order + 1 = 71 by native_decide]
+  rw [show order + 1 = 71 by rfl]
   apply Finset.sum_congr rfl
   intro N hN
   rw [powerTableUpTo_eval (Finset.mem_range.mp hN)]

@@ -2,6 +2,8 @@ import SSPLean.K3CyclicComplexFirstBernsteinConversion
 
 /-! # Exact compact-chart coefficients for the complex middle start -/
 
+-- These finite certificates deliberately use native_decide; the native trust
+-- dependency is documented in README.md. Keep the exception local to the certificates.
 set_option autoImplicit false
 
 namespace SSP.K3CyclicComplex.MiddleCoeff
@@ -65,18 +67,22 @@ def degreeOK (N : ℕ) : Bool :=
     ∀ row ∈ source, row.length ≤ degree + 1)
 
 set_option maxRecDepth 100000 in
+set_option linter.style.nativeDecide false in
 theorem certificate_four_through_twelve :
     ((List.range 9).map (· + 4)).all certificateOK = true := by native_decide
 
 set_option maxRecDepth 100000 in
+set_option linter.style.nativeDecide false in
 theorem certificate_thirteen_through_eighteen :
     ((List.range 6).map (· + 13)).all certificateOK = true := by native_decide
 
 set_option maxRecDepth 100000 in
+set_option linter.style.nativeDecide false in
 theorem certificate_nineteen_through_twenty_four :
     ((List.range 6).map (· + 19)).all certificateOK = true := by native_decide
 
 set_option maxRecDepth 100000 in
+set_option linter.style.nativeDecide false in
 theorem degree_four_through_twenty_four :
     ((List.range 21).map (· + 4)).all degreeOK = true := by native_decide
 

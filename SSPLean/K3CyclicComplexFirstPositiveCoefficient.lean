@@ -9,6 +9,8 @@ convert the complete degree-70 Taylor polynomial at `x = 10u` to a
 three-variable tensor Bernstein basis.
 -/
 
+-- These finite certificates deliberately use native_decide; the native trust
+-- dependency is documented in README.md. Keep the exception local to the certificates.
 set_option autoImplicit false
 
 namespace SSP.K3CyclicComplex
@@ -84,6 +86,7 @@ def certificateBlock (start count : ℕ) : Bool :=
   ((List.range count).map (· + start)).all (certificateAtFrom powers)
 
 set_option maxRecDepth 100000 in
+set_option linter.style.nativeDecide false in
 theorem certificate_at_zero : certificateAt 0 = true := by
   native_decide
 

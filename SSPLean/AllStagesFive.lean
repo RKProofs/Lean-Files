@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import SSPLean.FiveStageWitness
 import SSPLean.SixStageWitness
 

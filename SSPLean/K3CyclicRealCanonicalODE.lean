@@ -302,8 +302,8 @@ theorem canonicalOrderedRealRoots_series_eq_of_solution
     nlinarith [hode]
   apply SSP.CubicODE.eq_of_cubic_ode
     (c0 := Q) (c1 := -(a * b)) (c2 := a + b) (t0 := 0)
-    hh0 hh1 (fun t => by convert hh2 t using 1 <;> ring)
-    hF0 hF1 (fun t => by convert hF2 t using 1 <;> ring)
+    hh0 hh1 (fun t => by convert hh2 t using 1; ring)
+    hF0 hF1 (fun t => by convert hF2 t using 1; ring)
   · simpa [F] using hinit0
   · simpa [F1] using hinit1
   · simpa [F2] using hinit2

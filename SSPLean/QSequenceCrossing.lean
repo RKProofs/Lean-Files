@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import SSPLean.QSequencePaths
 import SSPLean.PathEnergy
 import SSPLean.SpectralDecay

@@ -1,4 +1,10 @@
-import Mathlib
+import Mathlib.Analysis.Normed.Field.Basic
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.LinearCombination.Lemmas
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Tactic
 
 /-!
 # Towards Theorem 1 of `s3_general_claim_proof.tex`

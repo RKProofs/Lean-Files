@@ -86,7 +86,8 @@ lemma complexOscillation_zero (A B omega : ℝ) :
     complexOscillation A B omega 0 = ((-A : ℝ) : ℂ) := by
   have htwo : (starRingEnd ℂ) (2 : ℂ) = 2 :=
     map_ofNat (starRingEnd ℂ) 2
-  simp [complexOscillation, middleAmplitude]
+  simp only [complexOscillation, pow_zero, mul_one, middleAmplitude, map_div₀,
+    map_sub, Complex.conj_ofReal, map_mul, map_neg, Complex.conj_I, Complex.ofReal_neg]
   rw [htwo]
   ring
 
@@ -95,7 +96,8 @@ lemma complexOscillation_one
     complexOscillation A B omega 1 = (B : ℂ) := by
   have htwo : (starRingEnd ℂ) (2 : ℂ) = 2 :=
     map_ofNat (starRingEnd ℂ) 2
-  simp [complexOscillation, middleAmplitude, middleFrequency]
+  simp only [complexOscillation, pow_one, middleAmplitude, middleFrequency, map_div₀,
+    map_sub, Complex.conj_ofReal, map_mul, Complex.conj_I, Complex.ofReal_div]
   rw [htwo]
   field_simp [homega]
   ring_nf

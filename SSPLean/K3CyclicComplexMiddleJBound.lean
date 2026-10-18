@@ -16,7 +16,7 @@ lemma taylorWithinEval_two_eq
       rw [min_eq_left homega.le, max_eq_right homega.le]
       exact homega)
   have hmem : (0 : ℝ) ∈ Set.uIcc 0 omega := by
-    simp [Set.uIcc_of_le homega.le, homega.le]
+    simp [homega.le]
   have h02 : (↑(0 : ℕ) : WithTop ℕ∞) ≤ 2 := by norm_num
   have h12 : (↑(1 : ℕ) : WithTop ℕ∞) ≤ 2 := by norm_num
   have hd0 : iteratedDerivWithin 0 f (Set.uIcc 0 omega) 0 =
@@ -32,7 +32,7 @@ lemma taylorWithinEval_two_eq
     iteratedDerivWithin_eq_iteratedDeriv hu hf.contDiffAt hmem
   rw [taylor_within_apply]
   norm_num [Finset.sum_range_succ, hd0, hd1, hd2]
-  ring <;> simp
+  ring; simp
 
 lemma contDiff_affinePower_im_two (K : ℕ) :
     ContDiff ℝ 2 (fun t => (affinePower Complex.I K t).im) := by

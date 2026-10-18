@@ -210,8 +210,19 @@ theorem uniformFaceANum_nonneg_of_q_bernstein
 
 /-! The middle nontrivial `q`-coefficient is a degree-six polynomial in `T`.
 On `0 ≤ T ≤ n-1`, rescale `T = (n-1)t` and use its degree-six Bernstein
-coefficients.  Defining the coefficients from seven exact samples keeps the
-certificate auditable while avoiding a second copy of the expanded polynomial. -/
+coefficients.  The coefficients use seven exact samples. Compact polynomial identities
+share their expansion across the interpolation and positivity proofs. -/
+
+
+noncomputable def FaceB2CompactPolynomial (m X t : ℝ) : ℝ :=
+  -2*m*t^5*(m + 3)^6*(m + 4)*(m + 5)*(m + 6)/3 + t^6*(m + 3)^6*(m + 4)^2*(m + 5)*(m + 6)/3 + t^4*(m + 3)^4*(m + 4)*(4*X*m^5 + 84*X*m^4 + 684*X*m^3 + 2700*X*m^2 + 5180*X*m + 3888*X + 3*m^5 + 57*m^4 + 459*m^3 + 2043*m^2 + 5022*m + 5184)/3 + 2*t^3*(m + 3)^4*(m + 4)*(3*X*m^4 + 36*X*m^3 + 65*X*m^2 - 504*X*m - 1520*X + 2*m^4 - 2*m^3 - 270*m^2 - 1494*m - 2268)/3 + t^2*(m + 3)^3*(11*X^2*m^5 + 260*X^2*m^4 + 2443*X^2*m^3 + 11422*X^2*m^2 + 26592*X^2*m + 24672*X^2 + 36*X*m^5 + 796*X*m^4 + 6900*X*m^3 + 29420*X*m^2 + 61824*X*m + 51264*X + 36*m^5 + 672*m^4 + 4896*m^3 + 17496*m^2 + 30780*m + 21384)/3 + 8*t*(m + 3)^3*(2*X^2*m^4 + 35*X^2*m^3 + 220*X^2*m^2 + 592*X^2*m + 576*X^2 + 5*X*m^4 + 84*X*m^3 + 505*X*m^2 + 1302*X*m + 1224*X + 6*m^4 + 90*m^3 + 486*m^2 + 1134*m + 972)/3 + 2*(m + 3)*(3*X^3*m^3 + 36*X^3*m^2 + 144*X^3*m + 192*X^3 + 4*X^2*m^5 + 82*X^2*m^4 + 656*X^2*m^3 + 2570*X^2*m^2 + 4944*X^2*m + 3744*X^2 + 8*X*m^5 + 156*X*m^4 + 1180*X*m^3 + 4356*X*m^2 + 7884*X*m + 5616*X + 6*m^5 + 108*m^4 + 756*m^3 + 2592*m^2 + 4374*m + 2916)
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 3000000 in
+theorem FaceB2CompactPolynomial_eq (m X t : ℝ) :
+    uniformFaceAQB2 (m+4) X ((m+3)*t) = FaceB2CompactPolynomial m X t := by
+  unfold uniformFaceAQB2 uniformFaceACore FaceB2CompactPolynomial
+  ring
 
 noncomputable def uniformFaceAQB2CompactSample (m X t : ℝ) : ℝ :=
   uniformFaceAQB2 (m+4) X ((m+3)*t)
@@ -278,14 +289,16 @@ theorem uniformFaceAQB2_compact_bernstein (m X t : ℝ) :
   unfold uniformFaceAQB2C0 uniformFaceAQB2C1 uniformFaceAQB2C2
   unfold uniformFaceAQB2C3 uniformFaceAQB2C4 uniformFaceAQB2C5
   unfold uniformFaceAQB2C6 uniformFaceAQB2CompactSample
-  unfold uniformFaceAQB2 uniformFaceACore cornerBern6
+  simp only [FaceB2CompactPolynomial_eq]
+  unfold FaceB2CompactPolynomial cornerBern6
   ring
 
 private theorem uniformFaceAQB2C0_nonneg
     (m X : ℝ) (hm : 0 ≤ m) (hX : 0 ≤ X) :
     0 ≤ uniformFaceAQB2C0 m X := by
   unfold uniformFaceAQB2C0 uniformFaceAQB2CompactSample
-  unfold uniformFaceAQB2 uniformFaceACore
+  simp only [FaceB2CompactPolynomial_eq]
+  unfold FaceB2CompactPolynomial
   ring_nf
   positivity
 
@@ -293,7 +306,8 @@ private theorem uniformFaceAQB2C1_nonneg
     (m X : ℝ) (hm : 0 ≤ m) (hX : 0 ≤ X) :
     0 ≤ uniformFaceAQB2C1 m X := by
   unfold uniformFaceAQB2C1 uniformFaceAQB2CompactSample
-  unfold uniformFaceAQB2 uniformFaceACore
+  simp only [FaceB2CompactPolynomial_eq]
+  unfold FaceB2CompactPolynomial
   ring_nf
   positivity
 
@@ -301,7 +315,8 @@ private theorem uniformFaceAQB2C2_nonneg
     (m X : ℝ) (hm : 0 ≤ m) (hX : 0 ≤ X) :
     0 ≤ uniformFaceAQB2C2 m X := by
   unfold uniformFaceAQB2C2 uniformFaceAQB2CompactSample
-  unfold uniformFaceAQB2 uniformFaceACore
+  simp only [FaceB2CompactPolynomial_eq]
+  unfold FaceB2CompactPolynomial
   ring_nf
   positivity
 
@@ -309,7 +324,8 @@ private theorem uniformFaceAQB2C3_nonneg
     (m X : ℝ) (hm : 0 ≤ m) (hX : 0 ≤ X) :
     0 ≤ uniformFaceAQB2C3 m X := by
   unfold uniformFaceAQB2C3 uniformFaceAQB2CompactSample
-  unfold uniformFaceAQB2 uniformFaceACore
+  simp only [FaceB2CompactPolynomial_eq]
+  unfold FaceB2CompactPolynomial
   ring_nf
   positivity
 
@@ -317,7 +333,8 @@ private theorem uniformFaceAQB2C4_nonneg
     (m X : ℝ) (hm : 0 ≤ m) (hX : 0 ≤ X) :
     0 ≤ uniformFaceAQB2C4 m X := by
   unfold uniformFaceAQB2C4 uniformFaceAQB2CompactSample
-  unfold uniformFaceAQB2 uniformFaceACore
+  simp only [FaceB2CompactPolynomial_eq]
+  unfold FaceB2CompactPolynomial
   ring_nf
   positivity
 
@@ -325,7 +342,8 @@ private theorem uniformFaceAQB2C5_nonneg
     (m X : ℝ) (hm : 0 ≤ m) (hX : 0 ≤ X) :
     0 ≤ uniformFaceAQB2C5 m X := by
   unfold uniformFaceAQB2C5 uniformFaceAQB2CompactSample
-  unfold uniformFaceAQB2 uniformFaceACore
+  simp only [FaceB2CompactPolynomial_eq]
+  unfold FaceB2CompactPolynomial
   ring_nf
   positivity
 
@@ -333,7 +351,8 @@ private theorem uniformFaceAQB2C6_nonneg
     (m X : ℝ) (hm : 0 ≤ m) (hX : 0 ≤ X) :
     0 ≤ uniformFaceAQB2C6 m X := by
   unfold uniformFaceAQB2C6 uniformFaceAQB2CompactSample
-  unfold uniformFaceAQB2 uniformFaceACore
+  simp only [FaceB2CompactPolynomial_eq]
+  unfold FaceB2CompactPolynomial
   ring_nf
   positivity
 
@@ -445,6 +464,17 @@ theorem uniformFaceAQB2_nonneg
 
 /-! The `q = 1` endpoint is likewise positive on the compact half. -/
 
+
+noncomputable def FaceB3CompactPolynomial (m X t : ℝ) : ℝ :=
+  -2*m*t^5*(m + 3)^6*(m + 4)*(m + 5)*(m + 6) + t^6*(m + 3)^6*(m + 4)^2*(m + 5)*(m + 6) + t^4*(m + 3)^4*(m + 4)*(-9*X*m^3 - 111*X*m^2 - 438*X*m - 552*X + m^5 + 5*m^4 - 75*m^3 - 657*m^2 - 1674*m - 1296) + 2*t^3*(m + 3)^4*(m + 4)*(X*m^4 + 16*X*m^3 + 65*X*m^2 - 30*X*m - 400*X + 4*m^4 + 44*m^3 + 108*m^2 - 180*m - 648) + t^2*(m + 3)^3*(5*X^2*m^5 + 116*X^2*m^4 + 1069*X^2*m^3 + 4918*X^2*m^2 + 11328*X^2*m + 10464*X^2 + 16*X*m^5 + 356*X*m^4 + 3092*X*m^3 + 13192*X*m^2 + 27744*X*m + 23040*X + 24*m^5 + 444*m^4 + 3204*m^3 + 11340*m^2 + 19764*m + 13608) + 4*t*(m + 3)^3*(2*X^2*m^4 + 35*X^2*m^3 + 220*X^2*m^2 + 592*X^2*m + 576*X^2 + 5*X*m^4 + 84*X*m^3 + 505*X*m^2 + 1302*X*m + 1224*X + 6*m^4 + 90*m^3 + 486*m^2 + 1134*m + 972) + 2*(m + 3)*(3*X^3*m^3 + 36*X^3*m^2 + 144*X^3*m + 192*X^3 + 4*X^2*m^5 + 82*X^2*m^4 + 656*X^2*m^3 + 2570*X^2*m^2 + 4944*X^2*m + 3744*X^2 + 8*X*m^5 + 156*X*m^4 + 1180*X*m^3 + 4356*X*m^2 + 7884*X*m + 5616*X + 6*m^5 + 108*m^4 + 756*m^3 + 2592*m^2 + 4374*m + 2916)
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 3000000 in
+theorem FaceB3CompactPolynomial_eq (m X t : ℝ) :
+    uniformFaceAQB3 (m+4) X ((m+3)*t) = FaceB3CompactPolynomial m X t := by
+  unfold uniformFaceAQB3 uniformFaceACore FaceB3CompactPolynomial
+  ring
+
 noncomputable def uniformFaceAQB3CompactSample (m X t : ℝ) : ℝ :=
   uniformFaceAQB3 (m+4) X ((m+3)*t)
 
@@ -510,7 +540,8 @@ theorem uniformFaceAQB3_compact_bernstein (m X t : ℝ) :
   unfold uniformFaceAQB3C0 uniformFaceAQB3C1 uniformFaceAQB3C2
   unfold uniformFaceAQB3C3 uniformFaceAQB3C4 uniformFaceAQB3C5
   unfold uniformFaceAQB3C6 uniformFaceAQB3CompactSample
-  unfold uniformFaceAQB3 uniformFaceACore cornerBern6
+  simp only [FaceB3CompactPolynomial_eq]
+  unfold FaceB3CompactPolynomial cornerBern6
   ring
 
 set_option maxRecDepth 100000 in
@@ -524,7 +555,8 @@ private theorem uniformFaceAQB3_coefficients_nonneg
   unfold uniformFaceAQB3C0 uniformFaceAQB3C1 uniformFaceAQB3C2
   unfold uniformFaceAQB3C3 uniformFaceAQB3C4 uniformFaceAQB3C5
   unfold uniformFaceAQB3C6 uniformFaceAQB3CompactSample
-  unfold uniformFaceAQB3 uniformFaceACore
+  simp only [FaceB3CompactPolynomial_eq]
+  unfold FaceB3CompactPolynomial
   constructor
   · ring_nf
     positivity
