@@ -36,7 +36,7 @@ theorem shiftedFirstF_hasDerivAt {m ω x : ℝ} (hω : ω ≠ 0) :
     HasDerivAt (shiftedFirstF m ω) (shiftedFirstF1 m ω x) x := by
   have h := (exp_mul_hasDerivAt m x).mul
     (firstF_hasDerivAt (m := m) (ω := ω) (x := x) hω)
-  convert! h using 1 <;> simp [shiftedFirstF, shiftedFirstF1] <;> ring
+  convert! h using 1; simp [shiftedFirstF1]; ring
 
 theorem shiftedFirstF1_hasDerivAt {m ω x : ℝ} (hω : ω ≠ 0) :
     HasDerivAt (shiftedFirstF1 m ω) (shiftedFirstF2 m ω x) x := by
@@ -44,8 +44,8 @@ theorem shiftedFirstF1_hasDerivAt {m ω x : ℝ} (hω : ω ≠ 0) :
     ((firstF_hasDerivAt (m := m) (ω := ω) (x := x) hω).const_mul m).add
       (firstF1_hasDerivAt (m := m) (ω := ω) (x := x) hω)
   have h := (exp_mul_hasDerivAt m x).mul hinside
-  convert! h using 1 <;>
-    simp [shiftedFirstF1, shiftedFirstF2, Function.comp_def] <;> ring
+  convert! h using 1;
+    simp [shiftedFirstF2]; ring
 
 theorem shiftedFirstF2_hasDerivAt {m ω x : ℝ} (hω : ω ≠ 0) :
     HasDerivAt (shiftedFirstF2 m ω) (shiftedFirstF3 m ω x) x := by
@@ -56,8 +56,8 @@ theorem shiftedFirstF2_hasDerivAt {m ω x : ℝ} (hω : ω ≠ 0) :
         (2 * m))).add
       (firstF2_hasDerivAt (m := m) (ω := ω) (x := x) hω)
   have h := (exp_mul_hasDerivAt m x).mul hinside
-  convert! h using 1 <;>
-    simp [shiftedFirstF2, shiftedFirstF3, Function.comp_def] <;> ring
+  convert! h using 1;
+    simp [shiftedFirstF3]; ring
 
 theorem shiftedFirstF_cubic_ode (m ω x : ℝ) :
     shiftedFirstF3 m ω x =

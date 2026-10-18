@@ -1,10 +1,10 @@
 import SSPLean.ThreeStateCubicCoefficients
 
 set_option autoImplicit false
-set_option maxHeartbeats 1000000
 open Set
 namespace SSP.ThreeState
 
+set_option maxHeartbeats 1000000 in
 /-- At the upper endpoint of the admissible shift interval, the determinant
 has a square lower bound. -/
 theorem shift_endpoint_nonneg {d e F J r : ℝ}
@@ -25,6 +25,7 @@ theorem shift_endpoint_nonneg {d e F J r : ℝ}
   rw [hr2,sub_self,mul_zero,add_zero] at hid
   nlinarith
 
+set_option maxHeartbeats 1000000 in
 /-- The smaller/larger roots of a quadratic with nonnegative sum and product. -/
 theorem nonneg_quadratic_roots {T K : ℝ} (hT : 0 ≤ T) (hK : 0 ≤ K)
     (hD : 0 ≤ T^2-4*K) :
@@ -35,6 +36,7 @@ theorem nonneg_quadratic_roots {T K : ℝ} (hT : 0 ≤ T) (hK : 0 ≤ K)
   have hzT : z ≤ T := by nlinarith [sq_nonneg (z+T)]
   refine ⟨(T-z)/2,(T+z)/2,?_,?_,?_,?_⟩ <;> nlinarith
 
+set_option maxHeartbeats 1000000 in
 /-- Generic admissible shift, with the alternatives needed for entrywise positivity. -/
 theorem exists_admissible_shift {T K J r : ℝ}
     (hT : 0 ≤ T) (hD : 0 ≤ T^2-4*K) (hr : 0 ≤ r)
@@ -89,6 +91,7 @@ theorem exists_admissible_shift {T K J r : ℝ}
       obtain ⟨a,b,ha,hab,hs,hp⟩ := nonneg_quadratic_roots (by positivity) hKt hDt
       exact ⟨t,a,b,0,ht0,ha,hab,le_rfl,hs,hp,heq.symm,Or.inr (Or.inr rfl)⟩
 
+set_option maxHeartbeats 1000000 in
 theorem endpoint_of_diagonal_data {T K J d e r : ℝ}
     (hd : 0 ≤ d) (he : 0 ≤ e) (hde : d ≤ e)
     (hT : T = d+e) (hK : K ≤ d*e) (hJ : -e*(d*e-K) ≤ J)
@@ -98,6 +101,7 @@ theorem endpoint_of_diagonal_data {T K J d e r : ℝ}
     (show r^2 = d^2-d*e+e^2+3*(d*e-K) by rw [hT] at hr2; nlinarith)
   simpa [hT,sub_add_eq_sub_sub] using h
 
+set_option maxHeartbeats 1000000 in
 theorem zeroDiagonal_endpoint_nonneg (N : Mat) (hN : ∀ i j, 0 ≤ N i j)
     (hz : N 0 0 = 0 ∨ N 1 1 = 0 ∨ N 2 2 = 0) {r : ℝ}
     (hr : 0 ≤ r) (hr2 : r^2 = (traceCoeff N)^2-3*pairCoeff N) :
@@ -204,6 +208,7 @@ theorem zeroDiagonal_endpoint_nonneg (N : Mat) (hN : ∀ i j, 0 ≤ N i j)
       · exact hr
       · exact hr2
 
+set_option maxHeartbeats 1000000 in
 /-- Every nonnegative matrix with a zero diagonal admits the canonical cubic
 and an entrywise nonnegative initial projection after a nonnegative shift. -/
 theorem zeroDiagonal_canonical_parameters (N : Mat) (hN : ∀ i j, 0 ≤ N i j)

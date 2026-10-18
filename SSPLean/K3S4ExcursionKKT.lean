@@ -59,6 +59,29 @@ noncomputable def excursionGradB (r x u A C v B D : ℝ) : ℝ :=
   excursionReducedGap r x u A C v B (D+1)
     -excursionReducedGap r x u A C v B D-excursionHBB r x u A v B/2
 
+noncomputable def GradACompact (r x u A C v B D : ℝ) : ℝ :=
+  2*r*(-90*A^2*r^2*u - 90*A^2*r^2*x - 45*A^2*r*v - 90*A^2*r*x + 15*A*B*r*u + 15*A*B*r*x + 60*A*B*v + 15*A*B*x + A*C*r - 35*A*D + 30*A*r^3*u^3 + 90*A*r^3*u^2*x + 90*A*r^3*u*x^2 + 30*A*r^3*x^3 + 150*A*r^2*u^2*v + 90*A*r^2*u^2*x + 300*A*r^2*u*v*x + 180*A*r^2*u*x^2 + 150*A*r^2*v*x^2 + 90*A*r^2*x^3 + 120*A*r*u*v^2 + 300*A*r*u*v*x + 90*A*r*u*x^2 + 120*A*r*v^2*x + 300*A*r*v*x^2 + 90*A*r*x^3 + 120*A*v^2*x + 150*A*v*x^2 + 30*A*x^3 + 36*B*C + 72*C*r^2*u^2 + 144*C*r^2*u*x + 72*C*r^2*x^2 + 72*C*r*u*v + 144*C*r*u*x + 72*C*r*v*x + 144*C*r*x^2 + 72*C*v*x + 72*C*x^2)/(5*A)
+
+set_option maxHeartbeats 2000000 in
+theorem GradACompact_eq (r x u A C v B D : ℝ) (hA : A ≠ 0) (hB : B ≠ 0) :
+    excursionGradA r x u A C v B D = GradACompact r x u A C v B D := by
+  unfold excursionGradA excursionHAA excursionReducedGap geomGap geomM4 geomM3 geomM2 geomM1
+  unfold kernelM1 kernelM2 kernelM3 kernelM4 GradACompact
+  field_simp [hA,hB]
+  ring
+
+noncomputable def GradBCompact (r x u A C v B D : ℝ) : ℝ :=
+  -2*(150*A*B*r^2*u + 150*A*B*r^2*x + 105*A*B*r*v + 150*A*B*r*x - 36*A*D*r + 45*B^2*r*u + 45*B^2*r*x + 45*B^2*x + 35*B*C*r - B*D + 90*B*r^3*u^3 + 270*B*r^3*u^2*x + 270*B*r^3*u*x^2 + 90*B*r^3*x^3 + 90*B*r^2*u^2*v + 270*B*r^2*u^2*x + 180*B*r^2*u*v*x + 540*B*r^2*u*x^2 + 90*B*r^2*v*x^2 + 270*B*r^2*x^3 + 180*B*r*u*v*x + 270*B*r*u*x^2 + 180*B*r*v*x^2 + 270*B*r*x^3 + 90*B*v*x^2 + 90*B*x^3 - 72*D*r^2*u^2 - 144*D*r^2*u*x - 72*D*r^2*x^2 - 72*D*r*u*v - 144*D*r*u*x - 72*D*r*v*x - 144*D*r*x^2 - 72*D*v*x - 72*D*x^2)/(5*B)
+
+set_option maxHeartbeats 2000000 in
+theorem GradBCompact_eq (r x u A C v B D : ℝ) (hA : A ≠ 0) (hB : B ≠ 0) :
+    excursionGradB r x u A C v B D = GradBCompact r x u A C v B D := by
+  unfold excursionGradB excursionHBB excursionReducedGap geomGap geomM4 geomM3 geomM2 geomM1
+  unfold kernelM1 kernelM2 kernelM3 kernelM4 GradBCompact
+  field_simp [hA,hB]
+  ring
+
+
 set_option maxHeartbeats 1000000 in
 /-- Exact Taylor formula in the two excursion third moments. -/
 theorem excursionReducedGap_taylor
@@ -223,9 +246,9 @@ theorem transformed_cornerGradA_nonneg
         (20/9*(1-R)^3) (z/((1-b)/(1-R)))
         (4/3*(z/((1-b)/(1-R)))^2) (20/9*(z/((1-b)/(1-R)))^3) =
       4*(b-R)*(1-R)^3*cornerGradAPoly R b z/(9*(1-b)^4) := by
-    unfold excursionGradA excursionHAA excursionReducedGap
-    unfold geomGap geomM4 geomM3 geomM2 geomM1
-    unfold kernelM1 kernelM2 kernelM3 kernelM4 cornerGradAPoly
+    repeat rw [GradACompact_eq _ _ _ _ _ _ _ _ (by positivity) (by positivity)]
+    dsimp only [GradACompact, excursionReducedGap]
+    unfold cornerGradAPoly
     field_simp [ne_of_gt h1R, ne_of_gt h1b, ne_of_gt hz]
     ring
   rw [hid]
@@ -282,11 +305,9 @@ theorem cornerGradA_nonneg
     excursionGradA r x u (4/3*u^2) (20/9*u^3)
       v (4/3*v^2) (20/9*v^3) := by
     dsimp [R, l]
-    unfold excursionGradA excursionHAA excursionReducedGap
-    unfold geomGap geomM4 geomM3 geomM2 geomM1
-    unfold kernelM1 kernelM2 kernelM3 kernelM4
+    repeat rw [GradACompact_eq _ _ _ _ _ _ _ _ (by positivity) (by positivity)]
+    dsimp only [GradACompact, excursionReducedGap]
     field_simp [ne_of_gt hl, ne_of_gt hu, ne_of_gt hv]
-    ring
   rw [← hid]
   positivity
 
@@ -652,6 +673,7 @@ noncomputable def transformedTerminalFaceCert (R b z : ℝ) : ℝ :=
       (20/9*(1-R)^3) (z/((1-b)/(1-R)))
       (4/3*(z/((1-b)/(1-R)))^2) (20/9*(z/((1-b)/(1-R)))^3))^2
 
+set_option maxRecDepth 10000 in
 set_option maxHeartbeats 2000000 in
 /-- Clearing denominators reduces the terminal-face certificate to `terminalFacePoly`. -/
 theorem transformedTerminalFaceCert_nonneg_of_poly_nonneg
@@ -665,11 +687,13 @@ theorem transformedTerminalFaceCert_nonneg_of_poly_nonneg
   have hid :
       45*b^3*z^2*(1-b)^6*transformedTerminalFaceCert R b z =
         32*(1-R)^6*cornerSideWeight R b z*terminalFacePoly R b z := by
-    unfold transformedTerminalFaceCert excursionGradB excursionHBB excursionReducedGap
-    unfold terminalFacePoly faceCoeff0 faceCoeff1 faceCoeff2 faceCoeff3
-    unfold cornerSideWeight
+    unfold transformedTerminalFaceCert
+    rw [GradBCompact_eq _ _ _ _ _ _ _ _ (by positivity) (by positivity)]
+    dsimp only [GradBCompact, excursionHBB, excursionReducedGap]
     unfold geomGap geomM4 geomM3 geomM2 geomM1
     unfold kernelM1 kernelM2 kernelM3 kernelM4
+    dsimp only [terminalFacePoly, faceCoeff0, faceCoeff1, faceCoeff2, faceCoeff3]
+    dsimp only [cornerSideWeight]
     field_simp [ne_of_gt hbp, ne_of_gt hz, ne_of_gt h1R, ne_of_gt h1b]
     ring
   have hscaled : 0 ≤ 45*b^3*z^2*(1-b)^6*transformedTerminalFaceCert R b z := by
@@ -705,9 +729,8 @@ theorem transformedTerminalFaceCert_large_nonneg
           (20/9*(1-R)^3) (z/((1-b)/(1-R)))
           (4/3*(z/((1-b)/(1-R)))^2) (20/9*(z/((1-b)/(1-R)))^3) =
         (4*(1-R)^3/(9*(1-b)^3))*terminalGradPoly R b z := by
-    unfold excursionGradB excursionHBB excursionReducedGap terminalGradPoly
-    unfold geomGap geomM4 geomM3 geomM2 geomM1
-    unfold kernelM1 kernelM2 kernelM3 kernelM4
+    rw [GradBCompact_eq _ _ _ _ _ _ _ _ (by positivity) (by positivity)]
+    dsimp only [GradBCompact, terminalGradPoly]
     field_simp [ne_of_gt h1R, ne_of_gt h1b, ne_of_gt hz]
     ring
   have hfactor : 0 < 4*(1-R)^3/(9*(1-b)^3) := by positivity
@@ -767,10 +790,10 @@ theorem transformed_cornerSideB_nonneg
           (4/3*(z/((1-b)/(1-R)))^2) (20/9*(z/((1-b)/(1-R)))^3) =
       16*(b-R)*(1-R)^3*cornerSideWeight R b z*cornerSidePoly R b z
         /(5*z^2*(1-b)^4) := by
-    unfold excursionGradA excursionGradB excursionHAA excursionHAB excursionHBB
-    unfold excursionReducedGap
-    unfold geomGap geomM4 geomM3 geomM2 geomM1
-    unfold kernelM1 kernelM2 kernelM3 kernelM4 cornerSidePoly cornerSideWeight
+    rw [GradACompact_eq _ _ _ _ _ _ _ _ (by positivity) (by positivity),
+      GradBCompact_eq _ _ _ _ _ _ _ _ (by positivity) (by positivity)]
+    dsimp only [GradACompact, GradBCompact, excursionHAB, excursionHBB]
+    unfold cornerSidePoly cornerSideWeight
     field_simp [ne_of_gt h1R, ne_of_gt h1b, ne_of_gt hz]
     ring
   rw [hid]

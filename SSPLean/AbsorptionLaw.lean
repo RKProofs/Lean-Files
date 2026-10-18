@@ -1,5 +1,7 @@
 import SSPLean.SurvivalMonotone
 import SSPLean.MomentBridge
+import Mathlib.MeasureTheory.Integral.Layercake
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 # The absorption time as a random variable, and its first moment

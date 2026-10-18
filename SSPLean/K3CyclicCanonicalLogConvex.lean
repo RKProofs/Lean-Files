@@ -23,7 +23,8 @@ theorem canonicalB_nonneg {a b c x2 x3 : ℝ}
     (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c) (h2 : 0 ≤ x2) (h3 : 0 ≤ x3) :
     ∀ i j, 0 ≤ canonicalB a b c x2 x3 i j := by
   intro i j
-  fin_cases i <;> fin_cases j <;> simp [canonicalB] <;> assumption
+  fin_cases i <;> fin_cases j
+  all_goals first | exact le_rfl | exact ha | exact hb | exact hc | exact h2 | exact h3
 
 theorem canonicalCoordinate_eq_pairing (a b c x2 x3 t : ℝ) (i : Fin 3) :
     ((NormedSpace.exp (t • canonicalB a b c x2 x3)).mulVec firstBasis) i =

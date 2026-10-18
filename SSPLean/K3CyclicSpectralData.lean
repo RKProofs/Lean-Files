@@ -106,7 +106,10 @@ theorem canonical_spectralData {a b Q : ℝ}
     CanonicalSpectralData a b Q := by
   by_cases hQ0 : Q = 0
   · left
-    have hb : 0 < b := by rcases hne with h | h; exact h; simp [hQ0] at h
+    have hb : 0 < b := by
+      rcases hne with h | h
+      · exact h
+      · simp [hQ0] at h
     refine ⟨0,a,b,ha,hab,hb,?_,?_,?_⟩ <;> simp [hQ0]
   · exact canonical_spectralData_of_positive_feedback ha hab
       (lt_of_le_of_ne hQ (Ne.symm hQ0))

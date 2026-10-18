@@ -39,7 +39,7 @@ lemma norm_oscillatory_term
   ring
 
 lemma omega_le_inv_sqrt_three
-    {omega : ℝ} (homega : 0 ≤ omega) (hsq : omega ^ 2 ≤ 1 / 3) :
+    {omega : ℝ} (_homega : 0 ≤ omega) (hsq : omega ^ 2 ≤ 1 / 3) :
     omega ≤ 1 / Real.sqrt 3 := by
   have hs : 0 < Real.sqrt 3 := Real.sqrt_pos.2 (by norm_num)
   have hs2 : Real.sqrt 3 ^ 2 = 3 := Real.sq_sqrt (by norm_num)
@@ -66,7 +66,7 @@ lemma inv_sqrt_three_pow_sub_six
 theorem oscillatory_real_pair_lower
     {N : ℕ} (hN : 6 ≤ N) {A B omega : ℝ}
     (homega : 0 < omega) (hsq : omega ^ 2 ≤ 1 / 3)
-    (hA0 : 0 ≤ A) (hzA : omega ^ 2 ≤ A)
+    (_hA0 : 0 ≤ A) (hzA : omega ^ 2 ≤ A)
     (hB0 : 0 ≤ B) (hB1 : B ≤ 1) :
     2 * (middleAmplitude A B omega ^ 2 *
         (2 * middleFrequency omega) ^ N).re ≥

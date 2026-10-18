@@ -300,7 +300,7 @@ private theorem faceBThreeCore_nonneg_at_grad_zero
 
 private theorem faceBThree_initial_segment
     (a T Y q qstar : ℝ) (ha : 0 < a) (ha1 : a ≤ 1)
-    (hT : 0 < T) (hY : 0 < Y)
+    (_hT : 0 < T) (hY : 0 < Y)
     (hq : 0 ≤ q) (hqqstar : q ≤ qstar) (hqstar1 : qstar ≤ 1)
     (hmid : 0 ≤ faceBThreeMid T (a*Y) ((1-a)*Y))
     (hboundary : 0 ≤ faceBThreeCore T (a*Y) ((1-a)*Y) qstar) :

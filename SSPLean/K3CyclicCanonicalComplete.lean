@@ -23,7 +23,7 @@ theorem canonicalFirst_zero_feedback_eq_one (a b x2 x3 : ℝ) :
   · exact canonicalFirst_hasDerivAt a b 0 x2 x3
   · exact canonicalFirstDeriv_hasDerivAt a b 0 x2 x3
   · intro t
-    convert canonicalFirstDeriv2_hasDerivAt a b 0 x2 x3 t using 1 <;> try rfl
+    convert canonicalFirstDeriv2_hasDerivAt a b 0 x2 x3 t using 1; try rfl
     ring
   · intro t; simpa using hasDerivAt_const t (1 : ℝ)
   · intro t; simpa using hasDerivAt_const t (0 : ℝ)

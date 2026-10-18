@@ -212,7 +212,7 @@ theorem uniformFaceACore_three_nonneg (X T q : ℝ)
 set_option maxRecDepth 100000 in
 set_option maxHeartbeats 1000000 in
 theorem sharpGradA_three_normalized
-    (a T Y q : ℝ) (hY : Y ≠ 0) (hq : q ≠ 0) (hsum : Y+a ≠ 0) :
+    (a T Y q : ℝ) (hY : Y ≠ 0) (_hq : q ≠ 0) (hsum : Y+a ≠ 0) :
     sharpGradA 3 (a/Y) (Y*(1-a)/(Y+a)) Y (3*Y^2/2)
         (q*T) (3*q*T^2/2) = a*uniformGradA 3 a T Y q/(2*Y) := by
   unfold sharpGradA sharpThird excursionGradA excursionHAA
@@ -224,7 +224,7 @@ theorem sharpGradA_three_normalized
   have hsq : a*Y*2+a^2+Y^2 ≠ 0 := by
     convert pow_ne_zero 2 hsum using 1
     all_goals ring
-  field_simp [hY, hq, hsum, hsq]
+  field_simp [hY, _hq, hsum, hsq]
   ring
 
 set_option maxRecDepth 100000 in

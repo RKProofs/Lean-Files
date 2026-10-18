@@ -8,7 +8,7 @@ namespace SSP.K3CyclicRealTail
 
 open scoped BigOperators
 
-noncomputable def normalizedChart0 (S D : ℝ) : ℝ :=
+noncomputable def normalizedChart0 (_S _D : ℝ) : ℝ :=
   1
 
 noncomputable def normalizedChart1 (S D : ℝ) : ℝ :=
@@ -71,7 +71,7 @@ noncomputable def varianceLowPower8 (S D : ℝ) : ℝ :=
 noncomputable def varianceLowPower9 (S D : ℝ) : ℝ :=
   -D*S/144000000000 - S/144000000000 - 1/72000000000
 
-noncomputable def varianceLowPower10 (S D : ℝ) : ℝ :=
+noncomputable def varianceLowPower10 (_S _D : ℝ) : ℝ :=
   -1/360000000000
 
 noncomputable def varianceLowBernsteinData0 : Array (ℕ × ℕ) := #[

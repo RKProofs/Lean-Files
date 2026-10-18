@@ -1,4 +1,7 @@
-import Mathlib
+import Mathlib.Algebra.Order.Chebyshev
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Ring.Basic
+import Mathlib.Tactic
 
 /-!
 # The algebraic-stability order barrier (paper Section 4), formalized

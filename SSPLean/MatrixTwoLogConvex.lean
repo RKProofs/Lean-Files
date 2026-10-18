@@ -1,4 +1,13 @@
-import Mathlib
+import Mathlib.RingTheory.Flat.TorsionFree
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.Analysis.ODE.ExistUnique
+import Mathlib.Analysis.Matrix.Normed
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.AlgebraicTopology.SimplexCategory.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic
 
 /-!
 # Dimension-corrected log-convexity for nonnegative two-by-two matrices
@@ -250,7 +259,8 @@ theorem scalar_normal_form (A : Mat) (u v : Fin 2 → ℝ)
     have hB0 : B*B = 0 := by simpa [hk] using hBsquare
     have hD : 0 ≤ dotProduct u (B.mulVec v) := by
       simp only [dotProduct, Matrix.mulVec, Fin.sum_univ_two]
-      simp [B, hr]
+      simp only [Fin.isValue, hr, neg_zero, of_apply, cons_val', cons_val_zero,
+        cons_val_fin_one, zero_mul, cons_val_one, zero_add, add_zero, B]
       exact add_nonneg (mul_nonneg (hu 0) (mul_nonneg (hA 0 1) (hv 1)))
         (mul_nonneg (hu 1) (mul_nonneg (hA 1 0) (hv 0)))
     exact Or.inl ⟨m, dotProduct u v, dotProduct u (B.mulVec v), hC, hD,

@@ -20,7 +20,7 @@ theorem shiftedFirstF_correctedCurvature3_nonneg
     (q := 1 / (1 + omega ^ 2)) hH
   have hF : 0 ≤ correctedCurvature3 x
       (firstF m omega x) (firstF1 m omega x) (firstF2 m omega x) := by
-    convert hscale using 1 <;>
+    convert hscale using 1;
       simp [firstF, firstF1, firstF2, div_eq_mul_inv, mul_comm]
   rw [shiftedFirstF_correctedCurvature3_eq]
   exact mul_nonneg (Real.exp_pos _).le hF

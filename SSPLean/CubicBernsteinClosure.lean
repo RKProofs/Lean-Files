@@ -1,4 +1,5 @@
-import Mathlib
+import Mathlib.Data.Real.Basic
+import Mathlib.Tactic.Ring
 
 /-! Small cubic closure identities keep coefficient proofs from expanding the
 polynomials hidden in their parameters. All identities are kernel checked. -/

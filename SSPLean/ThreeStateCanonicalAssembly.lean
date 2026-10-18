@@ -49,7 +49,7 @@ theorem pairingDerivative_cubic (M : Mat) (u v : Fin 3 → ℝ) (a b Q : ℝ)
       (Q*pairingDerivative M u v 0 t-a*b*pairingDerivative M u v 1 t+
         (a+b)*pairingDerivative M u v 2 t) t := by
   have hd := pairingDerivative_hasDerivAt M u v 2 t
-  convert hd using 1 <;> try rfl
+  convert hd using 1; try rfl
   dsimp [pairingDerivative]
   rw [hM]
   simp only [Matrix.mul_add,Matrix.mul_sub,Matrix.mul_smul,Matrix.mul_one,
@@ -80,7 +80,7 @@ theorem pairing_eq_canonicalMixture (M : Mat) (u v : Fin 3 → ℝ) (a b Q : ℝ
     · exact pairingDerivative_hasDerivAt M u v 0
     · exact pairingDerivative_hasDerivAt M u v 1
     · intro t
-      convert pairingDerivative_cubic M u v a b Q hM t using 1 <;> try rfl
+      convert pairingDerivative_cubic M u v a b Q hM t using 1; try rfl
       ring
     · intro t
       exact (((canonicalFirst_hasDerivAt a b Q 1 1 t).const_mul p0).add
@@ -100,7 +100,7 @@ theorem pairing_eq_canonicalMixture (M : Mat) (u v : Fin 3 → ℝ) (a b Q : ℝ
     · simp [canonicalMixture,p0]
     · simp [f1,g1,h1,p1]
     · simp [f2,g2,h2,p1,p2,map_sub,map_smul,smul_eq_mul]
-      <;> ring
+      ring
   have hbase : pairingDerivative M u v 0 = pairing M u v := by
     funext t
     simp [pairingDerivative,pairing]

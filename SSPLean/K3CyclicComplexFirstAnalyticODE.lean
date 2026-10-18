@@ -48,7 +48,7 @@ theorem firstT_hasDerivAt {m ω x : ℝ} (hω : ω ≠ 0) :
   have h' : HasDerivAt (firstT m ω)
       ((1 - m ^ 2) * (-Real.sin (ω * x) * ω) -
         (m + 1) * (m + ω ^ 2) * Real.cos (ω * x)) x := by
-    convert! h using 1 <;> try simp [firstT, Function.comp_def] <;> ring
+    convert! h using 1; try simp
   convert! h' using 1
   simp only [firstT1]
   ring
@@ -68,7 +68,7 @@ theorem firstT1_hasDerivAt {m ω x : ℝ} (hω : ω ≠ 0) :
   have h' : HasDerivAt (firstT1 m ω)
       (-(1 - m ^ 2) * ω * (Real.cos (ω * x) * ω) -
         (m + 1) * (m + ω ^ 2) * (-Real.sin (ω * x) * ω)) x := by
-    convert! h using 1 <;> try simp [firstT1, Function.comp_def] <;> ring
+    convert! h using 1; try simp
   convert! h' using 1
   rw [firstT, sinc_eq hω]
   field_simp [hω]
@@ -78,7 +78,7 @@ theorem firstH_hasDerivAt {m ω x : ℝ} (hω : ω ≠ 0) :
     HasDerivAt (firstH m ω) (firstH1 m ω x) x := by
   have hexp := (hasDerivAt_const x (firstA m ω)).mul (Real.hasDerivAt_exp x)
   have h := hexp.add (firstT_hasDerivAt (m := m) (ω := ω) (x := x) hω)
-  convert! h using 1 <;> try simp [firstH, firstH1] <;> ring
+  convert! h using 1; try simp [firstH1]
 
 theorem firstH1_hasDerivAt {m ω x : ℝ} (hω : ω ≠ 0) :
     HasDerivAt (firstH1 m ω) (firstH2 m ω x) x := by
@@ -86,7 +86,7 @@ theorem firstH1_hasDerivAt {m ω x : ℝ} (hω : ω ≠ 0) :
   have h := hexp.add (firstT1_hasDerivAt (m := m) (ω := ω) (x := x) hω)
   have h' : HasDerivAt (firstH1 m ω)
       (firstA m ω * Real.exp x + -ω ^ 2 * firstT m ω x) x := by
-    convert! h using 1 <;> try simp [firstH1] <;> ring
+    convert! h using 1; try simp
   convert! h' using 1
   simp only [firstH2]
   ring
@@ -98,7 +98,7 @@ theorem firstH2_hasDerivAt {m ω x : ℝ} (hω : ω ≠ 0) :
   have ht := (hasDerivAt_const x (ω ^ 2)).mul
     (firstT_hasDerivAt (m := m) (ω := ω) (x := x) hω)
   have h := hexp.sub ht
-  convert! h using 1 <;> try simp [firstH2] <;> ring
+  convert! h using 1; try simp
 
 theorem firstF_hasDerivAt {m ω x : ℝ} (hω : ω ≠ 0) :
     HasDerivAt (firstF m ω) (firstF1 m ω x) x := by
@@ -133,17 +133,17 @@ theorem one_add_sq_ne_zero (ω : ℝ) : 1 + ω ^ 2 ≠ 0 := by
   nlinarith [sq_nonneg ω]
 
 @[simp] theorem firstF_zero (m ω : ℝ) : firstF m ω 0 = 1 := by
-  simp [firstF, firstH, firstA, firstT, sinc, one_add_sq_ne_zero]
+  simp [firstF, firstH, firstA, firstT, sinc]
   field_simp [one_add_sq_ne_zero]
   ring
 
 @[simp] theorem firstF1_zero (m ω : ℝ) : firstF1 m ω 0 = -m := by
-  simp [firstF1, firstH1, firstA, firstT1, one_add_sq_ne_zero]
+  simp [firstF1, firstH1, firstA, firstT1]
   field_simp [one_add_sq_ne_zero]
   ring
 
 @[simp] theorem firstF2_zero (m ω : ℝ) : firstF2 m ω 0 = m ^ 2 := by
-  simp [firstF2, firstH2, firstA, firstT, sinc, one_add_sq_ne_zero]
+  simp [firstF2, firstH2, firstA, firstT, sinc]
   field_simp [one_add_sq_ne_zero]
   ring
 

@@ -84,25 +84,25 @@ theorem canonicalThirdDeriv2_hasDerivAt (a b c x2 x3 t : ℝ) :
 
 @[simp] theorem canonicalThird_zero (a b c x2 x3 : ℝ) :
     canonicalThird a b c x2 x3 0 = 0 := by
-  norm_num [canonicalThird, firstBasis, NormedSpace.exp_zero] <;>
-    simp [Matrix.vecHead, Matrix.vecTail]
+  norm_num [canonicalThird, firstBasis, NormedSpace.exp_zero];
+    simp
 
 @[simp] theorem canonicalThirdDeriv_zero (a b c x2 x3 : ℝ) :
     canonicalThirdDeriv a b c x2 x3 0 = 0 := by
   norm_num [canonicalThirdDeriv, canonicalB, firstBasis,
-    NormedSpace.exp_zero, Matrix.mul_apply, Fin.sum_univ_three] <;>
-    simp [Matrix.vecHead, Matrix.vecTail]
+    NormedSpace.exp_zero, Matrix.mul_apply, Fin.sum_univ_three];
+    simp [Matrix.vecHead]
 
 @[simp] theorem canonicalThirdDeriv2_zero (a b c x2 x3 : ℝ) :
     canonicalThirdDeriv2 a b c x2 x3 0 = x2 * x3 := by
   norm_num [canonicalThirdDeriv2, canonicalB, firstBasis,
-    NormedSpace.exp_zero, Matrix.mul_apply, Fin.sum_univ_three] <;>
-    simp [Matrix.vecHead, Matrix.vecTail] <;> ring
+    NormedSpace.exp_zero, Matrix.mul_apply, Fin.sum_univ_three];
+    simp [Matrix.vecHead, Matrix.vecTail]; ring
 
 theorem canonicalB_mulVec_two (a b c x2 x3 : ℝ)
     (v : Fin 3 → ℝ) :
     ((canonicalB a b c x2 x3).mulVec v) 2 = x3 * v 1 + b * v 2 := by
-  norm_num [canonicalB, Matrix.mul_apply, Fin.sum_univ_three] <;>
+  norm_num [canonicalB, Matrix.mul_apply, Fin.sum_univ_three];
     simp [Matrix.vecHead, Matrix.vecTail]
 
 /-- The third coordinate is driven by the middle coordinate through the last

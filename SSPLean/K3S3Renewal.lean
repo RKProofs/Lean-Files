@@ -21,8 +21,6 @@ all three input inequalities active, and strictly slack in the interior, so the 
 is proved separately and sharply below.
 -/
 
-set_option maxHeartbeats 2000000
-
 namespace SSP.K3S3
 
 /-! ## The certified kernel face
@@ -32,6 +30,7 @@ Positivstellensatz certificate (18 terms, exact rational coefficients) found wit
 `cvxpy`/LP in the chart `B = U/(1+U)`, `x = Y` and verified here by `ring` + `positivity`.
 The certificate construction is recorded in the module docstring. -/
 
+set_option maxHeartbeats 2000000 in
 /-- The kernel inequality in the `(U,Y)` chart, by an explicit Positivstellensatz
 certificate found by SDP/LP and verified exactly over `ℚ`. -/
 theorem kernelUY_nonneg (U Y : ℝ) (hU : 0 ≤ U) (hY : 0 ≤ Y) :
@@ -60,6 +59,7 @@ theorem kernelUY_nonneg (U Y : ℝ) (hU : 0 ≤ U) (hY : 0 ≤ Y) :
   have h3 : (0:ℝ) ≤ Y^3 := by positivity
   positivity
 
+set_option maxHeartbeats 2000000 in
 /-- The `(B,x)` form.  Taking `U = B/(1-B)` in `kernelUY_nonneg` and multiplying by
 `(1-B)^4 > 0` recovers the target exactly. -/
 theorem kernelBx_nonneg (B x : ℝ) (hB : 0 ≤ B) (hB1 : B < 1) (hx : 0 ≤ x) :
@@ -87,24 +87,22 @@ theorem kernelBx_nonneg (B x : ℝ) (hB : 0 ≤ B) (hB1 : B < 1) (hx : 0 ≤ x) 
   rw [← key]
   exact mul_nonneg h4.le hcert
 
-
-
 open SSP.K3S4Renewal
 
 /-- The order-three `k = 3` gap of a kernel `(m₁,m₂,m₃,m₄)`. -/
 noncomputable def gap3 (m₂ m₃ m₄ : ℝ) : ℝ := 5 * m₂ * m₄ - 6 * m₃ ^ 2
 
-open scoped Classical
-
 /-- Abbreviations for the `D`-quadratic coefficients of the `F = 0` face. -/
 private noncomputable def Sfac (B x : ℝ) : ℝ := 4*B*x^2 + 4*B*x - 4*x^2 - 4*x - 3
 
+set_option maxHeartbeats 2000000 in
 /-- `S < 0` on the box. -/
 private theorem Sfac_neg (B x : ℝ) (hB1 : B ≤ 1) (hx : 0 < x) : Sfac B x < 0 := by
   unfold Sfac
   nlinarith [sub_nonneg.mpr hB1, hx.le, mul_nonneg (sub_nonneg.mpr hB1) hx.le,
     mul_nonneg (mul_nonneg (sub_nonneg.mpr hB1) hx.le) hx.le]
 
+set_option maxHeartbeats 2000000 in
 /-- If `S + 8 > 0` then the `D`-linear coefficient's cofactor `T` is nonpositive. -/
 private theorem T_nonpos_of (B x : ℝ) (hB : 0 ≤ B) (hB1 : B ≤ 1) (hx : 0 < x)
     (hS2 : 0 < Sfac B x + 8) :
@@ -116,6 +114,7 @@ private theorem T_nonpos_of (B x : ℝ) (hB : 0 ≤ B) (hB1 : B ≤ 1) (hx : 0 <
     mul_nonneg (mul_nonneg (sub_nonneg.mpr hB1) hx.le) hx.le,
     sq_nonneg (2*x-1), sq_nonneg (B*x - x), mul_nonneg hB hB]
 
+set_option maxHeartbeats 2000000 in
 /-- **The `F = 0` face.**  The `k=3` order-three kernel with the third input slack maximal,
 for `B, D ∈ [0,1]`, `x > 0`.  Convex in `D`; the dichotomy is on the sign of `S + 8`.
 
@@ -124,7 +123,7 @@ for `B, D ∈ [0,1]`, `x > 0`.  Convex in `D`; the dichotomy is on the sign of `
 * If `S + 8 > 0` then `T ≤ 0`, hence `c₁ ≥ 0`, so `P` is increasing on `D ≥ 0` and
   `P(D) ≥ P(0)`, which is `kernelBx_nonneg`. -/
 theorem face_F0_nonneg (B D x : ℝ) (hB : 0 ≤ B) (hB1 : B ≤ 1)
-    (hD : 0 ≤ D) (hD1 : D ≤ 1) (hx : 0 < x) :
+    (hD : 0 ≤ D) (_hD1 : D ≤ 1) (hx : 0 < x) :
     0 ≤ 96*(1-B)^4*(1-D)^2*x^6 + 192*(1-B)^4*(1-D)^2*x^5 + 96*(1-B)^4*(1-D)^2*x^4
       + 144*(1-B)^3*(1-D)^2*x^4 + 144*(1-B)^3*(1-D)^2*x^3 + 54*(1-B)^2*(1-D)^2*x^2
       - 384*(1-B)^2*(1-D)*x^3 - 384*(1-B)^2*(1-D)*x^2 - 288*(1-B)*(1-D)*x
@@ -194,13 +193,15 @@ theorem face_F0_nonneg (B D x : ℝ) (hB : 0 ≤ B) (hB1 : B ≤ 1)
       mul_nonneg hD (by nlinarith [hc1nn, hc2nn, mul_nonneg hc2nn hD])
     linarith
 
+set_option maxHeartbeats 2000000 in
 /-- The `F = 1` face (`f = 0`): the whole expression collapses to `225 - 300B(x²+x) + 300(x²+x)`
 up to the factored form below, immediate for `B ≤ 1`. -/
-theorem face_F1_nonneg (B D x : ℝ) (hB1 : B ≤ 1) (hx : 0 < x) :
+theorem face_F1_nonneg (B _D x : ℝ) (hB1 : B ≤ 1) (hx : 0 < x) :
     0 ≤ 300*(1-B)*x^2 + 300*(1-B)*x + 225 := by
   nlinarith [hx.le, sub_nonneg.mpr hB1, mul_nonneg (sub_nonneg.mpr hB1) hx.le,
     mul_nonneg (mul_nonneg hx.le hx.le) (sub_nonneg.mpr hB1)]
 
+set_option maxHeartbeats 2000000 in
 /-- A quantity affine in `t` and nonnegative at both endpoints of `[0,1]` is nonnegative. -/
 theorem affine_nonneg_of_endpoints (g h t : ℝ) (ht : 0 ≤ t) (ht1 : t ≤ 1)
     (h0 : 0 ≤ g) (h1 : 0 ≤ g + h) : 0 ≤ g + t * h := by
@@ -208,6 +209,7 @@ theorem affine_nonneg_of_endpoints (g h t : ℝ) (ht : 0 ≤ t) (ht1 : t ≤ 1)
   · exact add_nonneg h0 (mul_nonneg ht hp)
   · nlinarith [mul_nonneg (sub_nonneg.mpr ht1) (neg_nonneg.mpr hn)]
 
+set_option maxHeartbeats 2000000 in
 /-- **The full three-slack kernel inequality.**  For `B, D, F ∈ [0,1]` and `x > 0`, the
 13-term reparametrised `k = 3` order-three gap numerator is nonnegative.  Affine in `F`, so
 the two faces `F = 0` (`face_F0_nonneg`) and `F = 1` (`face_F1_nonneg`) suffice. -/
@@ -239,7 +241,7 @@ theorem kernel13_nonneg (B D F x : ℝ) (hB : 0 ≤ B) (hB1 : B ≤ 1)
   rw [hsplit]
   exact affine_nonneg_of_endpoints _ _ F hF hF1 h0 (by linarith)
 
-
+set_option maxHeartbeats 2000000 in
 /-- **The no-return face, proved.**  Substituting the slack ratios
 `B = (3/2)v²/b`, `D = (4/3)B²/(vd)`, `F = (5/4)D²/(Bf)` with `b,d,f ∈ (0,1]` turns the
 hypotheses into exactly those bounds, and the gap into `K13/(4b⁴d²f)` where `K13` is the
@@ -308,6 +310,7 @@ theorem gap3_noReturn_nonneg' (x v B D F : ℝ)
     exact mul_nonneg hv6.le h1
   nlinarith [hkey, hRHS, hden]
 
+set_option maxHeartbeats 2000000 in
 /-- **The no-return face.**  When absorption occurs on the first excursion, the law is the
 independent sum of one exponential holding time of mean `x` and a terminal excursion of order
 at most two.  Given Aldous--Shepp and the two order-two hierarchy inputs for that excursion,

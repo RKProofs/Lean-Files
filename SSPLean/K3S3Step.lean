@@ -17,26 +17,26 @@ set_option maxRecDepth 100000 in
 set_option maxHeartbeats 2000000 in
 private theorem sharpGradA_three_scale
     (L r x u A v B : ℝ) (hL : L ≠ 0) (hu : u ≠ 0) (hv : v ≠ 0)
-    (hA : A ≠ 0) (hB : B ≠ 0) :
+    (hA : A ≠ 0) (_hB : B ≠ 0) :
     sharpGradA 3 r (L*x) (L*u) (L^2*A) (L*v) (L^2*B) =
       L^3*sharpGradA 3 r x u A v B := by
   unfold sharpGradA sharpThird excursionGradA excursionHAA excursionReducedGap
   unfold stageGap hessianCore geomM4 geomM3 geomM2 geomM1
   unfold kernelM1 kernelM2 kernelM3 kernelM4
-  field_simp [hL, hu, hv, hA, hB]
+  field_simp [hL, hu, hv, hA, _hB]
   ring
 
 set_option maxRecDepth 100000 in
 set_option maxHeartbeats 2000000 in
 private theorem sharpGradB_three_scale
     (L r x u A v B : ℝ) (hL : L ≠ 0) (hu : u ≠ 0) (hv : v ≠ 0)
-    (hA : A ≠ 0) (hB : B ≠ 0) :
+    (_hA : A ≠ 0) (hB : B ≠ 0) :
     sharpGradB 3 r (L*x) (L*u) (L^2*A) (L*v) (L^2*B) =
       L^3*sharpGradB 3 r x u A v B := by
   unfold sharpGradB sharpThird excursionGradB excursionHBB excursionReducedGap
   unfold stageGap hessianCore geomM4 geomM3 geomM2 geomM1
   unfold kernelM1 kernelM2 kernelM3 kernelM4
-  field_simp [hL, hu, hv, hA, hB]
+  field_simp [hL, hu, hv, _hA, hB]
   ring
 
 set_option maxRecDepth 100000 in
@@ -94,8 +94,8 @@ private theorem sharpFaceB_three_scale
 set_option maxRecDepth 100000 in
 set_option maxHeartbeats 1000000 in
 private theorem sharpGradA_three_mixture
-    (a T Y p q : ℝ) (hT : T ≠ 0) (hY : Y ≠ 0)
-    (hp : p ≠ 0) (hq : q ≠ 0) (hsum : p*Y+a ≠ 0) :
+    (a T Y p q : ℝ) (_hT : T ≠ 0) (hY : Y ≠ 0)
+    (hp : p ≠ 0) (_hq : q ≠ 0) (hsum : p*Y+a ≠ 0) :
     sharpGradA 3 (a/(p*Y)) (p*Y*(1-a)/(p*Y+a))
         (p*Y) (3*p*Y^2/2) (q*T) (3*q*T^2/2) =
       a*uniformGradA 3 a T Y q/(2*Y*p) := by
@@ -106,7 +106,7 @@ private theorem sharpGradA_three_mixture
   have hsq : a*Y*p*2+a^2+Y^2*p^2 ≠ 0 := by
     convert pow_ne_zero 2 hsum using 1
     all_goals ring
-  field_simp [hT, hY, hp, hq, hsum, hsq]
+  field_simp [_hT, hY, hp, _hq, hsum, hsq]
   ring
 
 set_option maxRecDepth 100000 in

@@ -117,7 +117,7 @@ theorem tailP_lt_sqrt_three_pow {N : ℕ} (hN : 25 ≤ N) :
       have hpowpos : 0 < Real.sqrt 3 ^ (25 + k) :=
         pow_pos (by positivity) _
       calc
-        tailP (25 + (k + 1)) = tailP ((25 + k) + 1) := by congr 1 <;> omega
+        tailP (25 + (k + 1)) = tailP ((25 + k) + 1) := by congr 1
         _ ≤ (4 / 3 : ℝ) * tailP (25 + k) := hgrowth
         _ < (4 / 3 : ℝ) * Real.sqrt 3 ^ (25 + k) := by
           nlinarith

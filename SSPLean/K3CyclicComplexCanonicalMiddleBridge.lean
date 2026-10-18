@@ -159,19 +159,20 @@ theorem canonicalMiddle_eq_complexMiddleModel
     (fun t => canonicalMiddle_hasDerivAt a b c x2 x3 t)
     (fun t => canonicalMiddleDeriv_hasDerivAt a b c x2 x3 t)
     (fun t => by
-      convert canonicalMiddleDeriv2_hasDerivAt a b c x2 x3 t using 1 <;> ring)
+      convert canonicalMiddleDeriv2_hasDerivAt a b c x2 x3 t using 1; ring)
     (fun t => complexMiddleModel_hasDerivAt hrho0 hrho1 heta0 heta1)
     (fun t => complexMiddleModelDeriv_hasDerivAt hrho0 hrho1 heta0 heta1)
     (fun t => by
       convert complexMiddleModelDeriv2_hasDerivAt_cubic
-        hrho0 hrho1 heta0 heta1 hsum hpair hprod using 1 <;> ring)
+        hrho0 hrho1 heta0 heta1 hsum hpair hprod using 1; ring)
   · simp [complexMiddleModel,
       middleEgf_zero hrho0 hrho1 heta0 heta1]
   · simp [complexMiddleModelDeriv,
       middleEgf_zero hrho0 hrho1 heta0 heta1]
     simpa only [mul_assoc] using hscale.symm
-  · simp [complexMiddleModelDeriv2,
-      middleEgf_zero hrho0 hrho1 heta0 heta1]
+  · simp only [canonicalMiddleDeriv2_zero, complexMiddleModelDeriv2, mul_zero,
+      Real.exp_zero, mul_one, middleEgf_zero hrho0 hrho1 heta0 heta1,
+      scalarDerivative_zero, scalarDerivative_one, zero_add, scalarDerivative_two]
     rw [← hscale, ha]
     ring
 

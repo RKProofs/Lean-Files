@@ -98,7 +98,7 @@ theorem diagonal_exp (B : Mat n) (E : Mat m) (t : ℝ) :
       have hs := expEntry_series (fromBlocks B (0 : Matrix n m ℝ) 0 E) (Sum.inl i) (Sum.inr j) t
       have hz : HasSum (fun k : ℕ => ((k.factorial : ℝ)⁻¹*t^k)*
           ((fromBlocks B (0 : Matrix n m ℝ) 0 E)^k) (Sum.inl i) (Sum.inr j)) 0 := by
-        simpa [Matrix.fromBlocks_diagonal_pow] using (hasSum_zero : HasSum (fun _ : ℕ => (0 : ℝ)) 0)
+        simp [Matrix.fromBlocks_diagonal_pow, hasSum_zero]
       exact hs.unique hz
   | inr i =>
     cases j with
@@ -171,7 +171,6 @@ theorem block_exp_inl_inr (B : Mat n) (C : Matrix n m ℝ) (E : Mat m)
     apply Finset.sum_congr rfl
     intro b _
     ring
-
   simp only [Matrix.sub_apply] at h
   have hDzero : NormedSpace.exp (t • D) (Sum.inl i) (Sum.inr j) = 0 := by
     rw [diagonal_exp]; rfl

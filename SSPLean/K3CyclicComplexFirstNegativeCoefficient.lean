@@ -6,6 +6,8 @@ Here `r = -3m`.  The lower boundary of the root chart is interpolated with
 `tau` so that both parameters range over the unit interval.
 -/
 
+-- These finite certificates deliberately use native_decide; the native trust
+-- dependency is documented in README.md. Keep the exception local to the certificates.
 set_option autoImplicit false
 
 namespace SSP.K3CyclicComplex
@@ -71,14 +73,17 @@ def certificateOK (N : ℕ) : Bool :=
       decide (0 ≤ ComplexCoeff.bcoeff coeffs i j)
 
 set_option maxRecDepth 100000 in
+set_option linter.style.nativeDecide false in
 theorem certificate_through_ten :
     (List.range 11).all certificateOK = true := by native_decide
 
 set_option maxRecDepth 100000 in
+set_option linter.style.nativeDecide false in
 theorem certificate_eleven_through_twenty :
     ((List.range 10).map (· + 11)).all certificateOK = true := by native_decide
 
 set_option maxRecDepth 100000 in
+set_option linter.style.nativeDecide false in
 theorem certificate_twenty_one_through_thirty :
     ((List.range 10).map (· + 21)).all certificateOK = true := by native_decide
 

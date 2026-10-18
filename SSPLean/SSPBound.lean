@@ -1,4 +1,6 @@
-import Mathlib
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Ring.Basic
+import Mathlib.Tactic
 
 /-!
 # The SSP coefficient bound r ≤ 2s (paper Section 3), formalized

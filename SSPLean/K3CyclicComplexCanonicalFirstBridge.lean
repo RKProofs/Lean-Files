@@ -77,12 +77,12 @@ theorem canonicalFirst_eq_complexFirstModel
     (fun t => canonicalFirst_hasDerivAt a b c x2 x3 t)
     (fun t => canonicalFirstDeriv_hasDerivAt a b c x2 x3 t)
     (fun t => by
-      convert canonicalFirstDeriv2_hasDerivAt a b c x2 x3 t using 1 <;> ring)
+      convert canonicalFirstDeriv2_hasDerivAt a b c x2 x3 t using 1; ring)
     (fun t => complexFirstModel_hasDerivAt homega)
     (fun t => complexFirstModelDeriv_hasDerivAt homega)
     (fun t => by
       convert complexFirstModelDeriv2_hasDerivAt_cubic homega
-        hsum hpair hprod using 1 <;> ring)
+        hsum hpair hprod using 1; ring)
   · simp [complexFirstModel]
   · simp [complexFirstModelDeriv]
   · simp [complexFirstModelDeriv2]

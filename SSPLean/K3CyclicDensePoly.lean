@@ -125,7 +125,7 @@ theorem ueval_unorm (p : Uni) (r : ℝ) : ueval (unorm p) r = ueval p r := by
       generalize hq : unorm p = q
       cases q with
       | nil =>
-          simp only [List.isEmpty_nil, Bool.true_eq, if_true]
+          simp only [List.isEmpty_nil, if_true]
           by_cases ha : a = 0
           · simp [ha, ← ih, hq]
           · simp [ha, ← ih, hq]
@@ -199,7 +199,7 @@ theorem beval_bnorm (p : Bi) (r t : ℝ) : beval (bnorm p) r t = beval p r t := 
       generalize hq : bnorm p = q
       cases q with
       | nil =>
-          simp only [List.isEmpty_nil, Bool.true_eq, if_true]
+          simp only [List.isEmpty_nil, if_true]
           cases a' with
           | nil => simp [← ueval_unorm a r, ha', ← ih, hq]
           | cons b a' => simp [← ueval_unorm a r, ha', ← ih, hq]
