@@ -32,7 +32,8 @@ lemma taylorWithinEval_two_eq
     iteratedDerivWithin_eq_iteratedDeriv hu hf.contDiffAt hmem
   rw [taylor_within_apply]
   norm_num [Finset.sum_range_succ, hd0, hd1, hd2]
-  ring; simp
+  ring_nf
+  simp
 
 lemma contDiff_affinePower_im_two (K : ℕ) :
     ContDiff ℝ 2 (fun t => (affinePower Complex.I K t).im) := by

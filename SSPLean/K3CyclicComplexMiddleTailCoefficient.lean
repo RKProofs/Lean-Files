@@ -216,7 +216,7 @@ lemma kernel_penultimate_eq_second
   rw [Nat.choose_symm hN]
   have hsub : ((N - 1 : ℕ) : ℤ) = (N : ℤ) - 1 := by omega
   rw [hsub]
-  ring
+  ring_nf
 
 lemma sum_kernel_mul_boundaryCorrection_reverse
     {N : ℕ} (hN : 1 ≤ N) (A : ℝ) :
