@@ -421,7 +421,7 @@ private theorem uniformSharpFaceB_three_num_identity
   field_simp [hT, hY, hq, hsum, hsq]
   rw [← hgap]
   unfold uniformSharpGap
-  ring
+  ring_nf
 
 /-- The normalized terminal-face certificate follows from the active-gradient
 condition alone at the exceptional stage `n = 3`. -/

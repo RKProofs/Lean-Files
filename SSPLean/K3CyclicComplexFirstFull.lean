@@ -18,7 +18,7 @@ theorem shiftedFirstF_correctedCurvature3_eq (m ω x : ℝ) :
         (firstF m ω x) (firstF1 m ω x) (firstF2 m ω x) := by
   unfold shiftedFirstF shiftedFirstF1 shiftedFirstF2
   convert correctedCurvature3_exp_shift m x
-    (firstF m ω x) (firstF1 m ω x) (firstF2 m ω x) using 1; ring
+    (firstF m ω x) (firstF1 m ω x) (firstF2 m ω x) using 1; ring_nf
 
 theorem firstFCurvature_pos_compact
     {m ω x : ℝ} (hdom : FirstDomain m ω)

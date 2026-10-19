@@ -172,7 +172,7 @@ theorem middleEgf_cubic_ode
   intro n
   unfold middleEgfTerm
   rw [scalarDerivative_cubic_recurrence rhoValue etaValue n]
-  ring
+  ring_nf
 
 @[simp] theorem middleEgf_zero
     {rhoValue etaValue : ℝ}
