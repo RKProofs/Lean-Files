@@ -36,11 +36,14 @@ cd Lean-Files
 lake exe cache get
 
 # Build the project
-lake build
+LEAN_NUM_THREADS=1 lake build
 ```
 
 `lake exe cache get` fetches pre-compiled Mathlib `.olean` files so you do not
 have to recompile Mathlib from source (which can take hours).
+
+We suggest setting `LEAN_NUM_THREADS=1` when building, as building some files requires lots of memory and using the default parallel build may cause your machine to run out of memory.
+
 
 ### Editor support
 
