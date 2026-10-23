@@ -4,49 +4,26 @@ import SSPLean.QSequenceCrossing
 import SSPLean.SpectralRadiusLtOne
 import SSPLean.BStability
 import SSPLean.K2ShortProof
+import SSPLean.MainRevisedSupport
 
 /-!
-# Sections 1–6 of `main_revised.tex`, in Lean
+# Results of `main_revised.tex`, in Lean
 
-This file collects the definitions, lemmas, theorems and corollaries of the first six
-sections of `main_revised.tex` and discharges each one, wherever possible by citing the
-existing development in this repository rather than reproving anything.
+The numbered index at the end covers all 18 active theorem, lemma and corollary
+environments in the October 23, 2026 source. It distinguishes proofs from
+conditional or partial formalizations. The paper's theorem, lemma and corollary
+counters are independent; the index does not use the older auxiliary file.
 
-Everything below is stated for a fixed stage count `s`, with vectors and matrices as
-functions `ℕ → ℝ` and `ℕ → ℕ → ℝ` supported on `range s`, matching the convention of
-`SSPLean.SSPBound`.  A dictionary to the paper's numbering is in the table at the end.
+Finite matrices use either `Fin s` indices or functions on `ℕ` read on `range s`.
+Moment results use the repository's concrete transient and uniformized density
+representations, including subprobability initial weights for an atom at zero.
 
-## What is proved here, and from what
-
-Almost all of §2–§5 is already formalized in this repository, so most entries below are
-one-line restatements.  The genuinely new content of this file is:
-
-* `substochastic_rowSum_le`, `substochastic_entry_mem` — Lemma `substochastic`, the
-  elementary half (`Q1 ≤ 1` and `0 ≤ Qᵢⱼ ≤ 1`).  The spectral half is
-  `SSP.spectralRadius_lt_one_elementary`.
-* `neumann_square_coeff` — the coefficient identity `(k+1)` behind Lemma `neumann2`,
-  proved as the Cauchy-product statement rather than by differentiating a series.
-* `mixture_closure` — Lemma `mixture`, the Cauchy–Schwarz mixture argument.
-* `sharp_two_stage_ssp` — the `s = 2` instance of Corollary `sharp`, i.e. the family in
-  Corollary `sharp` really does have `𝒞 = 2s`, checked at `s = 2` by exhibiting `N` and
-  `w` and verifying the two order conditions at `r = 4`.
-* `collapse_sum_identity` — the algebraic identity behind Lemma `collapse` of §6.
-
-## What is *not* proved here, and why
-
-Three statements in these sections are not theorems of the hypotheses as stated:
-
-* `Conjecture hierarchy` (§4) remains open in full generality.  Its cases `k = 1`
-  (Aldous–Shepp), `k = 2`, and `k = 3` are theorems in this repository.  The latter two
-  are exposed as `hierarchy_k2` below and `hierarchy_k3` in `SSPLean.K3Complete` for every
-  finite transient substochastic matrix.
-* `Conjecture astability` (§6) is likewise open.
-* Theorem `sspthm` (§2, Kraaijevanger / Ferracina–Spijker) and Definition `sspc` concern
-  monotonicity of numerical solutions of an IVP in an arbitrary (semi)norm.  Formalizing
-  them needs the RK solution map and a normed-space monotonicity hypothesis, neither of
-  which exists in this repository; they are recorded as definitions with the analytic
-  content isolated as a hypothesis.  Corollary `unconditional` is stated *relative to*
-  that hypothesis, which is exactly how the paper's proof uses it.
+The analytic monotonicity and sharpness theorem (Theorem 1) is still represented
+only by a transfer hypothesis. The two-stage sharpness witness remains a partial formalization of Corollary 2.
+Legacy declarations for the former A-stability section are retained for callers;
+they are not numbered results in the current paper. The full cyclic all-k
+hierarchy is false in the revised paper, which supplies a six-state counterexample
+at k = 71. The acyclic all-k and cyclic k = 2 inequalities are proved below.
 -/
 
 open Finset
@@ -143,11 +120,10 @@ theorem substochastic_spectralRadius {s : ℕ} (Q : Matrix (Fin s) (Fin s) ℝ)
 The paper's Lemma `neumann2` is the analytic identity `(I−Q)⁻² = ∑ₖ (k+1) Qᵏ`, obtained by
 differentiating a Neumann series (the paper also remarks that a counting proof is available).
 
-What is formalized *here* is only the combinatorial core of that remark: the number of pairs
+This declaration proves the combinatorial core of that remark: the number of pairs
 `(j,k)` with `j + k = n` is `n + 1`, so the `Qⁿ` coefficient of `(∑ₖ Qᵏ)²` is `n + 1`.  The
-analytic identity itself — the `tsum` rearrangement of the Cauchy product, with the summability
-needed to justify it — is **not** proved here; see `neumann2_weighted_series` below, which
-supplies exactly that and is what Lemma `AS` needs. -/
+actual convergent matrix identity is `neumann_square_series` below. The scalar
+rearrangement `neumann2_weighted_series` is a separate supporting result. -/
 theorem neumann_square_coeff (n : ℕ) :
     (Finset.range (n + 1)).card = n + 1 := by
   simp
@@ -166,9 +142,8 @@ theorem neumann_square_pairs (n : ℕ) :
 /-! ## The analytic half of Lemma `neumann2`
 
 The paper's Lemma `neumann2` is the identity `(I−Q)⁻² = ∑ₖ (k+1) Qᵏ`.  Its combinatorial core
-is `neumann_square_coeff` above; the analytic content is the `tsum` rearrangement below, which
-is what Lemma `AS` needs in order to be *stated* at all (its right-hand side is
-`∑ₖ (k+1) pₖ`).
+is `neumann_square_coeff` above. The scalar `tsum` rearrangement below is supporting
+content; the complete matrix statement is `neumann_square_series`.
 
 The hypothesis is geometric decay, not bare summability.  That is essential and not a
 convenience: `pₙ = 1/(n+1)²` is summable while `∑ₙ (n+1)pₙ = ∑ₙ 1/(n+1)` diverges, so the
@@ -194,13 +169,14 @@ noncomputable def fibreEquiv (n : ℕ) :
     rw [this]
   · intro i; apply Fin.ext; rfl
 
-/-- **Lemma `neumann2`, analytic identity.**  For `p` nonnegative with geometric decay
+/-- **Supporting scalar rearrangement for Lemma `neumann2`.** For `p` nonnegative with geometric decay
 `pₙ ≤ C θⁿ`, `0 ≤ θ < 1`,
 ```
   ∑' (kj : ℕ × ℕ), p (kj.1 + kj.2)  =  ∑' n, (n+1) · pₙ .
 ```
-Applied to `pₖ = (Qᵏ1)ᵢ` this is the `i`-th entry of `(I−Q)⁻² = ∑ₖ (k+1) Qᵏ`: the left side is
-the Cauchy product `(∑ⱼQʲ)(∑ₖQᵏ)` read entrywise, the right side the weighted series.
+Applied to `pₖ = (Qᵏ1)ᵢ`, it rearranges the scalar plane sum into the weighted
+series. Identifying the plane sum with the inverse square also requires the
+matrix Neumann identity, proved separately in `neumann_square_series`.
 
 The proof groups the plane sum over the fibres of `(k,j) ↦ k+j`; on the fibre over `n` the
 summand is constant at `pₙ`, and the fibre has `n+1` elements by `fibreEquiv`. -/
@@ -230,20 +206,9 @@ theorem neumann2_weighted_series (p : ℕ → ℝ) (C θ : ℝ) (hp : ∀ n, 0 �
 
 /-! ### Lemma `AS` (substochastic sequence inequality)
 
-The paper: for `Q ≥ 0`, `Q1 ≤ 1`, `ρ(Q) < 1`, fix `i` and set `pₖ = (Qᵏ1)ᵢ`; then
-`(∑ₖ pₖ)² ≤ (2s/(s+1)) ∑ₖ (k+1) pₖ`.
-
-This has **no standalone theorem here, deliberately.**  With `neumann2_weighted_series` in hand
-its two sides are `(N1)ᵢ` and `(N²1)ᵢ` (the left by `SSP.xVec_eq_tsum`), so `AS` and Lemma
-`componentbound` are the *same* inequality in series and matrix clothing.  This repository
-proves the matrix form directly and unconditionally — `componentwise_bound` below — so `AS` is
-never an intermediate step, and restating it would only re-export that theorem through the two
-bridges.
-
-What is *not* replicated is the paper's route to it: `pₖ` are survival probabilities of an
-absorbing chain, making the series `𝔼ᵢ[T]` and `𝔼ᵢ[T²]/2`, whereupon the bound is the
-Aldous–Shepp least-variability theorem `Varᵢ(T) ≥ (𝔼ᵢ[T])²/s`.  That analytic input is exactly
-what `SSPLean.QSequenceCrossing` replaces. -/
+The standalone series statement is `substochastic_sequence_inequality` below.
+It uses the component bound together with convergent matrix Neumann series,
+including the square, rather than formalizing the paper's probabilistic proof. -/
 
 /-- **Lemma `componentbound` (componentwise bound), verbatim.**
 
@@ -324,7 +289,7 @@ theorem unconditional_bound (s : ℕ) (hs : 0 < s) (Ssp : ℝ)
 /-- **Corollary `sharp`, the `s = 2` instance.**  The paper exhibits an `s`-stage
 second-order family attaining `𝒞 = 2s`.  Checking the family in general needs its explicit
 `N⁻¹`; at `s = 2` the data is small enough to verify directly.  Here `N = I + rA` for the
-paper's `A = [[1/4, 0], [1/2, 1/4]]` at `r = 4`, with `w = (1/2, 1/2)`, and both order-two
+paper's `A = [[1/4, 0], [1/2, 1/4]]` at `r = 4`, with `w = (0, 1)`, and both order-two
 conditions hold at `r = 4 = 2s`. -/
 theorem sharp_two_stage_ssp :
     ∃ (N : ℕ → ℕ → ℝ) (w : ℕ → ℝ),
@@ -355,12 +320,13 @@ theorem sharp_two_stage_componentBound :
 
 /-! ## §4. A moment hierarchy
 
-The conjecture is open; its `k = 2` consequence for the SSP coefficient, and the mixture
-lemma, are proved. -/
+The acyclic all-k hierarchy and cyclic k = 2 inequality are proved. The full
+cyclic all-k statement is false in the current paper. -/
 
 /-- **Conjecture `hierarchy`.**  `mₖ₋₁ mₖ₊₁ / mₖ² ≥ (s+k)/(s+k−1)` for the raw moments of a
 phase-type variable of order at most `s`.  Recorded as a predicate on a moment sequence;
-this is *not* proved — it is open in the paper.  The case `k = 1` is Aldous–Shepp, which in
+this is a predicate, not a theorem; the current paper refutes its full cyclic version.
+The case `k = 1` is Aldous–Shepp, which in
 this repository is `SSP.componentBound_unconditional`. -/
 def MomentHierarchy (s : ℕ) (m : ℕ → ℝ) : Prop :=
   ∀ k ≥ 1, ((s : ℝ) + k) / ((s : ℝ) + k - 1) * (m k) ^ 2 ≤ m (k - 1) * m (k + 1)
@@ -581,7 +547,289 @@ theorem barrier {s : ℕ} {A : ℕ → ℕ → ℝ} {b c : ℕ → ℝ}
     False :=
   SSP.no_order3_algebraically_stable A b c hA hstab.b_nonneg hc hrow h1 h2 h3 hstab.M_psd
 
-/-! ## §6. An A-stability barrier for positive coefficients -/
+/-! ## Additional declarations matching the current numbered statements -/
+
+/-- **Theorem 2 (`thm:SSPbound`)**, directly from the five inverse SSP conditions. -/
+theorem ssp_bound_of_conditions (s : ℕ) (hs : 0 < s)
+    (N Ninv : ℕ → ℕ → ℝ) (w : ℕ → ℝ) (r : ℝ)
+    (hSSP : SSPConditions s N Ninv w) (hoc : OrderTwo s N w r) : r ≤ 2 * s := by
+  classical
+  let F := SSP.toMat s N
+  let M := SSP.toMat s Ninv
+  have hleft : M * F = 1 := by
+    ext i j
+    rw [Matrix.mul_apply]
+    change (∑ k : Fin s, Ninv i k * N k j) = if i = j then 1 else 0
+    rw [Fin.sum_univ_eq_sum_range (fun k => Ninv i k * N k j) s]
+    simpa only [Fin.ext_iff] using hSSP.inv_left i i.isLt j j.isLt
+  have hdet := congrArg Matrix.det hleft
+  rw [Matrix.det_mul, Matrix.det_one] at hdet
+  have hFunit : IsUnit F := by
+    apply (Matrix.isUnit_iff_isUnit_det F).mpr
+    apply isUnit_iff_ne_zero.mpr
+    intro hz
+    rw [hz, mul_zero] at hdet
+    norm_num at hdet
+  have hFinv : F⁻¹ = M := Matrix.inv_eq_left_inv hleft
+  have hrows : ∀ i < s, rowSum s (SSP.ofMat s F) i = rowSum s N i := by
+    intro i hi
+    apply Finset.sum_congr rfl
+    intro j hj
+    simp [SSP.ofMat, F, SSP.toMat, hi, mem_range.mp hj]
+  have hrows2 : ∀ i < s, rowSum2 s (SSP.ofMat s F) i = rowSum2 s N i := by
+    intro i hi
+    apply Finset.sum_congr rfl
+    intro j hj
+    apply Finset.sum_congr rfl
+    intro k hk
+    simp [SSP.ofMat, F, SSP.toMat, hi, mem_range.mp hj, mem_range.mp hk]
+  apply ssp_bound_of_invMat s hs F hFunit
+  · intro i j
+    unfold SSP.subFromInv
+    split_ifs with hij
+    · rw [hFinv]
+      simpa [M, SSP.toMat, Matrix.sub_apply, Matrix.one_apply, Fin.ext_iff] using
+        hSSP.sub_nonneg i hij.1 j hij.2
+    · exact le_rfl
+  · intro i
+    rw [hFinv]
+    change 0 ≤ ∑ j : Fin s, Ninv i j
+    rw [Fin.sum_univ_eq_sum_range]
+    exact hSSP.rowSum_nonneg i i.isLt
+  · exact hSSP.w_nonneg
+  · exact hSSP.w_sum_le_one
+  · constructor
+    · rw [Finset.sum_congr rfl (fun i hi => congrArg (fun x => w i * x)
+        (hrows i (mem_range.mp hi)))]
+      exact hoc.1
+    · rw [Finset.sum_congr rfl (fun i hi => congrArg (fun x => w i * x)
+        (hrows2 i (mem_range.mp hi)))]
+      exact hoc.2
+
+/-- **Corollary 1**, with the component bound derived rather than assumed.
+Only the relation between the coefficient and admissible inverse charts remains
+an input. This is not a proof of the analytic Theorem 1. -/
+theorem unconditional_bound_of_transfer (s : ℕ) (hs : 0 < s) (Ssp : ℝ)
+    (hKFS : KFSTransfer s Ssp) : Ssp ≤ 2 * s := by
+  by_contra h
+  obtain ⟨r, hr1, hr2⟩ := exists_between (lt_of_not_ge h)
+  have hrpos : 0 < r := lt_of_le_of_lt (by positivity) hr1
+  obtain ⟨N, Ninv, w, hSSP, hoc⟩ := hKFS r hrpos hr2
+  have hb := ssp_bound_of_conditions s hs N Ninv w r hSSP hoc
+  linarith
+
+/-- **Lemma 2 (`lem:substochastic`), convergent Neumann series and positivity.** -/
+theorem substochastic_neumann {s : ℕ} (Q : Matrix (Fin s) (Fin s) ℝ)
+    (hQ : ∀ i j, 0 ≤ Q i j) (hrow : ∀ i, ∑ j, Q i j ≤ 1)
+    (hinv : IsUnit (1 - Q)) :
+    spectralRadius ℂ (Q.map (algebraMap ℝ ℂ)) < 1 ∧
+      HasSum (fun k : ℕ => Q ^ k) (1 - Q)⁻¹ ∧
+        (∀ i j, 0 ≤ (1 - Q)⁻¹ i j) := by
+  classical
+  have hρ := substochastic_spectralRadius Q hQ hrow hinv
+  have hsum := SSP.summable_pow_of_spectralRadius_lt_one Q hρ
+  refine ⟨hρ, ?_, ?_⟩
+  · simpa only [SSP.tsum_pow_eq_inv_one_sub Q hρ] using hsum.hasSum
+  · have hp : ∀ k : ℕ, ∀ i j, 0 ≤ (Q ^ k) i j := by
+      intro k
+      induction k with
+      | zero => intro i j; simp only [pow_zero, Matrix.one_apply]; split_ifs <;> positivity
+      | succ k ih =>
+        intro i j
+        rw [pow_succ, Matrix.mul_apply]
+        exact Finset.sum_nonneg (fun l _ => mul_nonneg (ih i l) (hQ l j))
+    intro i j
+    have ha : (∑' k : ℕ, Q ^ k) i = ∑' k : ℕ, (Q ^ k) i := tsum_apply hsum
+    have hb : (∑' k : ℕ, (Q ^ k) i) j = ∑' k : ℕ, (Q ^ k) i j :=
+      tsum_apply ((Pi.summable.mp hsum) i)
+    have he := (congrArg (fun f : Fin s → ℝ => f j) ha).trans hb
+    rw [← SSP.tsum_pow_eq_inv_one_sub Q hρ, he]
+    exact tsum_nonneg (fun k => hp k i j)
+
+/-- **Lemma 3 (`lem:neumann2`), actual matrix identity and convergence.** -/
+theorem neumann_square_series {s : ℕ} (Q : Matrix (Fin s) (Fin s) ℝ)
+    (hQ : ∀ i j, 0 ≤ Q i j) (hrow : ∀ i, ∑ j, Q i j ≤ 1)
+    (hinv : IsUnit (1 - Q)) :
+    spectralRadius ℂ (Q.map (algebraMap ℝ ℂ)) < 1 ∧
+      HasSum (fun k : ℕ => ((k : ℝ) + 1) • Q ^ k) ((1 - Q)⁻¹ * (1 - Q)⁻¹) :=
+  ⟨substochastic_spectralRadius Q hQ hrow hinv,
+    SSP.MainRevisedSupport.neumann_square_hasSum Q
+      (substochastic_spectralRadius Q hQ hrow hinv)⟩
+
+/-- **Lemma 4 (`lem:AS`), the substochastic sequence inequality.** -/
+theorem substochastic_sequence_inequality (s : ℕ) (hs : 0 < s)
+    (Q : ℕ → ℕ → ℝ) (hQ : ∀ i j, 0 ≤ Q i j)
+    (hsub : ∀ i < s, ∑ j ∈ range s, Q i j ≤ 1)
+    (hρ : spectralRadius ℂ ((SSP.toMat s Q).map (algebraMap ℝ ℂ)) < 1)
+    (i : Fin s) :
+    (∑' k : ℕ, ((SSP.toMat s Q) ^ k).mulVec (fun _ => (1 : ℝ)) i) ^ 2 ≤
+      (2 * s / (s + 1)) * ∑' k : ℕ, ((k : ℝ) + 1) *
+        ((SSP.toMat s Q) ^ k).mulVec (fun _ => (1 : ℝ)) i :=
+  SSP.MainRevisedSupport.substochastic_sequence_inequality s hs Q hQ hsub hρ i
+
+/-- **Theorem 4 (`thm:AldousShepp`), including at most `s` states and an atom at zero.** -/
+theorem aldous_shepp {d s : ℕ} (hd : 1 ≤ d) (hds : d ≤ s)
+    (X : SSP.K2Concrete.TransientInitial d) :
+    ((s : ℝ) + 1) / s * (SSP.K2Concrete.transientInitialMoment1 d X) ^ 2 ≤
+      SSP.K2Concrete.transientInitialMoment2 d X := by
+  have hd0 : (0 : ℝ) < d := by exact_mod_cast hd
+  have hs0 : (0 : ℝ) < s := by exact_mod_cast (lt_of_lt_of_le hd hds)
+  have hds' : (d : ℝ) ≤ s := by exact_mod_cast hds
+  have hcoef : ((s : ℝ) + 1) / s ≤ ((d : ℝ) + 1) / d := by
+    rw [div_le_div_iff₀ hs0 hd0]
+    nlinarith
+  exact le_trans (mul_le_mul_of_nonneg_right hcoef (sq_nonneg _))
+    (SSP.K2Concrete.transientInitialAldousSheppMoment hd X)
+
+/-- **Theorem 7 (`thm:cyclic-hierarchy`), ratio form with at most `s` states.** -/
+theorem cyclic_hierarchy {d s : ℕ} (hd : 1 ≤ d) (hds : d ≤ s)
+    (X : SSP.K2Concrete.TransientInitial d)
+    (hm : 0 < SSP.K2Concrete.transientInitialMoment1 d X) :
+    ((s : ℝ) + 2) / ((s : ℝ) + 1) ≤
+      SSP.K2Concrete.transientInitialMoment1 d X *
+        SSP.K2Concrete.transientInitialMoment3 d X /
+        (SSP.K2Concrete.transientInitialMoment2 d X) ^ 2 := by
+  have hds' : (d : ℝ) ≤ s := by exact_mod_cast hds
+  have hcoef : ((s : ℝ) + 2) / ((s : ℝ) + 1) ≤
+      ((d : ℝ) + 2) / ((d : ℝ) + 1) := by
+    rw [div_le_div_iff₀ (by positivity) (by positivity)]
+    nlinarith
+  exact hcoef.trans (SSP.K2Concrete.conjecture_one_k2_short hd X hm)
+
+/-- **Theorem 5 (`thm:OsogamiHarcholBalter`).** The cyclic theorem proves this
+inequality for all transient representations, and hence for every acyclic one. -/
+theorem osogami_harchol_balter {d s : ℕ} (hd : 1 ≤ d) (hds : d ≤ s)
+    (X : SSP.K2Concrete.TransientInitial d)
+    (hm : 0 < SSP.K2Concrete.transientInitialMoment1 d X) :
+    ((s : ℝ) + 2) / ((s : ℝ) + 1) ≤
+      SSP.K2Concrete.transientInitialMoment1 d X *
+        SSP.K2Concrete.transientInitialMoment3 d X /
+        (SSP.K2Concrete.transientInitialMoment2 d X) ^ 2 :=
+  cyclic_hierarchy hd hds X hm
+
+/-- **Theorem 6 (`thm:acyclic-hierarchy`), division-free uniformized density form.**
+This form also covers zero moments. `P` is triangular, `u,v` are nonnegative,
+and `atom` is the mass at zero. -/
+theorem acyclic_hierarchy {s : ℕ} (hs : 1 ≤ s)
+    (P : SSP.MatrixMomentReduction.Mat s) (hP : ∀ i j, 0 ≤ P i j)
+    (htri : ∀ i j, j < i → P i j = 0)
+    (u v : Fin s → ℝ) (hu : ∀ i, 0 ≤ u i) (hv : ∀ i, 0 ≤ v i)
+    (rate atom : ℝ) (hrate : 0 < rate) (hatom : 0 ≤ atom)
+    (hρ : spectralRadius ℂ (P.map (algebraMap ℝ ℂ)) < 1)
+    (k : ℕ) (hk : 1 ≤ k) :
+    ((s + k : ℕ) : ℝ) / ((s + k - 1 : ℕ) : ℝ) *
+        SSP.MatrixMomentReduction.rawMoment P u v rate atom k ^ 2 ≤
+      SSP.MatrixMomentReduction.rawMoment P u v rate atom (k - 1) *
+        SSP.MatrixMomentReduction.rawMoment P u v rate atom (k + 1) :=
+  SSP.MainRevisedSupport.acyclic_hierarchy hs P hP htri u v hu hv rate atom
+    hrate hatom hρ k hk
+
+/-- **Theorem 6 (`thm:acyclic-hierarchy`)**, ratio form with at most `s` states. -/
+theorem acyclic_hierarchy_ratio {d s : ℕ} (hd : 1 ≤ d) (hds : d ≤ s)
+    (P : SSP.MatrixMomentReduction.Mat d) (hP : ∀ i j, 0 ≤ P i j)
+    (htri : ∀ i j, j < i → P i j = 0)
+    (u v : Fin d → ℝ) (hu : ∀ i, 0 ≤ u i) (hv : ∀ i, 0 ≤ v i)
+    (rate atom : ℝ) (hrate : 0 < rate) (hatom : 0 ≤ atom)
+    (hρ : spectralRadius ℂ (P.map (algebraMap ℝ ℂ)) < 1)
+    (hm : 0 < SSP.MatrixMomentReduction.rawMoment P u v rate atom 1)
+    (k : ℕ) (hk : 1 ≤ k) :
+    ((s + k : ℕ) : ℝ) / ((s + k - 1 : ℕ) : ℝ) ≤
+      SSP.MatrixMomentReduction.rawMoment P u v rate atom (k - 1) *
+        SSP.MatrixMomentReduction.rawMoment P u v rate atom (k + 1) /
+          SSP.MatrixMomentReduction.rawMoment P u v rate atom k ^ 2 :=
+  SSP.MainRevisedSupport.acyclic_hierarchy_ratio hd hds P hP htri u v hu hv
+    rate atom hrate hatom hρ hm k hk
+
+/-- **Lemma 6 (`lem:alg`), including the zero-denominator convention at `w=0`.** -/
+theorem algebraic_inequality (n : ℕ) (hn : 2 ≤ n) (w u β : ℝ)
+    (hw0 : 0 ≤ w) (hw1 : w < 1) (hu : 0 ≤ u)
+    (hβ : (n : ℝ) / (n - 1) * w ^ 2 ≤ β) (hzero : w = 0 → β = 0) :
+    (n + 2 : ℝ) / (n + 1) * (2 * (1 - w) + u + β) ^ 2 ≤
+      3 * (1 - w) * (2 * (1 - w) + u + β) + 3 * u +
+        (n + 1 : ℝ) / n * (u ^ 2 / (1 - w) + β ^ 2 / w) :=
+  SSP.MainRevisedSupport.algebraic_inequality n hn w u β hw0 hw1 hu hβ hzero
+
+/-- **Theorem 8 (`thm:SSPboundP3`)**, from inverse SSP and order-three conditions. -/
+theorem order3_bound_of_invMat (s : ℕ) (hs : 1 ≤ s)
+    (N : Matrix (Fin s) (Fin s) ℝ) (hNunit : IsUnit N)
+    (hQ : ∀ i j, 0 ≤ SSP.subFromInv s N i j)
+    (hNrow : ∀ i : Fin s, 0 ≤ ∑ j, N⁻¹ i j)
+    (w : ℕ → ℝ) (hw : ∀ i, 0 ≤ w i) (hw1 : ∑ i ∈ range s, w i ≤ 1)
+    (r : ℝ) (hr : 0 ≤ r) (hoc : OrderThree s (SSP.ofMat s N) w r) :
+    r ≤ (s : ℝ) - 1 + Real.sqrt ((s : ℝ) ^ 2 - 1) := by
+  classical
+  let Q := SSP.subFromInv s N
+  have hrow : ∀ i : Fin s, ∑ j, SSP.toMat s Q i j ≤ 1 := by
+    intro i
+    rw [show SSP.toMat s Q = 1 - N⁻¹ from SSP.toMat_subFromInv s N]
+    change (∑ j, ((1 : Matrix (Fin s) (Fin s) ℝ) i j - N⁻¹ i j)) ≤ 1
+    rw [Finset.sum_sub_distrib]
+    have he : (∑ j : Fin s, (1 : Matrix (Fin s) (Fin s) ℝ) i j) = 1 := by
+      simp [Matrix.one_apply]
+    rw [he]
+    linarith [hNrow i]
+  have hden : (1 : Matrix (Fin s) (Fin s) ℝ) - SSP.toMat s Q = N⁻¹ := by
+    rw [SSP.toMat_subFromInv, sub_sub_cancel]
+  have hu : IsUnit (1 - SSP.toMat s Q) :=
+    hden ▸ (Matrix.isUnit_nonsing_inv_iff.mpr hNunit)
+  have he : ∀ i < s, ∀ j < s, SSP.ofMat s N i j = SSP.invMat s Q i j := by
+    intro i hi j hj
+    rw [SSP.ofMat, dif_pos (⟨hi, hj⟩ : i < s ∧ j < s),
+      SSP.invMat, dif_pos (⟨hi, hj⟩ : i < s ∧ j < s), hden,
+      Matrix.nonsing_inv_nonsing_inv N ((Matrix.isUnit_iff_isUnit_det N).mp hNunit)]
+  have e1 : ∀ i < s, rowSum s (SSP.ofMat s N) i = rowSum s (SSP.invMat s Q) i :=
+    fun i hi => Finset.sum_congr rfl (fun j hj => he i hi j (mem_range.mp hj))
+  have e2 : ∀ i < s, rowSum2 s (SSP.ofMat s N) i = rowSum2 s (SSP.invMat s Q) i := by
+    intro i hi
+    exact Finset.sum_congr rfl (fun j hj => Finset.sum_congr rfl (fun l hl => by
+      rw [he i hi j (mem_range.mp hj), he j (mem_range.mp hj) l (mem_range.mp hl)]))
+  have e3 : ∀ i < s, rowSum3 s (SSP.ofMat s N) i = rowSum3 s (SSP.invMat s Q) i := by
+    intro i hi
+    exact Finset.sum_congr rfl (fun j hj => Finset.sum_congr rfl (fun l hl =>
+      Finset.sum_congr rfl (fun m hm => by
+        rw [he i hi j (mem_range.mp hj), he j (mem_range.mp hj) l (mem_range.mp hl),
+          he l (mem_range.mp hl) m (mem_range.mp hm)])))
+  apply order3_bound_unconditional s hs Q (fun i j => hQ i j) hrow hu w hw
+  · rwa [Fin.sum_univ_eq_sum_range]
+  · exact hr
+  · refine ⟨⟨?_, ?_⟩, ?_⟩
+    · rw [← hoc.1.1]
+      exact Finset.sum_congr rfl (fun i hi => by rw [e1 i (mem_range.mp hi)])
+    · rw [← hoc.1.2]
+      exact Finset.sum_congr rfl (fun i hi => by rw [e2 i (mem_range.mp hi)])
+    · rw [← hoc.2]
+      exact Finset.sum_congr rfl (fun i hi => by rw [e3 i (mem_range.mp hi)])
+
+/-- **Lemma 7 (`lem:partialsums`), including the paper's strict inequality.** -/
+theorem partial_sums_strict (b c : ℕ → ℝ) (s : ℕ)
+    (hb : ∀ i, 0 ≤ b i) (hc : ∀ i j, i ≤ j → j < s → c i ≤ c j)
+    (hsum : ∑ i ∈ range s, b i = 1) (hmean : ∑ i ∈ range s, b i * c i = 1 / 2)
+    (hδ : ∀ k ≤ s, (SSP.psum b k) ^ 2 / 2 ≤ ∑ i ∈ range k, b i * c i) :
+    (∑ i ∈ range s, b i * c i ^ 2 ≤ 1 / 3 - (∑ i ∈ range s, b i ^ 3) / 12) ∧
+      (1 / 3 - (∑ i ∈ range s, b i ^ 3) / 12 < (1 : ℝ) / 3) := by
+  refine ⟨partial_sums b c s hb hc hsum hmean hδ, ?_⟩
+  have hex : ∃ i ∈ range s, 0 < b i := by
+    by_contra h
+    push Not at h
+    have hz : ∑ i ∈ range s, b i = 0 :=
+      Finset.sum_eq_zero (fun i hi => le_antisymm (h i hi) (hb i))
+    linarith
+  obtain ⟨i, hi, hbi⟩ := hex
+  have hpos : 0 < ∑ i ∈ range s, b i ^ 3 :=
+    Finset.sum_pos' (fun j _ => pow_nonneg (hb j) _) ⟨i, hi, pow_pos hbi _⟩
+  linarith
+
+/-- **Theorem 9 (`thm:barrier`), with the stage-sorting step proved.** -/
+theorem barrier_unsorted {s : ℕ} (A : Matrix (Fin s) (Fin s) ℝ) (b c : Fin s → ℝ)
+    (hA : ∀ i j, 0 ≤ A i j) (hb : ∀ i, 0 ≤ b i)
+    (hrow : ∀ i, ∑ j, A i j = c i)
+    (h1 : ∑ i, b i = 1) (h2 : ∑ i, b i * c i = 1 / 2)
+    (h3 : ∑ i, b i * c i ^ 2 = 1 / 3)
+    (hM : ∀ x : Fin s → ℝ, 0 ≤ ∑ i, ∑ j,
+      (b i * A i j + b j * A j i - b i * b j) * (x i * x j)) : False :=
+  SSP.MainRevisedSupport.barrier_unsorted A b c hA hb hrow h1 h2 h3 hM
+
+/-! ## Legacy A-stability declarations (not part of the current numbered paper) -/
 
 /-- **Definition (A-stability conditions, Juhl–Shirokoff form).**  There is a symmetric
 `R ⪰ 0` with `R1 = b` and `X = RA + AᵗR − bbᵗ ⪰ 0`.  This is the hypothesis set of
@@ -650,35 +898,38 @@ def AStabilityBarrier (s : ℕ) : Prop :=
     ∑ i ∈ range s, b i * (c i) ^ 2 = 1/3 →
     False
 
-/-! ## Dictionary
-
-| paper | here | provenance |
-|---|---|---|
-| Def. (SSP coefficient), eq. `KFSconditions` | `SSPConditions` | definition |
-| eq. `NemethOrderConditions` | `OrderTwo`, `OrderThree` | definition |
-| Thm. `sspthm` (Kraaijevanger; Ferracina–Spijker) | `KFSTransfer` | analytic; isolated as hypothesis |
-| Lem. `wcs` | `weighted_cauchy_schwarz` | `SSP.weighted_cauchy_schwarz` |
-| Lem. `substochastic` | `substochastic_rowSum_le`, `substochastic_entry_mem`, `substochastic_spectralRadius` | new / `SSP.entry_le_one_of_substochastic` / `SSP.Elementary.spectralRadius_lt_one_elementary` |
-| Lem. `neumann2` | `neumann_square_coeff`, `neumann_square_pairs` (counting core); `neumann2_weighted_series` (analytic identity) | new |
-| Lem. `AS` | — (absorbed) | subsumed by the matrix form below |
-| Lem. `componentbound` | `componentwise_bound` | `SSP.componentBound_unconditional_of_invertible'` |
-| Thm. `SSPbound` | `ssp_bound` | `SSP.ssp_coefficient_bound` |
-| Thm. `alt` (§`altproof`, restatement of `SSPbound`) | `ssp_bound_of_invMat` | `SSP.qsequence_ssp_bound_unconditional_of_invMat` |
-| Cor. `unconditional` | `unconditional_bound` | new, from `ssp_bound` + `KFSTransferCB` |
-| Cor. `sharp` | `sharp_two_stage_ssp`, `sharp_two_stage_componentBound` | new (`s = 2` instance; equality at `i = 2`) |
-| Conj. `hierarchy` | `MomentHierarchy` | general `k`: open; not proved |
-| Conj. `hierarchy`, `k = 2` | `hierarchy_k2` | **proved unconditionally**; `SSP.K2Concrete.all_transient_initial_laws_short` (no canonical-representation theorem) |
-| Conj. `hierarchy`, `k = 3` | `hierarchy_k3` (in `SSPLean.K3Complete`) | **proved unconditionally**; `SSP.K2Concrete.all_transient_initial_k3` |
-| Lem. `mixture` | `mixture_closure` | new |
-| Thm. `order3` | `order3_bound_unconditional` | `hierarchy_k2` + `SSP.order3_ssp_bound` |
-| Rem. `uniqueness` (equality at `r = 2s`) | — | **proved**: `SSP.orderTwo_two_mul_iff_halfRateSerialErlang`, `SSP.orderTwo_two_mul_iff_halfRateSerialMat` (in `SSPLean.SSPBoundEquality`) |
-| Def. (Algebraic Stability) | `AlgebraicallyStable` | definition |
-| Lem. `partialsums` | `partial_sums` | `SSP.partial_sum_lemma` |
-| Thm. `barrier` | `barrier` | `SSP.no_order3_algebraically_stable` |
-| Def. (A-stability conditions) | `AStabilityData` | definition |
-| Lem. `collapse` | `collapse_sum_identity` | new (algebraic core) |
-| Conj. `astability` | `AStabilityBarrier` | open at `s = 4`; false for `s ≥ 5` |
-| Lem. `targetstatement` (App. A, elementary proof of Lem. `componentbound`) | — | `SSP.componentBound_unconditional` |
--/
-
 end SSP.MainRevised
+
+/-! ## Index: numbered results in `main_revised.tex`
+
+Numbering is from the active October 23, 2026 TeX source. Theorem, lemma and
+corollary counters are independent. Every Lean identifier is fully qualified.
+"Partial" and "conditional" entries must not be read as proofs of the full
+paper statement. A different proof route is acceptable when the statement agrees.
+
+| Paper result | TeX label | Corresponding Lean result | Coverage |
+|---|---|---|---|
+| Theorem 1 — SSP monotonicity and sharpness | `sspthm` | `SSP.MainRevised.KFSTransfer` | **Missing analytic proof**: this is a predicate/hypothesis, not a theorem. |
+| Theorem 2 — SSP bound | `thm:SSPbound` | `SSP.MainRevised.ssp_bound_of_conditions` | Proved from the five inverse SSP conditions and order-two identities; no component-bound hypothesis. |
+| Lemma 1 — weighted Cauchy–Schwarz | `lem:wcs` | `SSP.MainRevised.weighted_cauchy_schwarz` | Proved. |
+| Lemma 2 — substochastic structure | `lem:substochastic` | `SSP.MainRevised.substochastic_rowSum_le`, `SSP.MainRevised.substochastic_entry_mem`, `SSP.MainRevised.substochastic_neumann` | Proved in these parts, including spectral radius, convergent Neumann series and inverse nonnegativity. |
+| Lemma 3 — Neumann series for the square | `lem:neumann2` | `SSP.MainRevised.neumann_square_series` | Proved as an actual matrix `HasSum`, including convergence. |
+| Lemma 4 — substochastic sequence inequality | `lem:AS` | `SSP.MainRevised.substochastic_sequence_inequality` | Proved in series form. |
+| Lemma 5 — componentwise bound | `lem:componentbound` | `SSP.MainRevised.componentwise_bound` | Proved; also covers the Appendix A restatement. |
+| Corollary 1 — unconditional coefficient bound | `cor:unconditional` | `SSP.MainRevised.unconditional_bound_of_transfer` | **Conditional**: assumes `KFSTransfer`; the component bound is derived, but a full `(A,b)` coefficient formalization is still missing. |
+| Corollary 2 — sharp family | `cor:sharp` | `SSP.MainRevised.sharp_two_stage_ssp`, `SSP.MainRevised.sharp_two_stage_componentBound` | **Partial**: only two stages and transformed order identities; not the full all-stage SSP coefficient equality. |
+| Theorem 3 — alternate SSP bound | `thm:alt` | `SSP.MainRevised.ssp_bound_of_invMat` | Proved; the same inverse-matrix bound as Theorem 2. |
+| Theorem 4 — Aldous–Shepp least variability | `thm:AldousShepp` | `SSP.MainRevised.aldous_shepp` | Proved for concrete transient initial laws with at most `s` states, including an atom at zero. |
+| Theorem 5 — Osogami least-r-value inequality | `thm:OsogamiHarcholBalter` | `SSP.MainRevised.osogami_harchol_balter` | Proved by the stronger cyclic theorem, including at most `s` states and an atom at zero. |
+| Theorem 6 — acyclic all-k hierarchy | `thm:acyclic-hierarchy` | `SSP.MainRevised.acyclic_hierarchy_ratio`, `SSP.MainRevised.acyclic_hierarchy` | Proved in triangular uniformized-density form, including positive-moment ratios, at most `s` states, and an atom at zero; the division-free form also covers zero moments. |
+| Theorem 7 — cyclic k=2 hierarchy | `thm:cyclic-hierarchy` | `SSP.MainRevised.cyclic_hierarchy` | Proved in ratio form for concrete transient initial laws with at most `s` states, including an atom at zero. |
+| Lemma 6 — algebraic inequality | `lem:alg` | `SSP.MainRevised.algebraic_inequality` | Proved, including `w=0` and `β=0`; Lean division by zero gives the stated convention. |
+| Theorem 8 — third-order SSP bound | `thm:SSPboundP3` | `SSP.MainRevised.order3_bound_of_invMat` | Proved directly from inverse SSP conditions and transformed order-three identities. |
+| Theorem 9 — algebraic-stability order barrier | `thm:barrier` | `SSP.MainRevised.barrier_unsorted` | Proved, including a permutation to sort stages; no sorted-stage hypothesis. |
+| Lemma 7 — partial sums | `lem:partialsums` | `SSP.MainRevised.partial_sums_strict` | Proved, including both the quantitative upper bound and its strict comparison with `1/3`. |
+
+The general cyclic all-k conjecture is not a numbered theorem in this index:
+the revised paper disproves it using six states at k = 71. Legacy A-stability
+and mixture declarations above are retained for compatibility and do not add
+numbered results to the current paper.
+-/
