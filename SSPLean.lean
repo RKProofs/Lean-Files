@@ -9,7 +9,9 @@ import SSPLean.CanonicalS3
 import SSPLean.ChainInequality
 import SSPLean.CycleThree
 import SSPLean.FiveStageWitness
+import SSPLean.FourCycleCurvatureAlgebra
 import SSPLean.FourStageReduction
+import SSPLean.FourStateTensorSum
 import SSPLean.K2AllStages
 import SSPLean.K2Concrete
 import SSPLean.K2ConcreteInitial
@@ -107,6 +109,7 @@ import SSPLean.K3S4KKT
 import SSPLean.K3S4Renewal
 import SSPLean.K3S4SecondMoment
 import SSPLean.MainRevised
+import SSPLean.MixedCycleCurvatureCertificates
 import SSPLean.MomentBridge
 import SSPLean.MomentHierarchy
 import SSPLean.MomentTests
