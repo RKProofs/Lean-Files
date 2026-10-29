@@ -1,0 +1,397 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage{xurl}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newcommand{\E}{\mathbb E}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Gap}{\mathcal G}
+\newcommand{\Btwo}[4]{#1(1-#4)^2+2#2#4(1-#4)+#3#4^2}
+
+\title{The All-Stage $k=3$ State-Return Induction\\A Proof Summary}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We summarize the completed induction step for the $k=3$ phase-type moment
+inequality
+\[
+  (n+2)\,\E Z^2\,\E Z^4\ge (n+3)(\E Z^3)^2.
+\]
+The proof uses the state-return decomposition, monotonicity in the fourth
+moments, a positive-definite quadratic minimization in the two third moments,
+and a scale-free atom/Erlang parametrization of the sharp second-moment
+boundary.  The resulting corner and two face conditions are proved by exact
+Bernstein and discriminant certificates.  The complete algebraic induction
+step for every $n\ge4$ is machine-checked in Lean.
+\end{abstract}
+
+\section{Statement and scope}
+
+For a nonnegative random variable $Z$ write $m_j(Z)=\E Z^j$.  The $k=3$
+inequality at phase order $n$ is
+\begin{equation}\label{eq:target}
+  (n+2)m_2(Z)m_4(Z)-(n+3)m_3(Z)^2\ge0.
+\end{equation}
+The induction hypothesis applies to the two phase-type excursions of order at
+most $n-1$.  If their first four moments are
+\[
+ (u,A,C,E)=(m_1(U),m_2(U),m_3(U),m_4(U)),\qquad
+ (v,B,D,F)=(m_1(V),m_2(V),m_3(V),m_4(V)),
+\]
+then the required lower bounds are
+\begin{align}
+ n u^2&\le (n-1)A,& n v^2&\le(n-1)B, \label{eq:second}\\
+ (n+1)A^2&\le nuC,& (n+1)B^2&\le nvD, \label{eq:third}\\
+ (n+2)C^2&\le(n+1)AE,&
+ (n+2)D^2&\le(n+1)BF. \label{eq:fourth}
+\end{align}
+The all-stage Lean theorem proves the scalar renewal implication in the
+genuine cyclic region.  Combined with the standard state-return decomposition
+and its degenerate boundary cases, this is the induction step for
+\eqref{eq:target}.  The small orders are handled separately by the direct
+two-state and canonical three-state calculations.
+
+\section{Renewal reduction}
+
+After splitting at a chosen transient state, the absorption time has the form
+\[
+ Z=(E_0+V_0)+\sum_{j=1}^{N}(E_j+U_j),
+\]
+where the $E_j$ are exponential holding times, $U_j$ are return excursions,
+$V_0$ is the terminal excursion, and $N$ is geometric.  Let $x\ge0$ be the
+mean holding time and let $r>0$ be the mean number of returns.  Define the
+moments of the return and terminal kernels by
+\begin{align*}
+ a_1&=x+u,
+ &a_2&=2x^2+2xu+A,\\
+ a_3&=6x^3+6x^2u+3xA+C,
+ &a_4&=24x^4+24x^3u+12x^2A+4xC+E,
+\end{align*}
+and similarly $b_j$ with $(u,A,C,E)$ replaced by $(v,B,D,F)$.
+The renewal moments $M_j=m_j(Z)$ obey
+\begin{align}
+ M_1&=b_1+ra_1,\nonumber\\
+ M_2&=b_2+ra_2+2ra_1M_1,\nonumber\\
+ M_3&=b_3+ra_3+3ra_2M_1+3ra_1M_2,\label{eq:renewal}\\
+ M_4&=b_4+ra_4+4ra_3M_1+6ra_2M_2+4ra_1M_3.\nonumber
+\end{align}
+Thus the desired gap is
+\[
+ \Gap_n=(n+2)M_2M_4-(n+3)M_3^2.
+\]
+
+The coefficient of each of $E$ and $F$ in $\Gap_n$ is nonnegative.  Hence
+\eqref{eq:fourth} permits the sharp substitutions
+\begin{equation}\label{eq:lower-fourth}
+ E_0=\frac{n+2}{n+1}\frac{C^2}{A},\qquad
+ F_0=\frac{n+2}{n+1}\frac{D^2}{B}.
+\end{equation}
+It is therefore enough to prove nonnegativity of the reduced gap
+\[
+ G(C,D)=\Gap_n\big|_{E=E_0,\,F=F_0}.
+\]
+
+\section{The convex third-moment layer}
+
+For fixed $n,r,x,u,A,v,B$, the function $G$ is quadratic in $(C,D)$.  Put
+\[
+ H=\begin{pmatrix}H_{AA}&H_{AB}\\ H_{AB}&H_{BB}\end{pmatrix}
+       =\nabla^2_{C,D}G,
+ \qquad K=r^2u^2+2r^2ux+r^2x^2+ruv+2rux+rvx+2rx^2+vx+x^2.
+\]
+The entries used in the formal proof are
+\begin{align*}
+ H_{AA}&=\frac{2r\{Ar+(n+2)^2B+2(n+2)^2K\}}{(n+1)A},\\
+ H_{AB}&=-2(n+3)r,\\
+ H_{BB}&=\frac{2\{(n+2)^2Ar+B+2(n+2)^2K\}}{(n+1)B}.
+\end{align*}
+For $r,u,v,A,B>0$ and $x\ge0$, both diagonal entries are positive, while
+\begin{equation}\label{eq:hessian-det}
+ \det H=
+ \frac{4(n+2)^2r}{(n+1)^2AB}
+ (Ar+B+2K)\bigl(Ar+B+2(n+2)^2K\bigr)>0.
+\end{equation}
+Thus $G$ is strictly convex on the feasible quadrant for $(C,D)$.
+
+Set the sharp lower endpoints from \eqref{eq:third} to be
+\[
+ C_0=\frac{n+1}{n}\frac{A^2}{u},\qquad
+ D_0=\frac{n+1}{n}\frac{B^2}{v},
+\]
+and write $C=C_0+s$, $D=D_0+t$, where $s,t\ge0$.  If
+\[
+ g=G(C_0,D_0),\qquad g_A=\partial_CG(C_0,D_0),\qquad
+ g_B=\partial_DG(C_0,D_0),
+\]
+then the exact Taylor formula is
+\begin{equation}\label{eq:taylor}
+ G(C_0+s,D_0+t)=g+g_As+g_Bt+
+ \frac12\bigl(H_{AA}s^2+2H_{AB}st+H_{BB}t^2\bigr).
+\end{equation}
+
+The minimum of \eqref{eq:taylor} over $s,t\ge0$ has four possible KKT
+locations: the corner, one of the two open faces, or the interior.  Define
+\begin{align*}
+ S_A&=H_{AA}g_B-H_{AB}g_A,&
+ F_A&=2H_{AA}g-g_A^2,\\
+ S_B&=H_{BB}g_A-H_{AB}g_B,&
+ F_B&=2H_{BB}g-g_B^2.
+\end{align*}
+It is enough to establish
+\begin{enumerate}
+\item $g\ge0$ at the corner;
+\item if $g_A<0$ and $S_A\ge0$, then $F_A\ge0$;
+\item if $g_B<0$ and $S_B\ge0$, then $F_B\ge0$;
+\item the alternative $S_A<0$ and $S_B<0$ cannot occur.
+\end{enumerate}
+This replaces the failed attempt to prove convexity in the second moments:
+only the third-moment layer is convex, and its boundary minima must be treated
+explicitly.
+
+\section{Sharp second-moment coordinates}
+
+The inequalities \eqref{eq:second} have a convenient sharp-mixture
+parametrization.  Let
+\[
+ p=\frac{nu^2}{(n-1)A},\qquad q=\frac{nv^2}{(n-1)B};
+ \qquad 0<p,q\le1.
+\]
+These are the weights of an atom/Erlang-$(n-1)$ representation.  After one
+positive global rescaling, introduce
+\begin{equation}\label{eq:coordinates}
+ r=\frac{a}{pY},\qquad
+ x=\frac{pY(1-a)}{pY+a},\qquad
+ u=pY,\qquad A=\frac{npY^2}{n-1},
+ \qquad v=qT,\qquad B=\frac{nqT^2}{n-1},
+\end{equation}
+with
+\[
+ 0<a\le1,\qquad T,Y>0,\qquad 0<p,q\le1.
+\]
+Conversely, every nondegenerate point satisfying \eqref{eq:second} can be
+put in this form.  The normalized sharp gap and KKT quantities are independent
+of $p$, except for harmless positive powers.  We denote them by
+\[
+ \widehat g,\quad \widehat g_A,\quad \widehat g_B,\quad
+ \widehat S_A,\quad \widehat S_B,\quad
+ \widehat F_A,\quad \widehat F_B.
+\]
+For example, the exact scaling identities include
+\[
+ g=\widehat g,\qquad
+ g_A=\frac{2a}{Yp(n-1)^2}\,\widehat g_A,\qquad
+ g_B=-\frac{2}{(n-1)^2}\,\widehat g_B,\qquad
+ p^2F_A=\widehat F_A,\qquad F_B=\widehat F_B.
+\]
+All omitted factors in these identities are strictly positive on
+\eqref{eq:coordinates}, so the relevant signs are preserved (with the shown
+sign reversal for $g_B$).
+
+\section{The sharp corner and the interior alternative}
+
+After clearing the positive denominator $(n-1)^4$, the corner gap becomes a
+polynomial $P_n(a,T,Y,q)$.  It is quadratic in $q$.  Its Bernstein expansion
+on $q\in[0,1]$ reduces positivity to the endpoints and a middle coefficient.
+The $q=0$ endpoint is expanded in Bernstein form in $a$.  The $q=1$ endpoint
+is again expanded in $a$, with the terminal scale split at $T=n-1$:
+\[
+ T\le n-1 \quad\text{and}\quad T\ge n-1.
+\]
+Writing $m=n-4\ge0$ and, respectively,
+\[
+ T=(n-1)t\quad(0\le t\le1),
+ \qquad\text{or}\qquad T=n-1+z\quad(z\ge0),
+\]
+turns each coefficient into a sum of nonnegative monomials or a nonnegative
+quadratic certified by its discriminant.  Consequently
+\begin{equation}\label{eq:corner}
+ \widehat g(n,a,T,Y,q)\ge0
+ \quad(n\ge4, 0\le a\le1, T,Y\ge0, 0\le q\le1).
+\end{equation}
+
+The two strict interior side conditions have opposite normalized signs.  The
+return-side condition becomes positivity of an affine expression
+$R(n,a,T,Y,q)$, whereas the terminal-side condition is represented by a
+quadratic $S(n,a,T,Y,q)$.  Exact elimination gives
+\begin{equation}\label{eq:elimination}
+ \alpha(n,a,T,q)^2 S
+ =\beta(n,a)R^2+Q_1(n,a,T,q)R+Q_0(n,a,T,q),
+\end{equation}
+where $\alpha>0$ in the active region and $\beta>0$.  Separate exact
+certificates for the cases determined by the sign of the affine intercept
+show
+\[
+ R>0\quad\Longrightarrow\quad S\ge0.
+\]
+But a strict interior minimizer would require both normalized side
+expressions to be negative.  The implication above makes that impossible.
+Hence the fourth KKT alternative is eliminated for every $n\ge4$.
+
+\section{The return face}
+
+The return-face condition is needed only when the corresponding gradient is
+active:
+\[
+ \widehat g_A<0,\qquad R\le0.
+\]
+Clearing positive denominators gives the exact identity
+\begin{equation}\label{eq:return-num}
+ Y^3n(n+1)(n-1)^4\widehat F_A
+   =4a\,N_A,
+ \qquad
+ N_A=(n+2)M_2^{\mathrm{num}}\,P_A(n,aY,T,q),
+\end{equation}
+where $M_2^{\mathrm{num}}\ge0$ and $P_A$ is cubic in $q$.
+
+There are three reductions.
+\begin{enumerate}
+\item If $T\le n-1$, a Bernstein expansion in $q$ proves $P_A\ge0$
+unconditionally.
+\item Suppose $T\ge n-1$ and the current affine slope $M$ of the active
+return interval is nonpositive.  After setting $m=n-4$ and
+$z=T-(n-1)$, a root/surplus parametrization maps the domain to
+$m,s,X\ge0$ and $v\in[0,1]$.  The $X$-axis is covered by
+\[
+ [0,1],\quad [1,m^2+39],\quad
+ [m^2+39,\,2m^2+6m+60],\quad
+ [2m^2+6m+60,\infty).
+\]
+On each interval, the transformed polynomial has an exact Bernstein-positive
+or monotonicity certificate.
+\item If $M>0$, the side condition $R\le0$ produces a projective coordinate
+$w\in[0,1]$.  The active-gradient condition remains in the precise form
+needed at that point.  A low/high chart split, followed in the high chart by
+two projective ratio charts, proves
+\[
+ \widehat g_A<0\quad\Longrightarrow\quad P_A\ge0.
+\]
+The individual chart polynomials are certified by Bernstein coefficients and,
+where a middle coefficient changes sign, by a quadratic discriminant.
+\end{enumerate}
+Together these cases prove
+\begin{equation}\label{eq:return-face}
+ \widehat g_A<0, R\le0\quad\Longrightarrow\quad \widehat F_A\ge0.
+\end{equation}
+
+\section{The terminal face}
+
+The terminal-face numerator admits a particularly useful factorization:
+\begin{equation}\label{eq:terminal-factor}
+ N_B=(n+2)\,L(n,a,T,Y,q)\,P_B(n,a,T,Y,q),
+\end{equation}
+where $L>0$ and $P_B$ is quadratic in $q$.  Write its quadratic Bernstein
+form as
+\begin{equation}\label{eq:qbern}
+ P_B=B_0(1-q)^2+2B_1q(1-q)+B_2q^2.
+\end{equation}
+The coefficient $B_0$ is nonnegative by a cubic Bernstein expansion in
+$a$.  The other two coefficients are controlled by the endpoint values of
+the affine terminal gradient.  The initial range $T\le1$, and then the
+larger compact strip $T\le9$, are handled by direct Bernstein and
+positive-semidefinite certificates.  The right endpoint $B_2$ is
+unconditional whenever its gradient condition is active.
+
+Only the case $T\ge9$ for the middle coefficient $B_1$ remains.  Set
+\[
+ m=n-4,\qquad t=T-1\ge8,\qquad X=aY.
+\]
+The active left-gradient condition is affine in $t$ and yields the time
+budget
+\begin{equation}\label{eq:time-budget}
+ aC(m,X)(t-8)\le h(m,a,X),
+ \qquad C(m,X)>0,\quad h(m,a,X)\ge0.
+\end{equation}
+Let $U=h/(aC)$ and $w=(t-8)/U$.  Then $0\le w\le1$, and the middle
+coefficient is a quadratic Bernstein polynomial
+\begin{equation}\label{eq:time-bern}
+ B_1(t)=C_0(1-w)^2+2C_1w(1-w)+C_2w^2.
+\end{equation}
+Exact certificates give $C_0,C_2\ge0$.  If $C_1\ge0$, positivity is
+immediate.  If $C_1<0$, the required condition is
+\begin{equation}\label{eq:two-by-two}
+ C_0C_2-C_1^2\ge0.
+\end{equation}
+After multiplying by a positive square, the left side of
+\eqref{eq:two-by-two} equals
+\[
+ h(m,a,X)^2(m+6)J(m,a,X).
+\]
+The final exact identity is
+\begin{equation}\label{eq:J-certificate}
+ J=(-N)Q+\sum_{i=0}^{4}\binom4i R_i(m,X)a^i(1-a)^{4-i},
+\end{equation}
+where $N$ is a positive multiple of $C_1$, $Q\ge0$, and every
+$R_i(m,X)\ge0$ for $m,X\ge0$.  Thus $C_1<0$ implies $N\le0$, so every term
+on the right of \eqref{eq:J-certificate} is nonnegative.  This proves
+\eqref{eq:two-by-two}, hence $B_1\ge0$, and finally
+\begin{equation}\label{eq:terminal-face}
+ \widehat g_B>0, S\ge0\quad\Longrightarrow\quad \widehat F_B\ge0.
+\end{equation}
+
+\section{Assembly of the induction step}
+
+Equations \eqref{eq:corner}, \eqref{eq:return-face}, and
+\eqref{eq:terminal-face}, together with the impossibility of the strict
+interior KKT alternative, apply the convex-quadrant lemma to
+\eqref{eq:taylor}.  Therefore $G(C,D)\ge0$ for all $C,D$ satisfying
+\eqref{eq:third}.  Monotonicity in the two fourth moments then restores the
+actual $E,F$ from their lower bounds \eqref{eq:lower-fourth}, proving
+\eqref{eq:target} for the renewal law.
+
+Equivalently, the final normalized statement is the following.
+
+\begin{theorem}[all-stage $k=3$ renewal induction]
+Let $n\ge4$, $0<a\le1$, $T,Y>0$, and $0<p,q\le1$.  Put
+\[
+ r=\frac{a}{pY},\quad x=\frac{pY(1-a)}{pY+a},\quad
+ u=pY,\quad A=\frac{npY^2}{n-1},\quad
+ v=qT,\quad B=\frac{nqT^2}{n-1}.
+\]
+If
+\[
+ (n+1)A^2\le nuC,\qquad (n+1)B^2\le nvD,
+\]
+then the fourth-moment-reduced renewal gap satisfies
+\[
+ G(C,D)\ge0.
+\]
+Consequently, if the two excursion fourth moments also satisfy
+\eqref{eq:fourth}, then the full renewal moments satisfy
+\[
+ (n+2)M_2M_4\ge(n+3)M_3^2.
+\]
+\end{theorem}
+
+\section{Formal verification map}
+
+The principal Lean files are:
+\begin{itemize}
+\item \texttt{K3AllStages.lean}: renewal moments, fourth-moment monotonicity,
+the positive Hessian, the quadrant KKT reduction, mixture coordinates, the
+sharp corner, and exclusion of the interior point;
+\item \texttt{K3AllStagesTail.lean}, \texttt{K3AllStagesMiddleLow.lean}, and
+\texttt{K3AllStagesMiddleHigh.lean}: the nonpositive-slope return-face charts;
+\item \texttt{K3AllStagesPositiveSlope*.lean}: the positive-slope return-face
+charts;
+\item \texttt{K3AllStagesTerminalFace.lean} and
+\texttt{K3AllStagesTerminalFaceRemainingCert.lean}: the terminal face and the
+large-time determinant certificate;
+\item \path{K3AllStagesComplete.lean}: the final assembly, whose main theorem
+is \path{excursionReducedGap_mixture_coordinates_nonneg}.
+\end{itemize}
+Every polynomial identity is checked over the rationals by Lean's exact ring
+normalizer; every positivity step is reduced to explicit nonnegative factors,
+Bernstein coefficients, or a $2\times2$ determinant.  No numerical
+approximation enters the proof.
+
+\end{document}

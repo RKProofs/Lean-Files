@@ -1,0 +1,3645 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\CV}{\operatorname{CV}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{A Fisher-Information Reduction of the Cyclic Phase-Type Moment Hierarchy}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{The reduction}
+
+Let \(T\) be the absorption time of a phase-type chain with \(s\) transient
+states, and write
+\[
+  m_j=\E T^j.
+\]
+For \(r\geq0\), let \(T^{[r]}\) have the \(r\)-fold size-biased density
+\[
+  g_r(t)=\frac{t^r f(t)}{m_r},\qquad t>0.
+\]
+Then
+\[
+  \E T^{[r]}=\frac{m_{r+1}}{m_r},\qquad
+  \CV^2(T^{[r]})
+  =\frac{m_rm_{r+2}}{m_{r+1}^2}-1.
+\]
+Consequently the desired hierarchy at \(k=r+1\),
+\[
+  m_{k-1}m_{k+1}\geq
+  \frac{s+k}{s+k-1}m_k^2,
+\]
+is equivalent to
+\begin{equation}\label{eq:cv-target}
+  \CV^2(T^{[r]})\geq\frac1{s+r}.
+\end{equation}
+
+The following analytic condition is sufficient for all the inequalities
+\eqref{eq:cv-target} simultaneously.
+
+\begin{proposition}[Log-convex density quotient implies the hierarchy]
+\label{prop:fisher}
+Suppose
+\begin{equation}\label{eq:qdef}
+  q(t):=\frac{f(t)}{t^{s-1}}
+\end{equation}
+is log-convex on \((0,\infty)\).  Then \eqref{eq:cv-target} holds for every
+\(r\geq0\).
+\end{proposition}
+
+\begin{proof}
+Put \(d=s+r\).  Apart from its normalizing constant, the density of
+\(T^{[r]}\) is
+\[
+  g(t)=t^{d-1}q(t).
+\]
+Let
+\[
+  \ell(t)=\frac{q'(t)}{q(t)}.
+\]
+The score for the log-scale family \(g_a(t)=e^a g(e^a t)\) at \(a=0\) is
+\[
+  S(t)=1+t\frac{g'(t)}{g(t)}=d+t\ell(t).
+\]
+Integration by parts gives
+\begin{equation}\label{eq:scoremeans}
+  \E S=0,\qquad \E[t\ell(t)]=-d.
+\end{equation}
+Log-convexity of \(q\) says
+\[
+  \ell'(t)\geq0,
+  \qquad\text{equivalently}\qquad
+  \ell(t)^2\leq\frac{q''(t)}{q(t)}.
+\]
+Two integrations by parts therefore give
+\[
+  \E[(t\ell(t))^2]
+  \leq
+  \frac{\int_0^\infty t^{d+1}q''(t)\,dt}
+       {\int_0^\infty t^{d-1}q(t)\,dt}
+  =d(d+1).
+\]
+It follows from \eqref{eq:scoremeans} that the scale Fisher information is
+\[
+  I=\E[S^2]
+   =\E[(t\ell(t))^2]-d^2
+   \leq d.
+\]
+Finally, another integration by parts yields
+\[
+  \E[(T^{[r]}-\E T^{[r]})S(T^{[r]})]
+  =-\E T^{[r]}.
+\]
+Cauchy--Schwarz now gives
+\[
+  \Var(T^{[r]})I\geq(\E T^{[r]})^2.
+\]
+Since \(I\leq d=s+r\), this is \eqref{eq:cv-target}.
+\end{proof}
+
+All boundary terms in this calculation vanish for a phase-type density,
+including when the representation permits immediate absorption or the density
+has a lower-than-\(s-1\) order zero at the origin.
+
+\section{Uniformization and the one missing matrix lemma}
+
+Write a phase-type density as
+\[
+  f(t)=\alpha e^{Qt}b,
+  \qquad b=-Q\mathbf1.
+\]
+Choose a uniformization rate
+\(\lambda\geq\max_i(-Q_{ii})\), and put
+\[
+  P=I+\lambda^{-1}Q\geq0,
+  \qquad A=\lambda P\geq0.
+\]
+Then
+\[
+  f(t)=e^{-\lambda t}\alpha e^{tA}b.
+\]
+Multiplication by \(e^{-\lambda t}\) does not change the second derivative of
+the logarithm.  Thus Proposition~\ref{prop:fisher} would follow from the next
+standalone statement.
+
+\begin{conjecture}[Dimension-corrected matrix-exponential log-convexity]
+\label{conj:matrix}
+Let \(A\) be an entrywise nonnegative \(s\times s\) matrix and let
+\(u,v\geq0\).  If
+\[
+  F(t)=u^T e^{tA}v
+\]
+is not identically zero, then
+\begin{equation}\label{eq:matrix-logconvex}
+  t^{1-s}F(t)\quad\text{is log-convex on }(0,\infty).
+\end{equation}
+Equivalently,
+\begin{equation}\label{eq:matrix-curvature}
+  t^2\bigl(F(t)F''(t)-F'(t)^2\bigr)+(s-1)F(t)^2\geq0.
+\end{equation}
+\end{conjecture}
+
+There is an equivalent local differential formulation which removes the two
+endpoint vectors.  It appears well suited to an induction on the directed
+graph.
+
+\begin{proposition}[Growth-rate formulation]\label{prop:growth-rates}
+Let $h(t)=e^{tA}v$, initially with $v>0$, and put
+\[
+ r_i(t)=\frac{h_i'(t)}{h_i(t)},\qquad
+ c_{ij}(t)=A_{ij}\frac{h_j(t)}{h_i(t)}.
+\]
+Then
+\begin{equation}\label{eq:rate-system}
+ r_i'(t)=\sum_j c_{ij}(t)\bigl(r_j(t)-r_i(t)\bigr).
+\end{equation}
+Conjecture~\ref{conj:matrix} is equivalent to the componentwise estimates
+\begin{equation}\label{eq:rate-target}
+ r_i'(t)\geq-\frac{s-1}{t^2}
+ \qquad(1\leq i\leq s).
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Differentiating $r_i=h_i'/h_i$, using $h'=Ah$, gives
+\[
+ r_i'
+ =\frac{\sum_jA_{ij}h_jr_j}{h_i}-r_i^2
+ =\sum_jc_{ij}(r_j-r_i),
+\]
+because $\sum_jc_{ij}=r_i$.  Taking $u=e_i$ in the matrix conjecture
+shows that \eqref{eq:rate-target} is necessary.  Conversely, for arbitrary
+$u\geq0$, set
+\[
+ \pi_i(t)=\frac{u_i h_i(t)}{u^Th(t)}.
+\]
+A direct differentiation, or the usual log-sum identity, gives
+\[
+ (\log(u^Th))''
+ =\sum_i\pi_i r_i'
+   +\sum_i\pi_i\left(r_i-\sum_j\pi_jr_j\right)^2.
+\]
+Thus \eqref{eq:rate-target} implies
+$(\log(u^Th))''\geq-(s-1)/t^2$.  Vectors with zero entries follow by
+approximation.
+\end{proof}
+
+The coefficients $c_{ij}$ in \eqref{eq:rate-system} are nonnegative and the
+matrix $(c_{ij})$ is diagonally similar to $A$.  Moreover, along every
+directed cycle their product is independent of $t$, since the factors
+$h_j/h_i$ telescope.  Hence a negative $r_i'$ can only be produced by flow
+from $i$ toward vertices with smaller growth rate, while every closed cycle
+has zero total logarithmic change.  The remaining problem is to turn this
+finite descending-chain structure into the sharp loss $(s-1)/t^2$.
+
+\begin{theorem}[Conditional all-\(k\) cyclic theorem]
+Conjecture~\ref{conj:matrix} implies the phase-type moment hierarchy for every
+number of states \(s\) and every \(k\geq1\), including cyclic chains.
+\end{theorem}
+
+\begin{proof}
+Apply Conjecture~\ref{conj:matrix} with
+\(u^T=\alpha\) and \(v=b\).  Uniformization shows that the quotient
+\(f(t)/t^{s-1}\) is log-convex.  Proposition~\ref{prop:fisher} then proves all
+the adjacent-moment inequalities.
+\end{proof}
+
+This isolates the cyclic problem in a form that no longer mentions absorption
+times, size biasing, or moments.  In fact, if the moment hierarchy is required
+for every exponential tilt of every phase-type law, the matrix statement is
+also necessary.  We record the precise converse next.
+
+\begin{lemma}[Laplace concentration]\label{lem:laplace-concentration}
+Let $H$ be positive and $C^4$ near $t_0>0$, with enough exponential
+decay that the following integrals exist.  Put
+\[
+ J_{r,j}=\int_0^\infty
+          t^{r+j}e^{-rt/t_0}H(t)\,dt
+ \qquad(j=0,1,2).
+\]
+Then, as $r\to\infty$,
+\begin{equation}\label{eq:laplace-expansion}
+ \frac{J_{r,0}J_{r,2}}{J_{r,1}^2}-1
+ =\frac1r+
+   \frac{t_0^2(\log H)''(t_0)-1}{r^2}
+   +o(r^{-2}).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+The probability measure proportional to
+$t^re^{-rt/t_0}H(t)\,dt$ is a smooth tilt of a
+$\operatorname{Gamma}(r+1,r/t_0)$ law.  Taylor-expand
+$\log H(t)$ at $t_0$, use the centered Gamma moments through order four,
+and expand its squared coefficient of variation.  The constant and linear
+Taylor terms only change normalization and scale; the quadratic term gives
+$t_0^2(\log H)''(t_0)/r^2$.  The unperturbed Gamma law contributes
+$1/(r+1)=r^{-1}-r^{-2}+O(r^{-3})$, which proves
+\eqref{eq:laplace-expansion}.  Standard Laplace remainder estimates make the
+expansion uniform on a fixed neighborhood of $t_0$.
+\end{proof}
+
+\begin{proposition}[The matrix lemma is forced by the tilted hierarchy]
+\label{prop:converse}
+Suppose the phase-type hierarchy holds, for a fixed state bound $s$, for
+every $k$ and every $s$-state phase-type law.  Then
+Conjecture~\ref{conj:matrix} holds for every nonnegative $s\times s$ matrix
+$A$ and $u,v\geq0$.
+\end{proposition}
+
+\begin{proof}
+It is enough first to take $u,v>0$; the general case follows by
+approximation.  Choose $\lambda>\rho(A)$, put
+\[
+ d=(\lambda I-A)^{-1}v>0,\qquad D=\operatorname{diag}(d),
+\]
+and define
+\[
+ Q=D^{-1}AD-\lambda I,\qquad b=D^{-1}v.
+\]
+Then $Q$ is a phase-type subgenerator and $-Q\mathbf1=b$.  After multiplying
+$u$ by an irrelevant positive constant, take
+$\alpha=u^TD$ to be a probability vector.  Its absorption density
+is
+\[
+ \alpha e^{tQ}b=e^{-\lambda t}u^Te^{tA}v.
+\]
+For every $\theta>0$, exponentially killing this chain at rate $\theta$
+and conditioning on absorption through the original exit $b$ gives another
+$s$-state phase-type law.  Its density is proportional to
+\[
+ e^{-\theta t}\alpha e^{tQ}b
+ =e^{-(\lambda+\theta)t}F(t),
+ \qquad F(t)=u^Te^{tA}v.
+\]
+Indeed this is the usual Doob transform with
+$h=(\theta I-Q)^{-1}b$.
+
+Fix $t_0>0$.  For large $r$, choose
+$\theta=r/t_0-\lambda>0$, and apply the hierarchy at $k=r+1$.
+The squared coefficient of variation of the $r$-fold size-biased law is
+the left side of \eqref{eq:laplace-expansion} with $H=F$, whereas the
+hierarchy says that it is at least $1/(s+r)$.  Hence
+\[
+ \frac1r+\frac{t_0^2(\log F)''(t_0)-1}{r^2}+o(r^{-2})
+ \geq
+ \frac1r-\frac{s}{r^2}+O(r^{-3}).
+\]
+Multiplying by $r^2$ and letting $r\to\infty$ gives
+\[
+ t_0^2(\log F)''(t_0)+(s-1)\geq0.
+\]
+Since $t_0$ was arbitrary, this is
+\eqref{eq:matrix-curvature}.
+\end{proof}
+
+\section{The complete two-state cyclic case}
+
+The matrix conjecture, and hence the full hierarchy, can be proved
+unconditionally when \(s=2\).
+
+\begin{proposition}\label{prop:two-by-two}
+If \(A\) is a nonnegative \(2\times2\) matrix and \(u,v\geq0\), then
+\[
+  \frac{u^Te^{tA}v}{t}
+\]
+is log-convex on \((0,\infty)\).
+\end{proposition}
+
+\begin{proof}
+Write
+\[
+ A=\begin{pmatrix}a&b\\c&d\end{pmatrix},\qquad
+ \mu=\frac{a+d}{2},\qquad
+ \delta=\sqrt{\left(\frac{a-d}{2}\right)^2+bc}.
+\]
+When \(\delta>0\),
+\[
+ e^{tA}=e^{\mu t}\left(
+   \cosh(\delta t)I+
+   \frac{\sinh(\delta t)}{\delta}(A-\mu I)\right).
+\]
+The off-diagonal entries divided by \(t\) are nonnegative constant
+multiples of
+\[
+ e^{\mu t}\frac{\sinh(\delta t)}{\delta t}.
+\]
+This is log-convex because
+\[
+ \frac{d^2}{dt^2}\log\frac{\sinh(\delta t)}{\delta t}
+ =\frac1{t^2}-\delta^2\operatorname{csch}^2(\delta t)\geq0.
+\]
+For a diagonal entry, put
+\[
+ h=\frac{a-d}{2\delta},\qquad |h|\leq1.
+\]
+Apart from the common factor \(e^{\mu t}\), that entry is either
+\[
+ \cosh(\delta t)+h\sinh(\delta t)
+ =\frac{1+h}{2}e^{\delta t}+\frac{1-h}{2}e^{-\delta t}
+\]
+or the same expression with \(h\) replaced by \(-h\).  It is therefore a
+positive sum of exponentials and is log-convex.  Division by \(t\) preserves
+log-convexity because \(-\log t\) is convex.  The case \(\delta=0\) follows by
+continuity.  Finally, \(u^Te^{tA}v/t\) is a positive sum of these four
+log-convex entries, and positive sums of log-convex functions are
+log-convex.
+\end{proof}
+
+\begin{corollary}[All moments for two cyclic states]
+Every phase-type law with a representation of size at most two satisfies
+\[
+ m_{k-1}m_{k+1}\geq\frac{k+2}{k+1}m_k^2
+ \qquad(k\geq1).
+\]
+\end{corollary}
+
+\begin{proof}
+Apply Proposition~\ref{prop:two-by-two} after uniformization and then use
+Proposition~\ref{prop:fisher}.
+\end{proof}
+
+\section{Closure under block-triangular composition}
+
+The two-state result extends immediately to chains made from one- and
+two-state strongly connected components.  The key closure principle is useful
+more generally.
+
+\begin{lemma}[Dimension-additive convolution]\label{lem:convolution}
+Let $p,q\geq1$.  Suppose $f,g\geq0$, and suppose
+\[
+ t^{1-p}f(t)\quad\hbox{and}\quad t^{1-q}g(t)
+\]
+are log-convex.  Then, for
+\[
+ (f*g)(t)=\int_0^t f(t-x)g(x)\,dx,
+\]
+the function $t^{1-p-q}(f*g)(t)$ is log-convex.
+\end{lemma}
+
+\begin{proof}
+Write $f(t)=t^{p-1}\phi(t)$ and
+$g(t)=t^{q-1}\psi(t)$.  The substitution $x=ty$ gives
+\[
+ \frac{(f*g)(t)}{t^{p+q-1}}
+ =\int_0^1(1-y)^{p-1}y^{q-1}
+   \phi(t(1-y))\psi(ty)\,dy.
+\]
+For fixed $y$, the integrand is log-convex as a function of $t$.
+Positive integrals of log-convex functions are log-convex by H\"older's
+inequality.
+\end{proof}
+
+\begin{proposition}[Block-triangular closure]\label{prop:block-closure}
+Suppose Conjecture~\ref{conj:matrix} holds in dimensions $p$ and $q$.
+Then it holds for every nonnegative block upper-triangular matrix
+\[
+ A=\begin{pmatrix}B&C\\0&E\end{pmatrix},
+ \qquad B\in\mathbb R^{p\times p},\quad
+ E\in\mathbb R^{q\times q}.
+\]
+\end{proposition}
+
+\begin{proof}
+It is enough to prove the assertion entrywise, since a positive sum of
+log-convex functions is log-convex.  Entries in a diagonal block satisfy the
+claim by the corresponding lower-dimensional conjecture, followed by
+multiplication by $t^{-q}$ or $t^{-p}$.  For the upper-right block, Duhamel's
+formula gives
+\[
+ (e^{tA})_{ij}
+ =\sum_{a,b}C_{ab}\int_0^t
+   (e^{(t-x)B})_{ia}(e^{xE})_{bj}\,dx.
+\]
+Every summand has the required dimension-$p+q$ correction by
+Lemma~\ref{lem:convolution}; summing preserves log-convexity.
+\end{proof}
+
+\begin{corollary}[Components of size at most two]
+If every strongly connected component of the directed graph of a nonnegative
+$s\times s$ matrix $A$ has at most two vertices, then
+$t^{1-s}u^Te^{tA}v$ is log-convex for all $u,v\geq0$.  Consequently the
+full moment hierarchy holds for every phase-type chain whose transient
+strongly connected components have size at most two.
+\end{corollary}
+
+\begin{proof}
+Permute the strongly connected components into block upper-triangular order
+and repeatedly apply Proposition~\ref{prop:block-closure}.  Components of size
+one are immediate, and components of size two are covered by
+Proposition~\ref{prop:two-by-two}.  The phase-type conclusion follows from
+Proposition~\ref{prop:fisher}.
+\end{proof}
+
+\section{An exact reduction of the three-state problem}
+
+There is a useful way to pass from an arbitrary entry of a positive
+three-dimensional semigroup to an absorption density.  This removes the two
+endpoint vectors and makes the order-three canonical representation directly
+applicable.
+
+\begin{lemma}[A matrix entry is a phase-type density]\label{lem:entry-to-ph}
+Let $A$ be an irreducible nonnegative $s\times s$ matrix and fix $i,j$.
+There is a transient Markov generator $T$ with $s$ transient states, an exit
+vector $b=-T\mathbf1$ supported only at $j$, and constants $c,\lambda>0$ such
+that
+\[
+ (e^{tA})_{ij}=c e^{\lambda t}e_i^Te^{tT}b.
+\]
+Thus the logarithmic curvatures of the two sides are equal.
+\end{lemma}
+
+\begin{proof}
+Choose $\lambda>\rho(A)$ and put
+\[
+ h=(\lambda I-A)^{-1}e_j
+   =\sum_{n\geq0}\lambda^{-n-1}A^ne_j.
+\]
+Irreducibility gives $h>0$.  With $H=\operatorname{diag}(h)$, set
+\[
+ T=H^{-1}(A-\lambda I)H.
+\]
+Its off-diagonal entries are nonnegative, and
+\[
+ T\mathbf1=-H^{-1}e_j,
+ \qquad b=H^{-1}e_j.
+\]
+The killing state is reachable from every transient state, so $T$ is
+transient.  Finally,
+\[
+ e_i^Te^{tT}b
+ =h_i^{-1}e^{-\lambda t}(e^{tA})_{ij}.
+\]
+Take $c=h_i$.  Multiplication by a positive constant and by an exponential
+does not change logarithmic curvature.
+\end{proof}
+
+We now use the He--Zhang unicyclic representation theorem: every phase-type
+law of order three has a distribution-equivalent Markovian representation
+with subgenerator
+\begin{equation}\label{eq:canonical-three}
+ T_c=\begin{pmatrix}
+ -x_1&0&\eta x_1\\
+ x_2&-x_2&0\\
+ 0&x_3&-x_3
+ \end{pmatrix},
+ \qquad
+ x_1\geq x_2\geq x_3>0,\quad 0\leq\eta<1.
+\end{equation}
+Absorption occurs only from state $1$, at rate $(1-\eta)x_1$.  The canonical
+initial distribution need not be deterministic, but this causes no loss:
+after division by $t^2$ its density is a positive sum of the three
+deterministic-start densities.
+
+Put
+\[
+ D(z)=(z+x_1)(z+x_2)(z+x_3)-\eta x_1x_2x_3.
+\]
+A direct resolvent calculation gives their Laplace transforms:
+\begin{equation}\label{eq:canonical-laplace}
+ \begin{aligned}
+ L_1(z)&=\frac{(1-\eta)x_1(z+x_2)(z+x_3)}{D(z)},\\
+ L_2(z)&=\frac{(1-\eta)x_1x_2(z+x_3)}{D(z)},\\
+ L_3(z)&=\frac{(1-\eta)x_1x_2x_3}{D(z)}.
+ \end{aligned}
+\end{equation}
+Consequently the whole $3\times3$ matrix problem has been reduced to the
+following scalar statement.
+
+\begin{conjecture}[Canonical cubic lemma]\label{conj:canonical-cubic}
+For the parameters in \eqref{eq:canonical-three}, let $f_r$ be the inverse
+Laplace transform of $L_r$ in \eqref{eq:canonical-laplace}.  Then
+\[
+ t^{-2}f_r(t)\quad\hbox{is log-convex on $(0,\infty)$}
+ \qquad(r=1,2,3).
+\]
+\end{conjecture}
+
+\begin{proposition}[The cubic lemma is exactly sufficient in dimension three]
+\label{prop:three-reduction}
+Conjecture~\ref{conj:canonical-cubic} implies
+Conjecture~\ref{conj:matrix} for every nonnegative $3\times3$ matrix.
+\end{proposition}
+
+\begin{proof}
+It is enough to treat matrix entries.  Reducible matrices are already covered
+by Proposition~\ref{prop:block-closure}.  For an irreducible matrix apply
+Lemma~\ref{lem:entry-to-ph}, then replace the resulting order-three
+phase-type law by its He--Zhang representation.  Its density is a positive
+sum of $f_1,f_2,f_3$.  Positive sums preserve log-convexity, and the constant
+and exponential factors in Lemma~\ref{lem:entry-to-ph} are harmless.
+\end{proof}
+
+The remaining lemma can also be written as a geometric-renewal problem.  Let
+\[
+ g_r(t)=x_re^{-x_rt},\qquad C=g_1*g_2*g_3,
+ \qquad R=\sum_{n\geq0}\eta^n C^{*n},
+\]
+where $C^{*0}$ is a unit mass at zero.  Then
+\begin{equation}\label{eq:canonical-renewal}
+ f_1=(1-\eta)g_1*R,\qquad
+ f_2=(1-\eta)g_2*g_1*R,\qquad
+ f_3=(1-\eta)C*R.
+\end{equation}
+For $\eta=0$ the assertion follows immediately from
+Lemma~\ref{lem:convolution}: these are convolutions of respectively one, two,
+and three exponential densities, with extra factors $t^{-2}$, $t^{-1}$, and
+$1$.  What remains is therefore precisely the effect of geometric feedback.
+
+There is also a complete coefficientwise proof when the three rates are
+equal.  This supplies a nontrivial cyclic subcase and identifies the sharp
+root-of-unity calculation behind the directed three-cycle.
+
+\begin{proposition}[Equal-rate canonical cycle]\label{prop:equal-rate-cycle}
+Conjecture~\ref{conj:canonical-cubic} holds when
+$x_1=x_2=x_3$.
+\end{proposition}
+
+\begin{proof}
+Scale the common rate to one.  Apart from a positive constant and the common
+factor $e^{-t}$, the three densities in \eqref{eq:canonical-renewal} are
+\[
+ H_r(t)=\sum_{n\geq0}\eta^n\frac{t^{3n+r}}{(3n+r)!},
+ \qquad r=0,1,2.
+\]
+The exponential factor has no effect on logarithmic curvature.  In the
+coefficient of $\eta^N$ in
+\[
+ t^2(H_rH_r''-(H_r')^2)+2H_r^2,
+\]
+all terms have degree $L=3N+2r$.  After multiplication by the positive factor
+$L!$, that coefficient is
+\[
+ \sum_{\substack{0\leq p\leq L\\p\equiv r\pmod3}}
+ \binom Lp\left(2-\frac L2+\frac{(L-2p)^2}{2}\right).
+\]
+Let $\varepsilon=(-1)^N$.  A roots-of-unity filter, applied first to
+$(1+x)^L$ and then to
+\[
+ (L-2x\partial_x)^2(1+x)^L
+ =L(1+x)^{L-2}\bigl(L(1-x)^2+4x\bigr),
+\]
+evaluates the last display as
+\begin{equation}\label{eq:equal-rate-coefficient}
+ \frac{2^{L+1}+\varepsilon(-3L^2+3L+4)}{3}.
+\end{equation}
+This is nonnegative.  For odd $N$ it is immediate.  For even $N$, the only
+borderline small case is $L=4$, where equality holds; for $L\geq5$ the
+elementary inequality
+$2^{L+1}\geq3L^2-3L-4$ follows by induction.  The remaining cases
+$L=0,2$ are positive by inspection.  Hence every coefficient of the
+curvature expression is nonnegative for $0\leq\eta<1$.
+
+The same calculation gives a useful strengthening for the middle start.
+For $r=1$, replace the correction $2H_1^2$ by $H_1^2$, as required for
+log-convexity of $t^{-1}H_1$.  The filtered coefficient becomes
+\begin{equation}\label{eq:equal-rate-middle-strong}
+ \frac{2^L+(-1)^N(-3L^2+3L+2)}{3},
+ \qquad L=3N+2.
+\end{equation}
+For odd $N$ it is positive.  For even $N$, equality holds at $L=2$, and
+$2^L\geq3L^2-3L-2$ for $L\geq8$.  Hence $t^{-1}H_1(t)$ is log-convex in
+the equal-rate case.
+\end{proof}
+
+At this stage of the direct canonical route, the unequal-rate version of
+Conjecture~\ref{conj:canonical-cubic} is the only unproved step.  Formula
+\eqref{eq:canonical-renewal} suggests proving that unequal exponential rates
+can only increase the curvature in the equal-rate certificate, but a valid
+polarization or sum-of-squares argument for that assertion is not yet known.
+
+For further work it is useful to remove the negative diagonal without losing
+the special graph.  Multiplication by $e^{x_1t}$ does not change logarithmic
+curvature.  Put
+\[
+ B=T_c+x_1I=
+ \begin{pmatrix}
+ 0&0&c\\ x_2&a&0\\0&x_3&b
+ \end{pmatrix},\qquad
+ a=x_1-x_2,\qquad b=x_1-x_3,\qquad c=\eta x_1,
+\]
+so that $0\leq a\leq b$.  If $h=e^{tB}e_1$, define
+\[
+ z=c\frac{h_3}{h_1},\qquad
+ p=x_2\frac{h_1}{h_2},\qquad
+ q=x_3\frac{h_2}{h_3}.
+\]
+The three component growth rates are
+\[
+ r_1=z,\qquad r_2=a+p,\qquad r_3=b+q,
+\]
+and satisfy the closed cyclic system
+\begin{equation}\label{eq:canonical-rate-system}
+ z'=z(b+q-z),\qquad
+ p'=p(z-a-p),\qquad
+ q'=q(a+p-b-q),
+ \qquad zpq=cx_2x_3.
+\end{equation}
+Thus the remaining lemma is equivalent to the three elementary-looking
+inequalities
+\[
+ t^2z(z-b-q)\leq2,\qquad
+ t^2p(a+p-z)\leq2,\qquad
+ t^2q(b+q-a-p)\leq2.
+\]
+The initial limits are respectively $0,1,2$.  Extensive numerical tests find
+no violation; in fact the middle expression appears bounded by $1$.  This
+Riccati formulation uses only five nonnegative scalar parameters and the
+ordering $a\leq b$, and is currently the most compact form of the missing
+unequal-rate argument.
+
+The stronger middle bound also removes the third inequality altogether.
+More precisely, it is enough to prove
+\begin{equation}\label{eq:two-riccati-targets}
+ t^2z(z-b-q)\leq2,
+ \qquad
+ t^2p(a+p-z)\leq1.
+\end{equation}
+Indeed, the second inequality says exactly that $t^{-1}h_2(t)$ is
+log-convex.  Since
+\[
+ \bigl(e^{-bt}h_3(t)\bigr)'=x_3e^{-bt}h_2(t),
+ \qquad h_3(0)=0,
+\]
+we have
+\[
+ e^{-bt}h_3(t)=x_3\int_0^t e^{-bs}h_2(s)\,ds.
+\]
+Apply Lemma~\ref{lem:convolution} with $p=2$, $q=1$, and with the
+second factor equal to the constant function $1$.  It follows that
+$t^{-2}e^{-bt}h_3(t)$, and hence $t^{-2}h_3(t)$, is log-convex.  Thus only
+the first inequality and the sharper middle inequality in
+\eqref{eq:two-riccati-targets} are independent targets.
+
+Two of the starts can in fact be completed whenever the canonical cubic has
+only real roots.  Let
+\[
+ P(s)=s(s-a)(s-b)-Q,
+ \qquad Q=cx_2x_3,
+\]
+and suppose its roots are
+$\lambda_1\leq\lambda_2\leq\lambda_3$.  The Laplace transforms of the
+shifted second and third components are
+\[
+ \mathcal L h_2(s)=\frac{x_2(s-b)}{P(s)},
+ \qquad
+ \mathcal L h_3(s)=\frac{x_2x_3}{P(s)}.
+\]
+Since $P(b)=-Q<0$ and $P(s)\to\infty$ as $s\to\infty$, one has
+$\lambda_1\leq b<\lambda_3$.  With
+\[
+ \theta=\frac{b-\lambda_1}{\lambda_3-\lambda_1}\in[0,1],
+\]
+partial fractions give
+\begin{equation}\label{eq:middle-divided-difference}
+ \frac{s-b}{P(s)}
+ =\frac{\theta}{(s-\lambda_1)(s-\lambda_2)}
+  +\frac{1-\theta}{(s-\lambda_2)(s-\lambda_3)}.
+\end{equation}
+The inverse transform of each summand, divided by $t$, is a positive
+mixture of exponentials, since
+\[
+ \frac{e^{ut}-e^{vt}}{u-v}
+ =t\int_0^1e^{t((1-y)v+yu)}\,dy.
+\]
+Consequently $t^{-1}h_2(t)$ is log-convex, proving the sharper middle
+inequality in \eqref{eq:two-riccati-targets}.  Likewise, the inverse transform
+of $1/P(s)$ is the second divided difference of the exponential:
+\[
+ h_3(t)=x_2x_3t^2
+ \int_{\substack{y_i\geq0\\y_1+y_2+y_3=1}}
+ e^{t(y_1\lambda_1+y_2\lambda_2+y_3\lambda_3)}\,d\sigma(y).
+\]
+Thus $t^{-2}h_3(t)$ is log-convex directly.  Repeated roots follow by
+continuity.  In the real-spectrum region, therefore, only the first canonical
+start remains open; the genuinely cyclic complex-pair region still requires
+the first and middle bounds in \eqref{eq:two-riccati-targets}.
+
+The remaining real-spectrum first start also has a useful positive-mixture
+form.  Since
+\[
+ \frac{(s-a)(s-b)}{P(s)}=\frac1s+\frac{Q}{sP(s)},
+\]
+the Hermite--Genocchi formula gives
+\begin{equation}\label{eq:real-first-simplex}
+ h_1(t)=1+w(t),\qquad
+ w(t)=Qt^3M(t),\qquad
+ M(t)=\int_{\Delta_3}e^{tX(y)}\,dy,
+\end{equation}
+where
+\[
+ X(y)=y_1\lambda_1+y_2\lambda_2+y_3\lambda_3,
+ \qquad
+ \Delta_3=\{y_i\geq0:y_1+y_2+y_3\leq1\}.
+\]
+Let $\nu_t$ be the exponential tilt of normalized Lebesgue measure on
+$\Delta_3$ by $e^{tX}$, and put
+\[
+ \theta=\frac{w}{1+w},\qquad
+ L=3+t\E_{\nu_t}X,\qquad
+ V=t^2\operatorname{Var}_{\nu_t}(X).
+\]
+The mean under the tilt is increasing in $t$ and starts at
+$(\lambda_1+\lambda_2+\lambda_3)/4=(a+b)/4\geq0$; hence $L\geq3$.
+Using $t\,d/dt$ in \eqref{eq:real-first-simplex} gives the exact identity
+\begin{equation}\label{eq:real-first-simplex-curvature}
+ -t^2(\log h_1)''
+ =\theta\bigl(3-V-(1-\theta)L^2\bigr).
+\end{equation}
+Consequently the first-start target is already proved whenever
+\[
+ \theta\leq\frac{1+\sqrt3}{3},
+ \qquad\text{equivalently}\qquad
+ w\leq5+3\sqrt3,
+\]
+because $V\geq0$ and $L\geq3$ make the right side of
+\eqref{eq:real-first-simplex-curvature} at most
+$\theta(9\theta-6)\leq2$.  In the complementary range, the whole real-root
+problem is the scalar tilted-simplex inequality
+\begin{equation}\label{eq:real-first-simplex-target}
+ V+(1-\theta)L^2\geq3-\frac2\theta.
+\end{equation}
+Thus no signed partial-fraction coefficients remain in the real-root target.
+
+The real-root region also has a compact polynomial chart, and on a substantial
+initial range the target admits an exact finite certificate.  After scaling,
+write the three roots as
+\[
+ m-\rho,\qquad m+\rho,\qquad m+1.
+\]
+The coefficient identities for $P$ and the nonnegativity of $a,b,Q$ show that
+all three roots are nonnegative and that the admissible set is exactly
+\begin{equation}\label{eq:real-root-compact-chart}
+ 0\leq m\leq1,\qquad
+ \max\left\{0,\frac{3m^2+2m-1}{4}\right\}
+ \leq\rho^2\leq m^2.
+\end{equation}
+Indeed, if the two smaller roots were negative, their sum with the Perron
+root and their second elementary symmetric function could not both be
+nonnegative.  The discriminant of the quadratic with roots $a,b$ gives the
+lower bound in \eqref{eq:real-root-compact-chart}.  This region is the union
+of the two polynomial images of the unit square
+\begin{align}
+ m&=\frac r3,&
+ \rho^2&=\tau m^2,\label{eq:real-root-low-rectangle}\\
+ m&=\frac{1+2r}{3},&
+ \rho^2&=\frac{r(r+2)}3+\tau\frac{(1-r)^2}{9},
+ \label{eq:real-root-high-rectangle}
+\end{align}
+where $0\leq r,\tau\leq1$.
+
+Let $a_n=h_1^{(n)}(0)$ in this normalization.  Then
+\[
+ a_0=1,\qquad a_1=a_2=0,
+\]
+and
+\begin{equation}\label{eq:real-first-derivative-recurrence}
+ a_{n+3}=(1+3m)a_{n+2}-(3m^2+2m-\rho^2)a_{n+1}
+ +(1+m)(m^2-\rho^2)a_n.
+\end{equation}
+If $D_N$ denotes $N!$ times the coefficient of degree $N$ in the corrected
+curvature, then
+\begin{equation}\label{eq:real-first-taylor-coefficient}
+ D_N=\sum_{j=0}^N\binom Nj
+ \left(2-\frac N2+\frac{(N-2j)^2}{2}\right)a_ja_{N-j}.
+\end{equation}
+Exact conversion shows that every $D_N$, $0\leq N\leq60$, has only
+nonnegative tensor Bernstein coefficients on each of
+\eqref{eq:real-root-low-rectangle} and
+\eqref{eq:real-root-high-rectangle}.
+
+This finite calculation already gives a rigorous interval, not merely
+coefficient evidence.  Normalize the Perron root to $1$ and call the other
+two roots $0\leq u\leq v\leq1$.  Positive rescaling of time multiplies
+$D_N$ by a positive factor and therefore preserves the Bernstein-certified
+signs.  In the new normalization,
+\[
+ \sqrt u+\sqrt v\leq1,
+ \qquad
+ a_n=uv\,h_{n-3}(u,v,1)\quad(n\geq3),
+\]
+where $h_k$ is the complete homogeneous polynomial.  Consequently
+\[
+ 0\leq a_n\leq\frac{uv}{(1-u)(1-v)}\leq\frac19.
+\]
+For $N\geq61$, the absolute value of
+\eqref{eq:real-first-taylor-coefficient} is therefore at most $N^2 2^N$.
+On $0\leq x\leq10$, where $x$ now denotes Perron-normalized time, the tail
+after degree $60$ is at most
+\[
+ \frac{61^2 20^{61}}{61!}
+ \left(1-\frac{20\cdot62}{61^2}\right)^{-1}<1.
+\]
+The Bernstein partial sum is at least its constant term $2$, so the
+first-start inequality is proved throughout this compact time range.  The
+calculation and the rational tail comparison are reproduced by
+\path{python/check_real_first_full.py}.
+
+For reference, the unbounded tail has a particularly short exact form.
+For $0<u<v<1$, partial fractions give
+\[
+ h_1(t)=\frac{v e^{ut}}{(v-u)(1-u)}
+ -\frac{u e^{vt}}{(v-u)(1-v)}
+ +\frac{uv e^t}{(1-u)(1-v)}.
+\]
+Put
+\[
+ A=(1-v)t,\qquad B=(1-u)t,
+\]
+and
+\[
+ R=\frac{1-u}{v(v-u)}e^{-A},\qquad
+ S=\frac{1-v}{u(v-u)}e^{-B}.
+\]
+After factoring the last exponential, direct differentiation yields
+\begin{equation}\label{eq:real-first-tail-energy}
+ -t^2(\log h_1)''
+ =\frac{RA^2+RS(B-A)^2-SB^2}{(1-R+S)^2}.
+\end{equation}
+The apparent positive mixed term is already controlled by the last term:
+\begin{equation}\label{eq:real-first-tail-mixed-control}
+ R(B-A)^2\leq B^2.
+\end{equation}
+Indeed, after cancelling $t^2$, this follows from
+$v-u\leq v(1-u)$ and $e^{-A}\leq1$.  Thus the only part not covered by
+the compact certificate is proving that the right side of
+\eqref{eq:real-first-tail-energy} is at most $2$ for $t\geq10$, including
+the confluent limits.  This is now a two-exponential tail estimate on the
+compact root simplex, rather than a matrix inequality.  The partial-fraction
+identity, \eqref{eq:real-first-tail-energy}, and
+\eqref{eq:real-first-tail-mixed-control} are checked symbolically by
+\path{python/check_real_first_tail_identities.py}.
+
+There is a sharper coefficient route to the tail.  Put
+$g_n=h_n(u,v,1)$ and consider the normalized complete homogeneous sequence
+\begin{equation}\label{eq:real-first-normalized-complete-target}
+ q_n=\frac{g_n}{n+1}.
+\end{equation}
+The remaining sequence statement is elementary, although its useful form is
+not the most familiar normalization.
+\begin{proposition}[Normalized complete-homogeneous log-convexity]
+\label{prop:real-first-normalized-complete-logconvex}
+\begin{equation}\label{eq:real-first-normalized-complete-logconvex}
+ q_n^2\leq q_{n-1}q_{n+1}\qquad(n\geq1)
+ \quad\hbox{whenever}\quad \sqrt u+\sqrt v\leq1.
+\end{equation}
+\end{proposition}
+Notice that the case $n=1$ is precisely
+$(1-u-v)^2\geq4uv$.
+The Jacobi--Trudi identity gives an equivalent symmetric-polynomial form:
+\begin{equation}\label{eq:real-first-schur-target}
+ n(n+2)h_n(u,v,uv)
+ \leq h_{n-1}(1,u,v)h_{n+1}(1,u,v).
+\end{equation}
+Indeed,
+$s_{(n,n)}(1,u,v)=g_n^2-g_{n-1}g_{n+1}=h_n(u,v,uv)$.
+This formulation may be more convenient for a uniform proof because it
+contains no quotients and its $n=1$ case is exactly the root discriminant.
+
+There is now stronger exact evidence for a coefficientwise proof.  Introduce
+nonnegative $x,y,r$ by
+\[
+ u=x^2,\qquad v=y^2,\qquad 1=(x+y)^2+r
+\]
+after homogeneous rescaling, and put
+\[
+ \mathcal D_n(A,B,C)
+ =(n+1)^2h_{n-1}(A,B,C)h_{n+1}(A,B,C)
+   -n(n+2)h_n(A,B,C)^2.
+\]
+Exact coefficient extraction gives, through $n=40$,
+\begin{equation}\label{eq:real-first-coefficient-cone}
+ \mathcal D_n\bigl(x^2,y^2,(x+y)^2+r\bigr)
+ \in \mathbb Z_{\geq0}[x,y,r].
+\end{equation}
+It also gives the apparently stronger monotonicity
+\begin{equation}\label{eq:real-first-coefficient-increment}
+ \mathcal D_{n+1}\bigl(x^2,y^2,C\bigr)
+ -C^2\mathcal D_n\bigl(x^2,y^2,C\bigr)
+ \in \mathbb Z_{\geq0}[x,y,r],
+ \qquad C=(x+y)^2+r.
+\end{equation}
+For example,
+\[
+ \mathcal D_1\bigl(x^2,y^2,(x+y)^2+r\bigr)=r(r+4xy).
+\]
+Thus a uniform proof of either coefficient assertion would prove
+\eqref{eq:real-first-normalized-complete-logconvex} immediately, and
+\eqref{eq:real-first-coefficient-increment} suggests a particularly short
+induction.  The integer coefficient calculation avoids symbolic expansion and
+is reproduced by \path{python/check_normalized_complete_cone.py}.
+
+We now prove the proposition.  By continuity, order the roots as
+$0<u<v<1$; the confluent and boundary cases follow by taking limits.  Let
+$X$ be uniform on $[v,1]$
+and $Y$ uniform on $[u,v]$, and write $A_j=\mathbb E X^j$ and
+$B_j=\mathbb E Y^j$.  Partial fractions followed by one integration gives
+\begin{equation}\label{eq:real-first-uniform-difference}
+ q_n=\frac{A_n-uB_n}{1-u}.
+\end{equation}
+Indeed, the representing signed density vanishes on $[0,u]$, equals
+$-u(1-v)/(v-u)$ on $[u,v]$, and equals $1$ on $[v,1]$, before division by
+$(1-u)(1-v)$.  Consequently
+\begin{align}
+ (1-u)^2(q_{n-1}q_{n+1}-q_n^2)
+  &=\Delta_A+u^2\Delta_B-u\Gamma,\label{eq:real-first-uniform-determinant}\\
+ \Delta_A&=A_{n-1}A_{n+1}-A_n^2,\qquad
+ \Delta_B=B_{n-1}B_{n+1}-B_n^2,\nonumber\\
+ \Gamma&=\mathbb E\!\left[X^{n-1}Y^{n-1}(X-Y)^2\right].\nonumber
+\end{align}
+Here both $\Delta$ terms are nonnegative.  The case $n=1$ is the root
+discriminant noted above.  For $n\geq2$, pointwise
+maximization in $Y$ gives
+\begin{equation}\label{eq:real-first-cross-bound}
+ \Gamma\leq
+ \min\!\left\{v^{n-1},
+ \frac{4(n-1)^{n-1}}{(n+1)^{n+1}}\right\}A_{n+1}.
+\end{equation}
+Since the root condition implies
+$u\leq\min\{v,(1-\sqrt v)^2\}$, it remains only to prove the
+one-variable inequality
+\begin{equation}\label{eq:real-first-one-variable-moment-bound}
+ \min\{v,(1-\sqrt v)^2\}
+ \min\!\left\{v^{n-1},
+ \frac{4(n-1)^{n-1}}{(n+1)^{n+1}}\right\}A_{n+1}
+ \leq\Delta_A .
+\end{equation}
+Put
+\[
+ c_n=\frac{4(n-1)^{n-1}}{(n+1)^{n+1}},
+ \qquad
+ A_j=\frac{1-v^{j+1}}{(j+1)(1-v)}.
+\]
+Direct simplification gives
+\begin{equation}\label{eq:uniform-moment-determinant-polynomial}
+ \Delta_A
+ =\frac{(1-v)^2P_n(v)}{n(n+1)^2(n+2)},
+\end{equation}
+where
+\begin{equation}\label{eq:uniform-moment-palindromic-polynomial}
+ P_n(v)=
+ \sum_{k=0}^{n-2}\binom{k+3}{3}
+       \bigl(v^k+v^{2n-2-k}\bigr)
+ +\binom{n+2}{3}v^{n-1}.
+\end{equation}
+Thus $P_n(v)\geq1$.  Pairing the terms in each parenthesis by AM--GM and
+using $\sum_{k=0}^{n-2}\binom{k+3}{3}=\binom{n+2}{4}$ also gives
+\begin{equation}\label{eq:uniform-moment-central-lower-bound}
+ P_n(v)\geq\frac{n(n+1)^2(n+2)}{12}\,v^{n-1}.
+\end{equation}
+
+First suppose $0\leq v\leq1/4$ and $n\geq6$.  Since
+$A_{n+1}\leq((n+2)(1-v))^{-1}$, the left side of
+\eqref{eq:real-first-one-variable-moment-bound} is at most
+$v^n/((n+2)(1-v))$.  Equations
+\eqref{eq:uniform-moment-determinant-polynomial} and $P_n\geq1$ reduce the
+claim to
+\[
+ n(n+1)^2v^n\leq(1-v)^3.
+\]
+It is enough to set $v=1/4$.  The resulting inequality holds already at
+$n=4$, and its left side decreases with $n$.
+
+Now suppose $1/4\leq v\leq1$, write $b=\sqrt v$, and take $n\geq6$.
+By \eqref{eq:uniform-moment-central-lower-bound}, it is enough to show
+\begin{equation}\label{eq:uniform-moment-transition-bound}
+ \frac{12A_{n+1}}{(1+b)^2}
+ \min\left\{1,\frac{c_n}{b^{2n-2}}\right\}\leq1.
+\end{equation}
+Set
+\[
+ b_n=c_n^{1/(2n-2)}
+ =\sqrt{\frac{n-1}{n+1}}
+   \left(\frac2{n+1}\right)^{1/(n-1)}.
+\]
+For $1/2\leq b\leq b_n$, use
+$A_{n+1}\leq((n+2)(1-b^2))^{-1}$.  Since
+$(1-b)(1+b)^3$ decreases for $b\geq1/2$, it suffices that
+\begin{equation}\label{eq:uniform-moment-bn-bound}
+ (n+2)(1-b_n)(1+b_n)^3\geq12.
+\end{equation}
+For $b\geq b_n$, the left side of
+\eqref{eq:uniform-moment-transition-bound} is nonincreasing.  Indeed,
+\[
+ A_{n+1}=\frac1{n+2}\sum_{j=0}^{n+1}b^{2j},
+\]
+and $bA_{n+1}'/A_{n+1}\leq n+1$, because the weights $b^{2j}$ decrease
+with $j$.  This is at most
+$2n-2+2b/(1+b)$, the logarithmic derivative with respect to $\log b$ of
+$b^{2n-2}(1+b)^2$.  Thus this region also reduces to
+\eqref{eq:uniform-moment-bn-bound}.
+
+For completeness, \eqref{eq:uniform-moment-bn-bound} has a short calculus
+check.  Extend $b_n$ to $b(x)$ for real $x\geq6$.  Then
+\[
+ \frac{d}{dx}\log b(x)
+ =\frac{\log((x+1)/2)}{(x-1)^2}>0.
+\]
+Moreover, $(x+2)(1-b(x))$ is increasing.  To see this, use
+$b^{-1}-1\geq-\log b$ and
+\[
+ \frac{(x-1)^2}{2}\log\frac{x+1}{x-1}
+ \geq x-2+\frac1x
+ \geq3\log\frac{x+1}{2}\qquad(x\geq6).
+\]
+Hence $(x+2)(1-b(x))(1+b(x))^3$ is increasing.  Finally
+$b(6)<2/3$, so its value at $x=6$ is greater than
+$8(1-2/3)(1+2/3)^3=1000/81>12$.
+
+It remains only to cover $n=2,3,4,5$.  On the two intervals
+$0\leq b\leq1/2$ and $1/2\leq b\leq1$, exact Bernstein conversion proves
+the stronger inequality
+\[
+ \Delta_A\geq \min\{b^2,(1-b)^2\}\,c_nA_{n+1}.
+\]
+The rational certificates are reproduced by
+\path{python/check_uniform_moment_bound.py}.  This proves
+\eqref{eq:real-first-one-variable-moment-bound}; inserting it into
+\eqref{eq:real-first-uniform-determinant} proves the proposition.
+
+Here is why the proposition finishes the tail.  Write
+$w=h_1-1$ and
+\[
+ t^2\{ww''-(w')^2\}+2w^2
+ =(uv)^2\sum_{N\geq6}\widehat D_N\frac{t^N}{N!}.
+\]
+Since $w=uv\sum_{N\geq3}g_{N-3}t^N/N!$, one has, with
+$\kappa_N(j)=2-N/2+(N-2j)^2/2$,
+\[
+ \widehat D_N=
+ \sum_{j=3}^{N-3}\binom Nj\kappa_N(j)
+ g_{j-3}g_{N-j-3}.
+\]
+Set $M=N-6$ and
+\[
+ B_i=\binom N{i+3}(i+1)(M-i+1),\qquad 0\leq i\leq M.
+\]
+The summand weight is $B_iq_iq_{M-i}$.  By
+\eqref{eq:real-first-normalized-complete-logconvex}, the symmetric
+multiplier $q_iq_{M-i}$ is nondecreasing with
+$|i-M/2|$.  The same is true of $\kappa_N(i+3)$.  The weighted Chebyshev
+inequality therefore compares its average with the one obtained by setting
+$q_i=1$.  The numerator of that baseline average is
+\begin{equation}\label{eq:real-first-baseline-coefficient}
+ \sum_{i=0}^M B_i\kappa_N(i+3)
+ =\frac{2^N(N^2-17N+32)+4N^4-24N^3+68N^2-48N-64}{4},
+\end{equation}
+which is positive for every $N\geq15$.  Hence the proposition implies
+$\widehat D_N\geq0$ for all $N\geq15$.
+
+The finitely many lower coefficients already combine positively in the
+tail range.  With $y=10/t$, exact tensor Bernstein conversion on
+$0\leq s,d,y\leq1$, where
+\[
+ \sqrt u=\frac{s(1-d)}2,\qquad
+ \sqrt v=\frac{s(1+d)}2,
+\]
+proves
+\begin{equation}\label{eq:real-first-variance-low-block}
+ t^{-16}\sum_{N=6}^{16}\widehat D_N\frac{t^N}{N!}\geq0
+ \qquad(t\geq10).
+\end{equation}
+Thus \eqref{eq:real-first-normalized-complete-logconvex} implies
+$V\geq1$ on the whole remaining tail, and
+\eqref{eq:real-first-simplex-curvature} gives
+$E\leq\theta(2-(1-\theta)L^2)\leq2$.  The exact low block, the signs of
+$\widehat D_N$ through $N=40$, and the first twenty cases of the sequence
+lemma are reproduced by
+\path{python/check_real_first_variance_tail.py}.
+
+For comparison, a second possible reduction is suggested by scale
+monotonicity.  Put
+\[
+ \sqrt u=\frac{s(1-d)}2,\qquad
+ \sqrt v=\frac{s(1+d)}2,\qquad 0\leq s,d\leq1.
+\]
+Numerical differentiation indicates that $E$ is nondecreasing in $s$
+whenever $E\geq0$.  Such a conditional monotonicity would reduce the tail
+to $s=1$, which is exactly the repeated-rate boundary $a=b$.  The observed
+maximum on that boundary is approximately $1.30148$.  These observations
+are reproduced by \path{python/explore_real_first.py}; they are evidence,
+not part of the proof.
+
+The complex-pair region itself admits a compact two-parameter normalization.
+This removes the three original rates from a direct analytic attack on the
+first start.  Write the roots of $P$ as
+$\lambda,\mu\mathbin\pm i\nu$, put $d=\lambda-\mu>0$, and set
+\[
+ x=dt,\qquad m=\frac{\mu}{d},\qquad \omega=\frac{\nu}{d}.
+\]
+Comparison of the coefficients of $P$ gives
+\[
+ a+b=d(1+3m),\qquad
+ ab=d^2(3m^2+2m+\omega^2),\qquad
+ Q=d^3(1+m)(m^2+\omega^2).
+\]
+Consequently the admissible parameter set is
+\begin{equation}\label{eq:complex-root-domain}
+ -\frac13\leq m\leq\frac13,
+ \qquad
+ \max\{0,-3m^2-2m\}\leq\omega^2
+ \leq\frac{1-2m-3m^2}{4},
+\end{equation}
+with degenerate boundary points understood by continuity.  After the harmless
+exponential shift $e^{-\mu t}$, the first component has the explicit form
+\begin{equation}\label{eq:complex-root-first-start}
+ e^{-\mu t}h_1(t)=\frac{H_{m,\omega}(x)}{1+\omega^2},
+\end{equation}
+where
+\[
+ H_{m,\omega}(x)
+ =(m^2+\omega^2)e^x+(1-m^2)\cos(\omega x)
+ -\frac{(m+1)(m+\omega^2)}{\omega}\sin(\omega x).
+\]
+Thus the first bound in the complex-pair region is exactly the elementary
+three-variable inequality
+\begin{equation}\label{eq:complex-root-curvature}
+ x^2\bigl(H_{m,\omega}H_{m,\omega}''-(H_{m,\omega}')^2\bigr)
+ +2H_{m,\omega}^2\geq0
+\end{equation}
+for $x\geq0$ and the compact parameter domain
+\eqref{eq:complex-root-domain}.  This is an equivalent reduction, not yet a
+proof, but it supplies a second concrete target with no matrix or
+Laplace-transform variables left.
+
+The Wronskian in \eqref{eq:complex-root-curvature} admits a further exact
+factorization.  This removes the second derivatives and isolates the only
+term which can be negative.  Put
+\[
+ z=\omega^2,\qquad A=m^2+z,\qquad
+ T=(1-m^2)\cos(\omega x)-(m+1)(m+z)S_\omega(x),
+\]
+so that $H_{m,\omega}=Ae^x+T$.  The trigonometric part is a harmonic
+oscillator, and direct simplification gives
+\begin{align}
+ T'^2+zT^2&=A(m+1)^2(1+z),\label{eq:first-oscillator-energy}\\
+ (1-z)T-2T'
+ &=(m+1)(1+z)
+ \left((m+1)\cos(\omega x)+(z-m)S_\omega(x)\right).
+ \label{eq:first-oscillator-companion}
+\end{align}
+Consequently
+\begin{align}
+ H_{m,\omega}H_{m,\omega}''
+ -(H_{m,\omega}')^2
+ ={}&A(m+1)(1+z)\bigl[
+ e^x\{(m+1)\cos(\omega x)+(z-m)S_\omega(x)\}\notag\\
+ &\hspace{43mm}{}-(m+1)\bigr].
+ \label{eq:first-oscillator-wronskian}
+\end{align}
+Thus the complex first-start target is the derivative-free inequality
+\begin{align}
+ 2(Ae^x+T)^2
+ +x^2A(m+1)(1+z)\bigl[
+ e^x\{(m+1)\cos(\omega x)+(z-m)S_\omega(x)\}
+ -(m+1)\bigr]\geq0.
+ \label{eq:first-oscillator-target}
+\end{align}
+All factors outside the square brackets are nonnegative on
+\eqref{eq:complex-root-domain}.  At the confluent boundary $z=0$ this has
+the continuous specialization
+\[
+ H_{m,0}(x)=m^2e^x+1-m^2-m(m+1)x,\qquad 0\leq m\leq\frac13,
+\]
+and the bracket in \eqref{eq:first-oscillator-target} becomes
+$e^x(m+1-mx)-(m+1)$.  These identities are checked symbolically by
+\texttt{python/check\_complex\_first\_factorization.py}.
+
+The confluent boundary just displayed can in fact be settled completely.
+This is one of the two lower boundary arcs suggested by
+\eqref{eq:first-oscillator-target}.
+\begin{proposition}[Confluent complex boundary]\label{prop:first-omega-zero}
+For $z=0$, $0\leq m\leq1/3$, and $x\geq0$, the first-start inequality
+\eqref{eq:complex-root-curvature} holds.
+\end{proposition}
+\begin{proof}
+The case $m=0$ is immediate, so suppose $m>0$ and write $r=1+m$.  With
+\[
+ H=m^2e^x+1-m^2-mrx,\qquad
+ J=e^x(r-mx)-r,
+\]
+the left side of \eqref{eq:complex-root-curvature} is
+\begin{equation}\label{eq:first-omega-zero-D}
+ D=2H^2+x^2m^2rJ.
+\end{equation}
+If $J\geq0$ there is nothing to prove.  Since
+$J'=e^x(1-mx)$ and $J(0)=0$, the alternative $J<0$ forces $x>1/m$.
+
+We use twice the elementary bound
+\[
+ \frac{m^2e^{1/m}}{1+m}\geq\frac{e^3}{12}>\sqrt2
+ \qquad(0<m\leq1/3).
+\]
+Indeed, the expression on the left is decreasing on this interval.  It
+first implies, for $x\geq1/m$,
+\[
+ H\geq\frac12m^2e^x.
+\]
+If moreover $x\leq r/m$, then $-J\leq r$ and
+$me^x\geq\sqrt2\,xr$; hence
+\[
+ D\geq\frac12m^4e^{2x}-x^2m^2r^2\geq0.
+\]
+
+It remains to consider $x\geq r/m$.  Regard the right side of
+\eqref{eq:first-omega-zero-D} as the quadratic
+\[
+ \mathcal D(m,x,Y)
+ =2(m^2Y+1-m^2-mrx)^2+x^2m^2r\{Y(r-mx)-r\}.
+\]
+Put $u=mx-r\geq0$.  Then
+\[
+ m=\frac{u+1}{x-1},\qquad x=3u+4+v
+\]
+for some $v\geq0$, because $m\leq1/3$.  Also $x\geq4$ and
+$e^x\geq x^4/6$: the quotient $e^x/x^4$ is increasing there, and the
+inequality at $x=4$ follows from the first six terms of the exponential
+series.  Direct expansion after the preceding substitution shows that both
+\[
+ 72(x-1)^4\mathcal D\left(m,x,\frac{x^4}{6}\right),
+ \qquad
+ 6(x-1)^4\partial_Y\mathcal D\left(m,x,\frac{x^4}{6}\right)
+\]
+are polynomials in $u,v$ with nonnegative integer coefficients.  Therefore
+$\mathcal D$ is nonnegative at $Y=x^4/6$ and is increasing for all larger
+$Y$.  Taking $Y=e^x$ proves the result.  The two polynomial expansions
+(respectively $80$ and $35$ monomials) are verified exactly by
+\path{python/check_complex_first_factorization.py}.
+\end{proof}
+
+The other lower boundary arc can also be proved.  The following argument uses
+an exact finite Bernstein certificate only on a compact interval; the tail is
+handled analytically.
+\begin{proposition}[$a=0$ complex boundary]
+\label{prop:first-a-zero}
+For $m=-q$, $0\leq q\leq1/3$, and
+$z=2q-3q^2$, the first-start inequality
+\eqref{eq:complex-root-curvature} holds for every $x\geq0$.
+\end{proposition}
+\begin{proof}
+Undo the harmless exponential shift and put
+\[
+ h(x)=e^{-qx}\frac{H_{-q,\sqrt z}(x)}{1+z}.
+\]
+In the ordered canonical coordinates this is the first component with
+\[
+ b=1-3q,\qquad Q=2q(1-q)^2,
+\]
+and hence
+\begin{equation}\label{eq:a-zero-scalar-ode}
+ h'''=(1-3q)h''+2q(1-q)^2h,
+ \qquad h(0)=1,\quad h'(0)=h''(0)=0.
+\end{equation}
+Multiplication by $e^{-qx}$ does not change logarithmic curvature, so it is
+enough to prove
+\[
+ D_q(x)=x^2\{hh''-(h')^2\}+2h^2\geq0.
+\]
+
+We first treat $0\leq x\leq10$.  Write
+$a_n(q)=h^{(n)}(0)$.  Equation~\eqref{eq:a-zero-scalar-ode} gives the exact
+polynomial recurrence
+\[
+ a_{n+3}=(1-3q)a_{n+2}+2q(1-q)^2a_n,
+ \qquad a_0=1,\quad a_1=a_2=0.
+\]
+If $D_N(q)$ is $N!$ times the coefficient of $x^N$ in $D_q(x)$, then
+\[
+ D_N(q)=\sum_{j=0}^N\binom Nj
+ \left(2-\frac N2+\frac{(N-2j)^2}{2}\right)
+ a_j(q)a_{N-j}(q).
+\]
+Exact rational calculation shows that, for every $0\leq N\leq80$,
+$D_N(x/3)$ has nonnegative coefficients in the Bernstein basis on
+$0\leq x\leq1$.  Thus the degree-$80$ Taylor polynomial of $D_q$ is at
+least its constant term $2$ throughout the required parameter interval.
+
+For completeness, the Taylor tail has a short uniform bound.  The spectral
+form is
+\begin{equation}\label{eq:a-zero-spectral-form}
+ h=c_0e^{(1-q)x}+c_+e^{(-q+i\sqrt z)x}
+   +c_-e^{(-q-i\sqrt z)x},
+ \qquad c_-=\overline{c_+},
+\end{equation}
+where
+\[
+ c_0=\frac{2q(1-q)}{1+z}.
+\]
+All three exponents have modulus at most $1$, and
+$|c_0|+|c_+|+|c_-|\leq2$.  For a sum
+$h=\sum c_re^{\lambda_rx}$ one has
+\[
+ D_q(x)=\sum_{r,s}c_rc_s
+ \left\{2+\frac{x^2}{2}(\lambda_r-\lambda_s)^2\right\}
+ e^{(\lambda_r+\lambda_s)x}.
+\]
+Consequently, on $0\leq x\leq10$, the absolute remainder after total degree
+$80$ is at most
+\[
+ 8e^{20}\left\{\frac{20^{81}}{81!}
+ +100\frac{20^{79}}{79!}\right\}<1.
+\]
+Here one may use the elementary bound $e^{20}<500000000$; the final
+inequality is rational arithmetic.  The exact Bernstein calculation and
+this tail check are reproduced by
+\path{python/check_complex_first_a0_boundary.py}.  It follows that
+$D_q(x)>1$ on this compact interval.
+
+It remains to give a purely analytic estimate for $x\geq10$.  Put
+\[
+ U=\cos(\sqrt z,x)+3qS_{\sqrt z}(x).
+\]
+On the present boundary the square bracket in
+\eqref{eq:first-oscillator-target} is $(1-q)(e^xU-1)$.  If it is
+nonnegative, the result is immediate.  Otherwise $U<e^{-x}<1/2$.  If
+$\sqrt z,x\leq1$, then
+$\cos(\sqrt z,x)\geq1-zx^2/2\geq1/2$ and the sine term in $U$ is
+nonnegative, a contradiction.  Hence $zx^2>1$.  Since $z\leq2q$, this
+implies
+\begin{equation}\label{eq:a-zero-q-lower}
+ q>\frac1{2x^2},\qquad c_0\geq q>\frac1{2x^2}.
+\end{equation}
+
+Let $R=|c_+|+|c_-|$.  From the cosine and sine coefficients in
+\eqref{eq:a-zero-spectral-form},
+\[
+ R\leq\frac{1-q^2}{1+z}
+ +\frac{q(1-q)(1-3q)}{\sqrt z(1+z)}\leq\frac54.
+\]
+For the last inequality, the first summand is at most $1$, while the square
+of the assertion that the second is at most $1/4$ reduces to
+\[
+ 171q^3-96q^2+7q-2\leq0.
+\]
+This follows from $171q^3\leq57q^2$ and the negative-discriminant quadratic
+$-39q^2+7q-2$.
+
+The leading--oscillatory spectral gaps have squared modulus at most $4/3$.
+Therefore, with $L=2+2x^2/3$, formula
+\eqref{eq:a-zero-spectral-form} gives
+\[
+ D_q(x)\geq e^{-2qx}\bigl[
+ 2c_0^2e^{2x}-L\{2c_0Re^x+R^2\}\bigr].
+\]
+For $x\geq10$ the bracket is increasing as a function of
+$c_0\geq1/(2x^2)$: its derivative is nonnegative because
+$e^x/x^2\geq LR$, which follows already from
+$L\leq7x^2/10$, $R\leq5/4$, and $e^{10}>22000$.
+Using the same bounds, its value at the lower endpoint is at least
+\[
+ \frac{e^{2x}}{2x^4}-\frac78e^x-\frac{35}{32}x^2>0.
+\]
+Indeed, after division by $e^x$, the first term is increasing and the last
+is decreasing for $x\geq10$; at $x=10$ the claim follows already from
+$e^{10}>22000$.  This proves the tail and completes the boundary.
+\end{proof}
+
+In fact the same finite-certificate strategy, with a uniform complex-analytic
+remainder estimate, fills the interior of the complex-root chart.
+\begin{proposition}[Complex-pair first start]
+\label{prop:complex-first}
+For every parameter pair in \eqref{eq:complex-root-domain} and every
+$x\geq0$, the first-start inequality
+\eqref{eq:complex-root-curvature} holds.
+\end{proposition}
+\begin{proof}
+We first prove the assertion on $0\leq x\leq10$.  Two overlapping choices of
+the harmless exponential shift keep the exact certificates small.  For
+$m\geq0$, use
+\[
+ F=\frac{H_{m,\omega}}{1+z}.
+\]
+Its derivatives at zero satisfy
+\[
+ f_0=1,\qquad f_1=-m,\qquad f_2=m^2,
+ \qquad f_{n+3}=f_{n+2}-zf_{n+1}+zf_n.
+\]
+Let $P_{70}$ be the degree-$70$ Taylor polynomial of
+$x^2\{FF''-(F')^2\}+2F^2$.  Parameterize the positive half of
+\eqref{eq:complex-root-domain} by
+\[
+ m=\frac r3,\qquad
+ z=\tau\frac{3-2r-r^2}{12},\qquad 0\leq r,\tau\leq1,
+\]
+and put $x=10u$, $0\leq u\leq1$.  Exact conversion of
+$P_{70}(10u)$ to the tensor Bernstein basis in $(r,\tau,u)$ gives only
+positive coefficients; the smallest is
+\begin{equation}\label{eq:complex-first-bernstein-min}
+ \frac{7445875529}{6372236871}>1.
+\end{equation}
+
+For $m\leq0$, use instead
+$h=e^{mx}F$, the unshifted canonical component.  Its derivatives satisfy
+\[
+ h_{n+3}=(1+3m)h_{n+2}-(3m^2+2m+z)h_{n+1}
+ +(1+m)(m^2+z)h_n,
+ \qquad h_0=1,\qquad h_1=h_2=0.
+\]
+Write $r=-3m$ and parameterize this half by
+\[
+ z=\frac{r(2-r)}3+\tau\frac{(1-r)^2}{4},\qquad
+ 0\leq r,\tau\leq1.
+\]
+For every Taylor degree $0\leq N\leq70$, the corresponding curvature
+coefficient has only nonnegative tensor Bernstein coefficients in
+$(r,\tau)$.  Hence the degree-$70$ partial sum is at least its constant
+term $2$ for $x\geq0$.
+
+The omitted tail is uniformly smaller than $1$ in both cases.  Indeed, the
+chosen function ($F$ for $m\geq0$ and $h$ for $m\leq0$), together with its
+first two derivatives, has modulus at most $36e^{34}$ on the circle
+$|x|=34$.  This follows directly from the exponential--sine--cosine formula:
+all relevant spectral frequencies have modulus at most $1$, all scalar
+coefficients have modulus at most $1$, and
+$|S_\omega(x)|\leq |x|e^{|\omega x|}$.  Thus the curvature has modulus at
+most
+\[
+ M=(2\cdot34^2+2)(36e^{34})^2.
+\]
+Cauchy's estimate bounds its Taylor tail on $|x|\leq10$ by
+\[
+ M\frac{(5/17)^{71}}{1-5/17}<1;
+\]
+the last inequality follows already from $e^{34}<6\cdot10^{14}$ and is an
+exact rational check.  The two Bernstein certificates and the tail bound
+are verified by \path{python/check_complex_first_full.py}.  Combined with
+\eqref{eq:complex-first-bernstein-min}, they prove the claim for
+$0\leq x\leq10$.
+
+It remains to give a uniform analytic argument for $x\geq10$.  Put
+\[
+ A=m^2+z,\qquad
+ U=\cos(\omega x)+\frac{z-m}{m+1}S_\omega(x),\qquad y=x\sqrt A.
+\]
+The square bracket in \eqref{eq:first-oscillator-target} is
+$(m+1)(e^xU-1)$.  If it is nonnegative, there is nothing to prove.  Suppose
+therefore that $U<e^{-x}$.  The parameter domain gives
+\[
+ z\leq\frac13,\qquad A\leq\frac49,\qquad
+ (z-m)^2\leq A,\qquad m+1\geq\frac23.
+\]
+Using $\cos v\geq1-v^2/2$ and $|S_\omega(x)|\leq x$, we obtain
+\[
+ U\geq1-\frac{y^2}{2}-\frac{3y}{2}.
+\]
+Since $e^{-x}<1/8$, this forces $y>1/2$.
+
+The trigonometric term in $H=Ae^x+T$ has the useful identity
+\begin{equation}\label{eq:complex-first-TU}
+ T=(1-m^2)U-2A S_\omega(x).
+\end{equation}
+If $0\leq U<e^{-x}$, then
+$H\geq A(e^x-2x)\geq(9/10)Ae^x$.  If $U<0$, put
+\[
+ G(y)=\frac{y^2}{2}+\frac{3y}{2}-1.
+\]
+The preceding lower bound gives $|U|\leq G(y)$, while
+\[
+ G(y)\leq\frac{17}{16}y^2,
+\]
+because the difference after division by $y^2$ is
+$(3y-4)^2/(16y^2)$.  Equation~\eqref{eq:complex-first-TU} then gives
+\[
+ H\geq Ae^x-G(y)-2Ax\geq\frac9{10}Ae^x;
+\]
+the last step uses $x\geq10$, $y>1/2$, and $e^{10}>22000$.
+
+Finally,
+$(m+1)^2(1+z)\leq64/27$.  In the case $U\geq0$, the possibly negative
+bracket has magnitude at most $1$, and hence
+\[
+ D_H\geq\frac32A^2e^{2x}-\frac{64}{27}x^2A>0.
+\]
+In the case $U<0$, use
+$1+e^x|U|\leq1+(17/16)e^xy^2$ to obtain
+\[
+ D_H\geq y^4\left\{
+ \frac{3e^{2x}}{2x^4}-\frac{68}{27}e^x-\frac{256}{27}
+ \right\}>0.
+\]
+Both final inequalities follow at $x=10$ from $y>1/2$ and
+$e^{10}>22000$, and their left sides only improve thereafter.  This proves
+the full complex-pair region.
+\end{proof}
+
+There is also a natural, but no longer necessary, monotonicity route from the
+two boundaries into the interior of the
+complex-root domain.  Normalize
+$\widehat H=H_{m,\omega}/(1+z)$.  Its Laplace transform with respect to $x$
+and its $z$-derivative are
+\begin{align}
+ \mathcal L\widehat H(s)
+ &=\frac{s^2-(m+1)s+m^2+m+z}{(s-1)(s^2+z)},\notag\\
+ \partial_z\mathcal L\widehat H(s)
+ &=\frac{(m+1)(s-m)}{(s-1)(s^2+z)^2}.
+ \label{eq:first-z-derivative-laplace}
+\end{align}
+Equivalently,
+\[
+ \partial_z\widehat H
+ =(m+1)\,e^x*
+ \bigl(\cos(\omega x)-mS_\omega(x)\bigr)*S_\omega(x).
+\]
+Exact numerical minimization indicates that the normalized curvature in
+\eqref{eq:complex-root-curvature}, divided by $(1+z)^2$, is nondecreasing in
+$z$ for fixed $(x,m)$.  This monotonicity is no longer needed for the proof,
+and its individual Taylor coefficients do change sign.  Formula
+\eqref{eq:first-z-derivative-laplace} is a compact starting point for that
+stronger comparison; at present it remains conjectural.
+
+The missing middle bound has an equally explicit form in the same chart.
+Let
+\[
+ \delta=\sqrt{1-2m-3m^2-4\omega^2},\qquad
+ \beta=\frac{1+m+\delta}{2}=\frac{b-\mu}{d}.
+\]
+Then, up to the positive constant $x_2/d$,
+\[
+ e^{-\mu t}h_2(t)=\frac{K_{m,\omega}(x)}{1+\omega^2},
+\]
+where
+\[
+ K_{m,\omega}(x)
+ =(1-\beta)\bigl(e^x-\cos(\omega x)\bigr)
+ +\frac{\omega^2+\beta}{\omega}\sin(\omega x).
+\]
+Thus the sharper middle target in \eqref{eq:two-riccati-targets} is equivalent
+in the complex-pair region to
+\begin{equation}\label{eq:complex-root-middle-curvature}
+ x^2\bigl(K_{m,\omega}K_{m,\omega}''-(K_{m,\omega}')^2\bigr)
+ +K_{m,\omega}^2\geq0.
+\end{equation}
+The quotients by $\omega$ in both formulas have their continuous meanings at
+$\omega=0$.
+
+The parameter dependence of the last inequality can be reduced further.  Set
+\[
+ A=1-\beta=\frac{\lambda-b}{d},\qquad
+ \rho=\sqrt{1-3\omega^2}.
+\]
+Eliminating $m$ and $b$ from \eqref{eq:complex-root-domain} gives
+\begin{equation}\label{eq:complex-middle-A-interval}
+ 0\leq\omega^2\leq\frac13,\qquad
+ \frac{2(1-\rho)}3\leq A\leq\frac{2-\rho}3.
+\end{equation}
+The left endpoint is precisely $a=0$, and the right endpoint is precisely
+$a=b$.  Moreover, with
+\[
+ S_\omega(x)=\frac{\sin(\omega x)}{\omega},\qquad
+ D_\omega(x)=e^x-\cos(\omega x)-S_\omega(x),
+\]
+one has the affine formula
+\begin{equation}\label{eq:complex-middle-affine}
+ K_{m,\omega}(x)=(1+\omega^2)S_\omega(x)+A D_\omega(x).
+\end{equation}
+For fixed $(x,\omega)$, the left side of
+\eqref{eq:complex-root-middle-curvature} is a quadratic polynomial in $A$.
+The following argument proves that it is nonnegative on the whole interval,
+not merely at its endpoints.
+
+\begin{proposition}[Complex-pair middle start]
+\label{prop:complex-middle}
+For every parameter pair in \eqref{eq:complex-middle-A-interval} and every
+$x\geq0$, the stronger middle inequality
+\eqref{eq:complex-root-middle-curvature} holds.
+\end{proposition}
+
+\begin{proof}
+Put $z=\omega^2$ and $B=1-A+z$.  Then
+\[
+ K=Ae^x-A\cos(\omega x)+B\frac{\sin(\omega x)}{\omega}.
+\]
+Let $C_N$ be $N!$ times the coefficient of $x^N$ in
+\[
+ \mathcal C(x)=K^2+x^2(KK''-(K')^2).
+\]
+For $N\geq3$, set $M=N(N-1)/2$ and
+\[
+ R_N=(1+i\omega)^N
+     +M(1-i\omega)^2(1+i\omega)^{N-2},
+ \qquad J_N=\frac{\operatorname{Im}R_N}{\omega}.
+\]
+Writing the trigonometric part as a pair of conjugate exponentials gives the
+exact identity
+\begin{equation}\label{eq:middle-coefficient-pairing}
+ C_N=A^22^N
+ +2\operatorname{Re}\left[
+   \left(\frac{-A-iB/\omega}{2}\right)^2(2i\omega)^N\right]
+ -2A^2\operatorname{Re}R_N+2ABJ_N .
+\end{equation}
+All expressions at $\omega=0$ are interpreted by continuity.
+
+The domain has the useful elementary consequences
+\begin{equation}\label{eq:middle-domain-crude}
+ 0\leq z\leq A,\qquad 0\leq B\leq1,
+ \qquad r:=\sqrt{1+z}\leq\frac2{\sqrt3}.
+\end{equation}
+Moreover,
+\[
+ J_N(0)=N+M(N-4)>0\quad(N\geq4).
+\]
+The polynomial $R_N(\omega)$ is a sum of a product of $N$ linear factors
+and $M$ times another such product.  Taylor's theorem, using the conjugation
+symmetry at the origin, therefore gives
+\begin{equation}\label{eq:middle-J-remainder}
+ J_N\geq J_N(0)-\frac z6(1+M)N(N-1)(N-2)r^{N-3}.
+\end{equation}
+Indeed, the absolute value of the third derivative of either product is at
+most $N(N-1)(N-2)r^{N-3}$ on $[0,\omega]$.
+
+We now use \eqref{eq:middle-J-remainder} in
+\eqref{eq:middle-coefficient-pairing}, retain the nonnegative term
+$2ABJ_N(0)$, and bound the other two real parts by their moduli.  Since
+$z\leq A$ and $B\leq1$, for $N\geq6$ this yields
+\begin{align}
+ C_N\geq A^2\bigg\{2^N
+ &-2(1+M)r^N
+ -\frac13(1+M)N(N-1)(N-2)r^{N-3} \notag\\
+ &-2^{N-1}\left(3^{-N/2}+3^{3-N/2}\right)\bigg\}.
+ \label{eq:middle-tail-bound}
+\end{align}
+For example, the conjugate-pair term is bounded by
+\[
+ 2^{N-1}\bigl(A^2z^{N/2}+B^2z^{N/2-1}\bigr)
+ \leq
+ 2^{N-1}A^2\left(3^{-N/2}+3^{3-N/2}\right).
+\]
+
+The braces in \eqref{eq:middle-tail-bound} are positive for every
+$N\geq25$.  After division by $2^N$, their total subtracted part is
+\[
+ E_N=\left(2(1+M)+14
+ +\frac{\sqrt3}{8}(1+M)N(N-1)(N-2)\right)3^{-N/2}.
+\]
+At $N=25$ its numerator is
+$616+519225\sqrt3$, whereas its denominator is $531441\sqrt3$, so
+$E_{25}<1$.  Thereafter each of the two positive numerator summands grows
+by a factor less than $4/3$, while the denominator grows by $\sqrt3$.
+Indeed, their successive ratios are bounded by their values at $N=25$,
+namely $666/616$ and $(326/301)(26/23)$, both less than $4/3$.
+Thus $E_N$ decreases for $N\geq25$.
+
+It remains only to check the finite range.  Parametrize the complete domain
+by
+\[
+ \omega^2=\frac{1-\rho^2}{3},\qquad
+ A=\frac{2-2\rho+\rho y}{3},
+ \qquad 0\leq\rho,y\leq1.
+\]
+For $N=4,\ldots,24$, direct power-to-Bernstein conversion of $C_N$ gives
+only nonnegative rational coefficients, first in $y$ and then in $\rho$.
+This is a finite exact certificate: the derivative sequence used to form it
+is
+\[
+ K^{(n)}(0)=A(1-c_nz^{\lfloor n/2\rfloor})
+ +B s_nz^{\lfloor(n-1)/2\rfloor},
+\]
+where $(c_n)=(1,0,-1,0)$ and $(s_n)=(0,1,0,-1)$ periodically.  The short
+exact-arithmetic verification is
+\texttt{python/check\_complex\_middle\_boundaries.py}.  Finally,
+$C_0=C_1=C_2=C_3=0$.  Hence every Taylor coefficient of $\mathcal C$ is
+nonnegative, proving the result for $x\geq0$.
+\end{proof}
+
+Thus the middle start is now complete in both the real- and complex-spectrum
+regions.  By the convolution argument preceding
+\eqref{eq:middle-divided-difference}, the third start is complete as well.
+At this stage, only the first canonical start remains open.
+
+The calculation in \eqref{eq:real-first-simplex-curvature} in fact has a
+root-free extension which proves a substantial part of the remaining case.
+Assume $Q>0$ and define
+\[
+ \mathcal M(t)=\frac{h_1(t)-1}{Qt^3}.
+\]
+Since $h_1'=c h_3$, the function $\mathcal M$ is, up to a positive constant,
+$t^{-3}\int_0^t h_3(s)\,ds$.  The completed third-start result and the
+convolution lemma imply that $\mathcal M$ is log-convex.  Its series at the
+origin gives
+\[
+ (\log\mathcal M)'(0)=\frac{a+b}{4}\geq0;
+\]
+hence $(\log\mathcal M)'\geq0$ everywhere.  Put
+\[
+ \vartheta=\frac{h_1-1}{h_1},\qquad
+ \mathcal L=3+t(\log\mathcal M)',\qquad
+ \mathcal V=t^2(\log\mathcal M)''.
+\]
+Then $\mathcal L\geq3$, $\mathcal V\geq0$, and direct differentiation gives
+\begin{equation}\label{eq:first-integrated-third-identity}
+ -t^2(\log h_1)''
+ =\vartheta\bigl(3-\mathcal V
+ -(1-\vartheta)\mathcal L^2\bigr).
+\end{equation}
+It follows immediately that the first-start target holds, for every spectrum,
+throughout the region
+\begin{equation}\label{eq:first-small-return-region}
+ h_1(t)-1\leq5+3\sqrt3.
+\end{equation}
+Indeed, this is equivalent to
+$\vartheta\leq(1+\sqrt3)/3$, and the right side of
+\eqref{eq:first-integrated-third-identity} is then at most
+$\vartheta(9\vartheta-6)\leq2$.  Outside
+\eqref{eq:first-small-return-region}, the sole remaining scalar inequality is
+\begin{equation}\label{eq:first-integrated-third-target}
+ \mathcal V+(1-\vartheta)\mathcal L^2
+ \geq3-\frac2\vartheta.
+\end{equation}
+For real roots, $\mathcal V$ is precisely the tilted-simplex variance $V$ in
+\eqref{eq:real-first-simplex-target}; for a complex pair it remains a
+nonnegative convolution curvature.  Thus
+\eqref{eq:first-integrated-third-target} unifies the two spectral regions.
+
+Exact computation supports the cleaner, stronger inequality
+\begin{equation}\label{eq:first-integrated-third-strong}
+ \mathcal V+(1-\vartheta)\mathcal L^2\geq\vartheta.
+\end{equation}
+It implies \eqref{eq:first-integrated-third-target}, since
+$\vartheta\geq3-2/\vartheta$ for $0<\vartheta\leq1$.  In the original
+variables it is equivalent to
+\begin{equation}\label{eq:first-strong-curvature}
+ t^2\bigl(h_1h_1''-(h_1')^2\bigr)+2h_1^2-h_1-1\geq0,
+\end{equation}
+and would give the sharper bound
+$E_1\leq\vartheta(3-\vartheta)\leq2$.
+At coefficient level, \eqref{eq:first-strong-curvature} replaces
+$\Gamma(C,J,K)$ by $\Gamma(C,J,K)-\alpha(C,J,K)$.  Exact tests find the same
+five negative triples $(2,0,K)$, $3\leq K\leq7$, and no others.  Grouping
+with the neighboring $C=1,3$ terms gives positive quadratics whose
+discriminants are
+\[
+ -5907200,\quad -1402143,\quad -7154704640,\quad
+ -11951446784,\quad -263131073024.
+\]
+Thus the two normalized coefficient monotonicities below would prove even
+the strengthened form \eqref{eq:first-strong-curvature}; no additional
+infinite family is introduced.
+
+The completed third bound almost closes the first one by a barrier argument.
+This gives a useful quantitative target for strengthening the convolution
+step.  Introduce logarithmic time $\tau=\log t$ and the scaled variables
+\[
+ Z=tz,\qquad P=tp,\qquad R=tq,
+ \qquad A_0=ta,\qquad B_0=tb.
+\]
+Then \eqref{eq:canonical-rate-system} becomes
+\[
+ \dot Z=Z(1+B_0+R-Z),\qquad
+ \dot P=P(1+Z-A_0-P),\qquad
+ \dot R=R(1+A_0+P-B_0-R),
+\]
+where a dot denotes $d/d\tau$.  Set
+\[
+ E_1=Z(Z-B_0-R),\qquad
+ E_3=R(B_0+R-A_0-P).
+\]
+A direct differentiation, followed only by the substitution $E_1=2$, gives
+the exact first-contact identity
+\begin{equation}\label{eq:first-contact-slack}
+ \left.\dot E_1\right|_{E_1=2}
+ =Z(E_3-2)+4-\frac4Z.
+\end{equation}
+At such a contact one has $Z>\sqrt2$.  The established third inequality
+$E_3\leq2$ alone therefore falls just short of forcing $\dot E_1\leq0$.
+It would be enough to prove the following quantitative slack implication:
+\begin{equation}\label{eq:first-contact-slack-target}
+ E_1=2\quad\Longrightarrow\quad
+ 2-E_3\geq\frac{4(Z-1)}{Z^2}.
+\end{equation}
+The left side is exactly
+$t^2(\log(t^{-2}h_3))''$, so
+\eqref{eq:first-contact-slack-target} asks for a quantitative version of the
+same convolution log-convexity argument that already proves its
+nonnegativity.
+
+That slack itself has an exact positive decomposition.  Put
+\[
+ F(s)=\frac{e^{-bs}h_2(s)}s,
+ \qquad
+ G(t)=\frac{e^{-bt}h_3(t)}{t^2}
+     =x_3\int_0^1uF(tu)\,du,
+\]
+and let $\mu_t$ be the probability measure on $[0,1]$ with density
+proportional to $uF(tu)$.  If
+\[
+ E_2(s)=s^2p(s)(a+p(s)-z(s)),
+ \qquad L(s)=s(\log F)'(s),
+\]
+then differentiation under the integral gives
+\begin{equation}\label{eq:third-slack-decomposition}
+ 2-E_3(t)
+ =\E_{\mu_t}[1-E_2(tu)]
+  +\operatorname{Var}_{\mu_t}(L(tu)).
+\end{equation}
+Both terms are nonnegative by the stronger middle bound.  Combining
+\eqref{eq:first-contact-slack-target} and
+\eqref{eq:third-slack-decomposition} isolates the remaining dynamic question:
+at a first contact, one must extract a lower bound on either the averaged
+middle slack or the spread of the logarithmic slopes.  No oscillatory root
+variables occur in this formulation.
+
+There is a complementary coefficient reduction for the first canonical
+start.  It sharply localizes the cancellation that a proof still has to
+explain.  Write
+\[
+ S=a+b,\qquad \Delta=(a-b)^2,\qquad Q=cx_2x_3.
+\]
+The ordinary generating function of the return-walk weights is
+\begin{align}
+ \sum_{n\geq0}(B^n)_{11}z^n
+ &=\frac{(1-az)(1-bz)}
+         {(1-az)(1-bz)-Qz^3} \notag\\
+ &=\sum_{C\geq0}
+   \frac{Q^Cz^{3C}}
+        {\bigl((1-Sz/2)^2-\Delta z^2/4\bigr)^C}.
+ \label{eq:canonical-positive-coordinates}
+\end{align}
+Here the term with $C=0$ is $1$.  For $C\geq1$, expansion of the last
+display gives the manifestly nonnegative coefficient
+\begin{equation}\label{eq:canonical-alpha}
+ \alpha(C,J,K)=
+ \binom{C+J-1}{J}
+ \binom{2C+2J+K-1}{K}\,2^{-2J-K}
+\end{equation}
+of
+$Q^C\Delta^JS^Kz^{3C+2J+K}$.
+
+This turns coefficientwise curvature into a finite binomial-sum question.
+Set $\alpha(0,0,0)=1$, with all other $\alpha(0,J,K)=0$, put
+$N=3C+2J+K$, and define
+\begin{equation}\label{eq:canonical-gamma}
+ \begin{aligned}
+ \Gamma(C,J,K)
+ &=\sum_{\substack{0\leq c\leq C\\0\leq j\leq J\\0\leq k\leq K}}
+ \binom{N}{3c+2j+k}
+ \left(2-\frac N2+
+       \frac{(N-2(3c+2j+k))^2}{2}\right)\\
+ &\hspace{34mm}{}
+ \times\alpha(c,j,k)\alpha(C-c,J-j,K-k).
+ \end{aligned}
+\end{equation}
+Thus $\Gamma(C,J,K)$ is exactly the coefficient of
+$Q^C\Delta^JS^K$ in the $N$th exponential Taylor coefficient of the
+corrected curvature.
+
+There is a useful probabilistic simplification of
+\eqref{eq:canonical-gamma}.  Let
+\[
+ T(C,J,K)=\sum_{c,j,k}W(c,j,k),
+ \qquad
+ \pi(c,j,k)=\frac{W(c,j,k)}{T(C,J,K)},
+\]
+with $W$ as in \eqref{eq:S-loop-insertion} below, and regard
+$n=3c+2j+k$ as a random variable under $\pi$.  Complementing the cut sends
+$n$ to $N-n$ without changing its weight, so $\E_\pi n=N/2$.  Since the
+kernel in \eqref{eq:canonical-gamma} is
+\[
+ 2-\frac N2+2\left(n-\frac N2\right)^2,
+\]
+one obtains the exact identity
+\begin{equation}\label{eq:canonical-cut-variance}
+ \Gamma(C,J,K)=T(C,J,K)
+ \left(2-\frac N2+2\operatorname{Var}_\pi(n)\right).
+\end{equation}
+Thus the uniform coefficient sign assertion is equivalent to the elementary
+cut-dispersion bound
+\begin{equation}\label{eq:canonical-cut-variance-target}
+ \operatorname{Var}_\pi(n)\geq\frac N4-1.
+\end{equation}
+The five exceptional triples below are exactly the cases in which this
+conditional cut distribution is slightly too concentrated.  This variance
+formulation is also compatible with conditioning first on the number $c$ of
+cycles to the left of the cut, so the law of total variance offers a second
+route to the desired finite-exception statement.
+
+Exact expansion suggests the following particularly rigid sign pattern:
+\[
+ \Gamma(C,J,K)\geq0
+\]
+except when $(C,J)=(2,0)$ and $3\leq K\leq7$.  This has been checked in
+exact integer arithmetic for
+$1\leq C\leq12$, $0\leq J\leq9$, and $0\leq K\leq20$; it is not yet a
+proof for all indices.  The five exceptions do not threaten the desired
+curvature.  They occur at total degrees $N=9,\ldots,13$ and combine with
+the neighboring $C=1$ and $C=3$ terms into positive quadratics.  After
+discarding other nonnegative terms, the relevant brackets are
+\[
+\begin{array}{c|c}
+N&\text{quadratic in }x=Q/S^3\\ \hline
+9&133-320x+6592x^2\\
+10&47-437x+18096x^2\\
+11&171-3280x+309952x^2\\
+12&85-2296x+569728x^2\\
+13&55-920x+1179744x^2.
+\end{array}
+\]
+Their discriminants are respectively
+\[
+ -3404544,\quad -3211079,\quad -201248768,\quad
+ -188435904,\quad -258697280,
+\]
+so all five are strictly positive.  Consequently a proof of the uniform
+sign assertion for \eqref{eq:canonical-gamma} would settle the first
+canonical start coefficient by coefficient.  Analogous expansions for the
+other two starts show no exceptional negative group in the tested range.
+This finite-exception binomial lemma is now the most concrete algebraic
+target alongside the Riccati inequalities.
+
+There is evidence for a sharper reduction of that lemma.  Normalize by the
+positive coefficient in \eqref{eq:canonical-alpha} and set
+\[
+ R(C,J,K)=\frac{\Gamma(C,J,K)}{\alpha(C,J,K)}.
+\]
+Exact arithmetic through $C\leq9$, $J\leq14$, and $K\leq20$ gives
+\begin{align*}
+ R(C,J+1,K)&\geq R(C,J,K),\qquad &&C\geq1,\\
+ R(C,J,K+1)&\geq R(C,J,K),
+ &&(C,J,K)\notin\{(2,0,k):0\leq k\leq5\}.
+\end{align*}
+If these two monotonicity statements hold in general, the whole uniform sign
+claim reduces to the already proved equal-rate value
+\[
+ R(C,0,0)=
+ \frac{2^{3C+1}+(-1)^C(-27C^2+9C+4)}{3}
+\]
+and the single slice $C=2$, $J=0$.  That slice has the closed form
+\begin{equation}\label{eq:C2-closed-form}
+ \begin{aligned}
+ \Gamma(2,0,K)=\frac{1}{6\,2^K}\bigl\{
+ &96\,2^K(K^2-5K-34)\\
+ &{}+K^5+23K^4+219K^3+1081K^2+2888K+3348
+ \bigr\}.
+ \end{aligned}
+\end{equation}
+Formula~\eqref{eq:C2-closed-form} follows by writing the interior summation
+with $n=k+3$, extending it to the full binomial sum $0\leq n\leq K+6$,
+evaluating the moments through degree four, and subtracting the six boundary
+terms.
+It is positive for $K\geq9$ directly, because both displayed groups are then
+nonnegative, and inspection of $0\leq K\leq8$ leaves exactly
+$K=3,\ldots,7$ negative.  Thus the two normalized monotonicity inequalities,
+rather than an unrestricted three-variable sign calculation, are sufficient
+for the first start.
+
+There is an exact insertion formula for the second monotonicity statement.
+It substantially narrows what remains to be proved.  Put
+\[
+ \kappa_N(n)=2-\frac N2+\frac{(N-2n)^2}{2},\qquad
+ W(c,j,k)=\binom Nn\alpha(c,j,k)
+ \alpha(C-c,J-j,K-k),
+\]
+where $n=3c+2j+k$ and $N=3C+2J+K$.  Inserting one $S$-loop on either side
+of the cut gives
+\begin{equation}\label{eq:S-loop-insertion}
+ R(C,J,K+1)-R(C,J,K)
+ =\frac1{\alpha(C,J,K)}\sum_{c,j,k}W(c,j,k)\Phi_{N,C}(n,c),
+\end{equation}
+where
+\[
+ \Phi_{N,C}(n,c)
+ =\frac{N+1}{N-C}\left\{
+ \frac{n-c}{n+1}\kappa_{N+1}(n+1)
+ +\frac{N-n-C+c}{N+1-n}\kappa_{N+1}(n)
+ \right\}-\kappa_N(n).
+\]
+The identity uses only
+\[
+ (K+1)\alpha(C,J,K+1)=\frac{N-C}{2}\alpha(C,J,K)
+\]
+and its two cut analogues.  In the centered variables
+$u=N-2n$ and $r=C-2c$, the kernel becomes
+\begin{equation}\label{eq:S-loop-centered-kernel}
+ \Phi_{N,C}(n,c)=
+ \frac{A_N(u^2)}{2((N+2)^2-u^2)}
+ +\frac{(N+1)(3N-u^2)u(u-r)}
+ {(N-C)((N+2)^2-u^2)},
+\end{equation}
+with
+\[
+ A_N(v)=v^2+(N^2-3N)v-N^3+2N^2+8N.
+\]
+Both $W$ and $\Phi$ are invariant under the complementary-cut involution
+$(n,c)\mapsto(N-n,C-c)$.  The kernel can be negative, so pointwise insertion
+does not prove monotonicity.  Equation~\eqref{eq:S-loop-insertion} shows that
+the missing statement is precisely a correlation estimate between the total
+cut imbalance $u$ and its noncycle part $u-r$; it replaces a comparison of
+two triple sums by one weighted average over the old cuts.
+
+The first normalized monotonicity has a parallel exact insertion formula.
+It is useful because it puts both conjectural comparisons on the same old-cut
+probability space.  With $N,n,W$ as above, set
+\[
+ m=n-c,\qquad \bar m=N-n-C+c,
+\]
+and define
+\begin{align*}
+ \lambda_L&=\frac{(N+2)(N+1)m(m+1)}
+ {8(n+2)(n+1)(2c+2j+1)},\\
+ \lambda_R&=\frac{(N+2)(N+1)\bar m(\bar m+1)}
+ {8(N-n+2)(N-n+1)(2(C-c)+2(J-j)+1)},\\
+ \Psi_{C,J,K}(c,j,k)
+ &=\frac{8(2C+2J+1)}{(N-C)(N-C+1)}
+ \left\{\lambda_L\kappa_{N+2}(n+2)
+       +\lambda_R\kappa_{N+2}(n)\right\}-\kappa_N(n).
+\end{align*}
+Then
+\begin{equation}\label{eq:Delta-pair-insertion}
+ R(C,J+1,K)-R(C,J,K)
+ =\frac1{\alpha(C,J,K)}
+   \sum_{c,j,k}W(c,j,k)\Psi_{C,J,K}(c,j,k).
+\end{equation}
+Indeed,
+\[
+ \frac{\alpha(c,j+1,k)}{\alpha(c,j,k)}
+ =\frac{(n-c)(n-c+1)}
+ {8(j+1)(2c+2j+1)},
+\]
+and the same identity on the complementary side accounts for every newly
+inserted pair exactly $J+1$ times.  Formula
+\eqref{eq:Delta-pair-insertion} follows after using the corresponding total
+ratio and the two binomial-coefficient ratios.  Like the loop kernel,
+$\Psi$ can be negative pointwise; the assertion needed is its nonnegative
+weighted mean.
+
+There is also a positive beta-integral form which eliminates the loop split
+$k$ from either weighted average.  Put
+\[
+ \beta(C,J,K)=\frac{\alpha(C,J,K)}{(3C+2J+K)!}.
+\]
+For $C\geq1$, a beta integral gives
+\begin{equation}\label{eq:canonical-beta-alpha}
+ \beta(C,J,K)=\frac{d_{C,J}}{2^K K!}
+ \int_0^1x^{2C+2J+K-1}(1-x)^C\,dx,
+ \qquad
+ d_{C,J}=\frac{(C)_J}
+ {4^J J!(2C+2J-1)!C!}.
+\end{equation}
+For an interior split $1\leq c\leq C-1$, fix $j$ and introduce independent
+integration variables $x,y$ from the two copies of
+\eqref{eq:canonical-beta-alpha}.  If
+\[
+ p=\frac{x}{x+y},\qquad d=3c+2j,
+\]
+then summing all $k=0,\ldots,K$ replaces the loop allocation by
+$X\sim\operatorname{Bin}(K,p)$ and gives
+\begin{align}
+ &\sum_{k=0}^K
+ \kappa_N(d+k)\beta(c,j,k)\beta(C-c,J-j,K-k) \notag\\
+ &\quad=\frac{d_{c,j}d_{C-c,J-j}}{2^K K!}
+ \int_0^1\!\int_0^1
+ x^{2c+2j-1}(1-x)^c
+ y^{2(C-c)+2(J-j)-1}(1-y)^{C-c} \notag\\
+ &\hspace{42mm}{}
+ \times(x+y)^K\,\Xi_{N,K,d}(p)\,dx\,dy,
+ \label{eq:canonical-beta-cut}
+\end{align}
+where the remaining kernel is merely the quadratic
+\begin{equation}\label{eq:canonical-beta-kernel}
+ \Xi_{N,K,d}(p)=2-\frac N2
+ +2\left(d+Kp-\frac N2\right)^2+2Kp(1-p).
+\end{equation}
+The two boundary cuts contribute
+$2\kappa_N(0)\beta(C,J,K)$.  Since
+$\Gamma/N!=\sum\kappa_N(n)\beta(c,j,k)
+\beta(C-c,J-j,K-k)$, equations
+\eqref{eq:canonical-beta-alpha}--\eqref{eq:canonical-beta-kernel} are an
+exact double-integral formula for $R(C,J,K)$.  Thus the $k$-sum and its
+changing support are not intrinsic: after conditioning on $x,y$, loop
+allocation is an ordinary binomial random variable.  What remains is to
+control the negative constant in \eqref{eq:canonical-beta-kernel} by the
+square, binomial variance, and the two positive boundary cuts.  This form
+uses the actual $\alpha$-weights and therefore avoids the false generic
+renewal-point variance statement, which ignores the averaging over loop
+allocations.
+
+For exact computation there is an even simpler coefficient system which
+keeps the rate ordering explicit.  Put $d=b-a\geq0$.  Then the coefficient
+of
+\[
+ Q^Ca^Jd^Kz^{3C+J+K}
+\]
+in the first-start return series is
+\begin{equation}\label{eq:canonical-ordered-alpha}
+ \widetilde\alpha(C,J,K)=
+ \binom{C+K-1}{K}\binom{2C+K+J-1}{J}
+ \qquad(C\geq1).
+\end{equation}
+To see this, expand
+$(1-az)^{-C}(1-(a+d)z)^{-C}$ and apply Vandermonde's identity.
+The analogous coefficients for the second and third starts are respectively
+\[
+ \binom{C+K-1}{K}\binom{2C+K+J}{J},
+ \qquad
+ \binom{C+K}{K}\binom{2C+K+J+1}{J},
+\]
+with the evident convention at $C=0$.  In exact tests through total Taylor
+degree $20$, the corrected-curvature coefficients for starts two and three
+are all nonnegative.  For start one the only negative monomials again have
+$C=2$ and total Taylor degree $9$ through $13$: in the ordered coordinates
+they are the two families $Q^2a^Ld^0$ and $Q^2a^{L-1}d$,
+$3\leq L\leq7$.  Formula~\eqref{eq:canonical-ordered-alpha} is often more
+convenient than \eqref{eq:canonical-alpha} for a direct Vandermonde proof;
+the symmetric coordinates remain better for combining the exceptional
+terms into the five quadratics above.
+
+The boundary $a=0$ is especially simple in these coordinates.  Write
+$\widetilde\Gamma(C,K)$ for the coefficient of $Q^Cd^K$ in the corrected
+first-start curvature and put
+\[
+ \widetilde R(C,K)=
+ \frac{\widetilde\Gamma(C,K)}{\widetilde\alpha(C,0,K)},
+ \qquad N=3C+K.
+\]
+There is an exact loop-insertion identity parallel to
+\eqref{eq:S-loop-insertion}.  If
+\[
+ \widetilde W(c,k)=\binom N{3c+k}
+ \widetilde\alpha(c,0,k)
+ \widetilde\alpha(C-c,0,K-k),
+ \qquad n=3c+k,
+\]
+then
+\begin{equation}\label{eq:ordered-loop-insertion}
+ \widetilde R(C,K+1)-\widetilde R(C,K)
+ =\frac1{\widetilde\alpha(C,0,K)}
+  \sum_{c,k}\widetilde W(c,k)\widetilde\Phi_{C,K}(c,k),
+\end{equation}
+where
+\begin{align*}
+ \widetilde\Phi_{C,K}(c,k)
+ ={}&\frac{N+1}{C+K}\left\{
+ \frac{c+k}{n+1}\kappa_{N+1}(n+1)
+ +\frac{C-c+K-k}{N+1-n}\kappa_{N+1}(n)
+ \right\}-\kappa_N(n).
+\end{align*}
+Indeed, mark and remove one of the $K+1$ loops in the new coefficient, on
+either side of the cut, and use
+\[
+ (K+1)\widetilde\alpha(C,0,K+1)
+ =(C+K)\widetilde\alpha(C,0,K).
+\]
+This accounts for every new term exactly $K+1$ times and proves
+\eqref{eq:ordered-loop-insertion}.
+
+The initial value $\widetilde R(C,0)$ is the proved equal-rate expression
+in \eqref{eq:equal-rate-coefficient}.  Exact arithmetic finds
+\[
+ \widetilde R(C,K+1)\geq\widetilde R(C,K)
+\]
+for $1\leq C\leq12$ and $0\leq K\leq20$, with the sole exception
+$(C,K)=(2,0)$.  That exception is harmless, and in fact the entire
+$C=2$ slice can be evaluated explicitly:
+\begin{equation}\label{eq:ordered-C2-closed-form}
+ \widetilde\Gamma(2,K)
+ =128\,2^K-\frac{K^4+14K^3+69K^2+156K+228}{2}>0.
+\end{equation}
+To verify the strict inequality, check $K=0,1,2$ directly.  Thereafter it
+propagates by induction, since for
+$P(K)=K^4+14K^3+69K^2+156K+228$ one has
+\[
+ 2P(K)-P(K+1)=K^4+10K^3+21K^2-28K-12>0
+ \qquad(K\geq2).
+\]
+The $C=1$ slice is even simpler:
+$\widetilde\Gamma(1,K)=K^2+5K+10$.
+Consequently, proving that the weighted mean in
+\eqref{eq:ordered-loop-insertion} is nonnegative for $C\geq3$ would give an
+independent coefficientwise proof of the $a=0$ boundary already established
+in Proposition~\ref{prop:first-a-zero}.  The kernel itself changes sign, so
+this assertion is again a correlation inequality rather than a termwise
+estimate.  All identities and the quoted finite check are verified
+in \path{python/check_canonical_k3_coefficients.py}.
+
+\section{Equivalent walk-count formulation}
+
+The Taylor expansion
+\[
+  F(t)=\sum_{n\geq0}\frac{t^n}{n!}\,u^TA^nv
+\]
+has nonnegative coefficients.  Define a probability distribution by
+\[
+  \Pr_t(N=n)=
+  \frac{t^n u^TA^nv}{n!F(t)}.
+\]
+Then
+\[
+  \E_tN=t\frac{F'(t)}{F(t)},
+  \qquad
+  \Var_t(N)=t\frac{F'(t)}{F(t)}
+             +t^2(\log F(t))''.
+\]
+Consequently \eqref{eq:matrix-curvature} is exactly
+\begin{equation}\label{eq:walkvariance}
+  \Var_t(N)\geq \E_tN-(s-1).
+\end{equation}
+Here \(u^TA^nv\) is the total weight of length-\(n\) walks in a weighted directed
+graph with \(s\) vertices.  Thus the matrix lemma says that conditioning a
+Poisson walk by its endpoints can reduce its variance below its mean by at most
+\(s-1\).  A likely combinatorial proof should remove loops from a walk: at most
+\(s-1\) steps survive loop erasure, while all remaining steps must carry the
+Poisson-type variance on the right side of \eqref{eq:walkvariance}.
+
+It is tempting to seek a coefficientwise strengthening of this formulation.
+Write
+\[
+ D(t)=t^2\bigl(F(t)F''(t)-F'(t)^2\bigr)+(s-1)F(t)^2
+     =\sum_{N\geq0}D_N\frac{t^N}{N!},
+\]
+and put \(a_n=u^TA^nv\).  Direct expansion and symmetrization give
+\begin{equation}\label{eq:coefficient-formula}
+ D_N=\sum_{i=0}^N\binom Ni
+ \left(s-1-\frac N2+\frac{(N-2i)^2}{2}\right)a_i a_{N-i}.
+\end{equation}
+If \(I\) has the symmetric distribution
+\[
+ \Pr(I=i)=
+ \frac{\binom Ni a_i a_{N-i}}
+      {\sum_{j=0}^N\binom Nj a_j a_{N-j}},
+\]
+then \(D_N\geq0\) is precisely
+\begin{equation}\label{eq:split-variance}
+ \Var(I)\geq\frac N4-\frac{s-1}{2}.
+\end{equation}
+The normalizing denominator counts two weighted walks of total length \(N\),
+together with an interleaving of their steps.  Thus \(I\) is the length of
+the first walk.  However, the proposed coefficientwise inequality is false,
+even though all numerical tests of the pointwise sum \(D(t)\) remain
+nonnegative.  Take \(s=4\), let \(A\) be the adjacency matrix of the directed
+four-cycle (all four edge weights equal to one), and take \(u=v=e_1\).  Then
+\[
+ a_n=\begin{cases}1,&4\mid n,\\0,&4\nmid n.\end{cases}
+\]
+For \(N=8\), only \(i=0,4,8\) contribute to
+\eqref{eq:coefficient-formula}, and hence
+\[
+ D_8=31+31-\binom84=-8<0.
+\]
+Equivalently, \(I\) is supported on \(0,4,8\), with weights \(1,70,1\), so
+\[
+ \Var(I)=\frac49<\frac12
+       =\frac N4-\frac{s-1}{2}.
+\]
+Thus cancellation between different Taylor coefficients is essential; a
+coefficient-by-coefficient tail-switching proof cannot establish
+Conjecture~\ref{conj:matrix}.  Notice that the same example gives
+\[
+ F(t)=\frac{\cosh t+\cos t}{2},
+\]
+and it does not furnish a pointwise counterexample to
+\eqref{eq:matrix-curvature}.
+\section{A state-return route beyond three moments}
+
+There is a second possible route to the all-state conjecture which does not
+pass through the matrix-exponential statement.  Remove one transient state
+and decompose the absorption time into a geometric number of return
+excursions followed by one terminal excursion.  If \(x\) is the mean holding
+time at the removed state and \(r\) is the mean number of returns, the moment
+generating functions satisfy
+\[
+ M_Z(z)=\frac{V(z)}{(1+r)(1-xz)-rU(z)}.
+\]
+This suggests the following uniform induction lemma: if both excursion laws,
+of order at most \(n-1\), satisfy the hierarchy through level \(k\), then the
+renewal law satisfies level \(k\) at order \(n\).  Such a lemma for every \(k\)
+would prove the full conjecture by induction on the number of states.  It is
+already known at \(k=1,2,3\).
+
+The first unproved instance, \(k=4\), now has a reasonably small exact
+reduction.  Write the first five return-excursion moments as
+\[
+ (u,A,C,E,G)
+\]
+and the terminal-excursion moments as \((v,B,D,F,J)\).  After adjoining the
+exponential holding time, let \(a_j,b_j\) be the return and terminal kernel
+moments.  Then
+\[
+ M_j=b_j+ra_j+\sum_{\ell=1}^{j-1}\binom j\ell ra_\ell M_{j-\ell}.
+\]
+The sharp fifth-moment child bounds permit the substitutions
+\[
+ G=\frac{n+3}{n+2}\frac{E^2}{C},
+ \qquad
+ J=\frac{n+3}{n+2}\frac{F^2}{D}.
+\]
+The resulting parent gap
+\[
+ \mathcal G_4=(n+3)M_3M_5-(n+4)M_4^2
+\]
+is a strictly convex quadratic in \(E,F\).  If
+
+\[
+ R_3=M_3-rC-D,
+\]
+its Hessian has off-diagonal entry \(-2r(n+4)\), and its determinant is
+\[
+ \frac{4r(n+3)^2M_3}{CD(n+2)^2}
+ \left(rC+D+(n+3)^2R_3\right)>0.
+\]
+Thus the top-moment convexity used in the \(k=3\) proof persists at \(k=4\).
+
+The stationary-point algebra simplifies substantially after a weighted
+change of variables.  Put
+\[
+ \alpha=\frac{n+3}{n+2},\quad
+ c=rC,\quad d=D,\quad w=c+d,\quad
+ y=\frac EC,\quad f=\frac FD,
+\]
+and set
+\[
+ m=M_1,\qquad P=M_3,\qquad T=x+ra_1,
+\]
+\[
+ L=M_4\big|_{E=F=0},\qquad
+ K=M_5\big|_{E=F=0}.
+\]
+Then the entire quadratic is
+\begin{align}
+ \mathcal G_4={}&(n+3)P
+ \{K+\alpha(cy^2+df^2)+5c(T+m)y+5dTf\}\notag\\
+ &\quad -(n+4)(L+cy+df)^2.\label{eq:k4-top-quadratic}
+\end{align}
+Introduce the weighted mean and difference
+\[
+ \mu=\frac{cy+df}{w},\qquad \delta=f-y.
+\]
+The two variables separate in \eqref{eq:k4-top-quadratic}.  In particular,
+every interior stationary point satisfies the simple identity
+\begin{equation}\label{eq:k4-stationary-difference}
+ \delta_*=\frac{5m}{2\alpha}
+ =\frac{5(n+2)}{2(n+3)}M_1.
+\end{equation}
+After minimizing in \(\delta\), the remaining quadratic in \(\mu\) has leading
+coefficient
+\[
+ A_\mu=\frac{w}{n+2}\Delta,
+ \qquad
+ \Delta=(n+3)^2(P-w)+w>0,
+\]
+linear coefficient
+\[
+ B_\mu=5(n+3)P(wT+cm)-2(n+4)Lw,
+\]
+and constant term
+\[
+ C_\mu=(n+3)P\left(K-\frac{25cdm^2}{4\alpha w}\right)
+       -(n+4)L^2.
+\]
+Consequently the value at the unconstrained interior stationary point is
+\begin{equation}\label{eq:k4-interior-value}
+ C_\mu-\frac{B_\mu^2}{4A_\mu}.
+\end{equation}
+The lower fourth-moment child bounds say
+\[
+ y\geq\frac{n+2}{n+1}\frac CA,
+ \qquad
+ f\geq\frac{n+2}{n+1}\frac DB.
+\]
+The algebraic lemma established below is that
+\eqref{eq:k4-interior-value} is nonnegative whenever the stationary point
+given by \eqref{eq:k4-stationary-difference} satisfies these two feasibility
+inequalities and the lower child hierarchy holds.
+
+The quantities in this last lemma also obey a short recurrence.  With
+\(a=rA\) and \(b=B\),
+\begin{align*}
+ M_2&=2Tm+a+b,\\
+ P&=3TM_2+3am+c+d,\\
+ L&=4TP+6aM_2+4cm,\\
+ K&=5TL+10aP+10cM_2.
+\end{align*}
+These identities remove all large kernel expansions from the interior
+problem.  Random searches over the child moment cone have found feasible
+interior stationary points, but none with a negative value in
+\eqref{eq:k4-interior-value}.
+
+There is a sharper reduction of this last problem.  By homogeneity put
+\(m=1\), write \(f=y+5(n+2)/(2(n+3))\), and let
+\(p,q,A_0,B_0\in[0,1]\).  The feasibility inequalities and the two
+third-moment child inequalities are parametrized by
+\[
+ a=\frac{nTypA_0}{n+2},\qquad
+ c=\frac{ayp}{\beta},\qquad
+ b=\frac{n(1-T)fqB_0}{n+2},\qquad
+ d=\frac{bfq}{\beta},
+ \qquad \beta=\frac{n+2}{n+1}.
+\]
+Indeed \(p,q\leq1\) are exactly the two stationary-point feasibility
+bounds, while \(A_0,B_0\leq1\) encode
+\(nTc\geq(n+1)a^2\) and
+\(n(1-T)d\geq(n+1)b^2\).  The remaining terminal second-moment bound is
+\[
+             \frac{(n-1)B_0qf}{n+2}\geq1-T.
+\]
+Define
+\[
+\begin{split}
+ S&=2(n+4)M_4-(n+3)P(2\alpha f+5T),\\
+ R&=M_5-M_4\left(\alpha f+\frac52T\right).
+\end{split}
+\]
+Then the parent gap has the exact identity
+\[
+ \mathcal G_4=(n+3)PR-\frac12M_4S.
+\]
+Both \(S\) and \(R\) are affine in \(B_0\).  If
+\[
+ S=S_0+B_0S_1,\qquad R=R_0+B_0R_1,\qquad
+ J=R_0S_1-R_1S_0,
+\]
+then at an interior stationary point \(S=0\),
+\[
+                         R=\frac{J}{S_1}.
+\]
+On finite positive parameters, the exact certificates below prove
+\[
+             S(1)\geq0\quad\Longrightarrow\quad S_1>0,\ J\geq0.
+\]
+The strict slope and the orientation argument below justify both division
+by $S_1$ and the condition $S(1)\geq0$ at a stationary point. The terminal
+second-moment bound is unnecessary for this interior step.
+
+After compactifying \(n-4\) and \(y\), the sole common infinity corner of
+\(S(1),S_1,J\) has Newton boundary
+\[
+                         (0,1),\qquad(2,0).
+\]
+Thus it is covered by the two charts associated with
+\(1/y\asymp1/n^2\).  Their radial faces reduce the remaining implication to
+five-variable polynomials with respectively \(14,4,20\) terms.  On one
+secondary face the slope implication follows directly from convexity in
+\(A_0\): if
+\[
+ H=12A_0p-2\theta q+3q-6,
+\]
+then the condition polynomial is convex in \(A_0\), is nonpositive at
+\(A_0=0\), and at the root of \(H\) contains the nonnegative factor
+\[
+                6-3p+T(3-2\theta)(q-p).
+\]
+Hence the condition being nonnegative forces \(H\geq0\).
+
+The analogous slope implication on the opposite infinity face is now also
+exact.  Write \(F=S(1)/4\), \(H=S_1/2\), and put
+\[
+ K_0=3TWq-6TW-2q,\qquad
+ L=3TWp-3TWq+3Wp-6W-2p+2q.
+\]
+Then \(H=12A_0TWp+K_0\), \(F(0)=-q(T-1)K_0\leq0\), and at the root of
+\(H\),
+\[
+                         F=-\frac{K_0L}{12W}.
+\]
+Convexity in \(A_0\) therefore leaves only endpoint estimates.  With
+\(C=3W(T+1)-2\) and \(D=2-3TW\), the constraint \(H(1)\geq0\) gives
+\(p\geq\tfrac12+Dq/(12TW)\).  If \(C\geq0\), maximizing
+\(L=Cp+Dq-6W\) at the appropriate endpoints gives either \(-3W\) or
+\(3W(T-1)-2\).  If \(C\leq0\), substitution of this lower bound leaves
+\(-Q/(12TW)\); \(Q\) is affine in \(q\), its \(q=0\) endpoint is
+manifestly nonnegative, and its \(q=1\) endpoint has nonnegative Bernstein
+coefficients after \(W=2z/[3(T+1)]\) and one split at \(z=1/2\).
+For the remaining endpoint put \(E=15TW+3W-2\).  When \(E\leq0\), the
+polynomial \(-3(5T+1)F(1)\), after
+\(W=2z/[3(5T+1)]\), has nonnegative Bernstein coefficients.  When
+\(E\geq0\), convexity in \(p\) reduces to the preceding root or to
+\(p=1\); in the latter case \(H\leq0\) gives
+\(q\geq6TW/(2-3TW)\), and \(F(1)\) is decreasing in \(q\) and already
+nonpositive at that lower endpoint.  Thus \(S(1)\geq0\) implies
+\(S_1\geq0\) on both infinity faces.
+
+One resultant face is exact as well.  On the \(T\leq Z\) secondary chart
+(which is the same polynomial chart as the opposite primary face), put
+\(K=J/(8A_0p)\).  An exact rational identity has been found of the form
+\[
+                         K=M F+N H+P,
+\]
+where every Bernstein coefficient of \(M,N,P\) is nonnegative.  Hence
+\(F\geq0\) implies \(J\geq0\) there.
+
+On the remaining \(Z\leq T\) chart, both \(F\) and
+\(K=J/(8A_0p)\) are affine in \(T\).  The endpoint \(T=0\) now has another
+exact identity \(K=MF+NH+P\) with nonnegative rational Bernstein
+coefficients.  At \(T=1\), put \(x=A_0p\).  Then
+\[
+ F=2x\{6x+(3-R)p-6\}.
+\]
+At its boundary \(x_0=1-(3-R)p/6\), the target factors as
+\[
+ K(x_0)=\frac13
+ \{2Rp-2Rq-6p+3q+6\}
+ \{10Rp^2-3Rp-30p^2+60p-18\}.
+\]
+Feasibility gives \(p\geq6/(9-R)\), which makes both factors
+nonnegative.  If \(p\geq q\), the target is convex in \(x\) and its
+derivative at \(x_0\) is nonnegative; if \(p\leq q\), it is concave and
+its second endpoint \(x=p\) is nonnegative by checking the two affine
+endpoints \(q=p,1\).  Thus both \(T\)-endpoints are exact.  The interior crossing
+\(F(T)=0\) is now exact as well.  Its unresolved boxes converge to the
+single equality corner
+\[
+ T=1,\qquad R=0,\qquad p=1,\qquad q=0,\qquad
+ x=A_0p=\frac12,\qquad H=0.
+\]
+Put \(u=1-T\), \(a=1-p\), and \(h=H\), and use the weighted variables
+\[
+                         h,\qquad 6a,\qquad3q,\qquad2R,\qquad3u.
+\]
+In the chart where \(h\) dominates, the exact Bernstein coefficients of
+\(K/h\) all lie between $2$ and $10$.  In each of the other four
+charts, all Bernstein coefficients of \(-F\) are nonnegative.  This closes
+the corner.  The complement of the local box is partitioned at
+\[
+ u=\frac13,\quad R=\frac12,\quad a=\frac16,\quad
+ q=\frac13,\quad h=1.
+\]
+Twenty-nine of its rational boxes close by exact conditional subdivision,
+at depth at most six.  One exceptional box has \(-F\geq0\), with its sole
+zero on the weighted fan boundary.  In the other, feasibility can be an
+equality only at
+\(R=0,a=1/6,q=1/3,h=5\); there
+\[
+ F=-\frac54(3u-2),\qquad K=\frac{694-387u}{36},
+\]
+so $F\geq0$ again gives $K>0$.  Consequently the full infinity-face
+implication $S(1)\geq0\Rightarrow S_1,J\geq0$ is exact.  The transverse
+problem can now be sharpened considerably.  Write $F=S(1)$ and $H=S_1$.
+In the $U^2\leq V$ chart, $H=h_0+h_1A_0$ is affine in $A_0$, with
+\[
+ h_1=-24Tp(D-1)(D+1)(3DW+1)(5DW+1)(6DW+1)^2(7DW+1)\geq0,
+\]
+whereas $F=f_0+f_1A_0+f_2A_0^2$ is convex, since
+\[
+ \frac{\partial^2F}{\partial A_0^2}
+ =96T^2p^2(D-1)^2(D+1)^2(3DW+1)^2
+ (5DW+1)(6DW+1)^3(7DW+1)\geq0.
+\]
+At the root $A_*=-h_0/h_1$, clear the denominator and put
+\[
+ \Phi=h_1^2F(A_*)=f_2h_0^2-f_1h_0h_1+f_0h_1^2.
+\]
+The two ordinary blow-up charts
+\[
+ D=R,\quad W=Rx,\qquad\hbox{and}\qquad D=Rx,\quad W=R
+\]
+have only nonnegative Bernstein coefficients in $-\Phi$. The arrays have
+shapes $43\mathbin\times18\mathbin\times6\mathbin\times4\mathbin\times3$
+and $43\mathbin\times26\mathbin\times6\mathbin\times4\mathbin\times3$.
+An exact zero-face audit shows $\Phi<0$ whenever
+$0<D<1$, $W>0$, $T,p>0$, including $q=0$. In the first blow-up the
+maximal zero faces are
+\[
+R=0,T=p=1,q=0;\qquad R=1;\qquad T=0;\qquad p=0.
+\]
+In the second, replace $R=1$ by $R=x=1$. Every one is excluded by
+these finite positive parameters. Direct Bernstein checking also gives
+$F(0)<0$ on the same domain: its maximal zero faces are
+\[
+D=0,T=1;\quad D=q=0;\quad W=T=0;\quad T=q=0.
+\]
+Since $h_1>0$, convexity between $A_0=0$ and the root $A_*=-h_0/h_1$
+therefore proves the strict implication
+\[
+                   F\geq0\quad\Longrightarrow\quad H>0.
+\]
+This statement includes $q=0$ and $q=1$; it is asserted on finite positive
+parameters rather than every degenerate compactification face. The full
+Jacobian certificate for this chart is given below.
+
+For completeness, the Newton analysis leading to the remaining $J$ charts
+is as follows.  The first singular stratum is
+\[
+ W=T=0,\qquad p=q=1,\qquad A_0=\frac13,
+\]
+with $D\in[0,1]$ free.  For $P=1-p$, $Q=1-q$, and
+$C=A_0-1/3$, its first normal terms are
+\[
+\begin{split}
+ F&=-5D^2(7D^2+8)T+O_2,\\
+ H&=-(17D^2-2)T+O_2,\\
+ J&=\frac13T(D^2-1)(3D^2+2)(258D^4-D^2-32)+O_2.
+\end{split}
+\]
+Use the six weighted variables
+\[
+ D^2,\qquad W^2,\qquad T,\qquad 1-p,\qquad
+ 1-q,\qquad |A_0-1/3|.
+\]
+All six lower-$A_0$ charts and the upper $D^2$-dominant chart have
+$-F\geq0$ coefficientwise.  In each of the three singular upper charts
+where $P$, $Q$, or $C$ is dominant, put $W=R^2v$.  At the repeated
+$t=v=0$ face the tangents have the form
+\[
+ F=a t-bv^2,\qquad H=h t-ev^2,\qquad J=j t+gv^2,
+ \qquad b,e,g\geq0.
+\]
+The slope determinant $hb-ea$ factors with a nonnegative sign on the unit
+cube.  For the Jacobian, $a>0$ implies $j\geq0$ by exact conditional
+dyadic certificates: four cuts in the $P$ chart, four in the $Q$ chart,
+and a depth-twelve tree in the $C$ chart with at most nine unresolved
+boxes at any level.  Hence all three repeated equality faces themselves
+are exact.
+
+The full $P$-dominant radial extension is now exact as well.  In its
+secondary $t$-dominant chart use
+\[
+ D=rd,\quad W=r^2\sigma u,\quad T=r^2\sigma^2,\quad
+ p=1-r^2,\quad q=1-r^2\bar q,\quad
+ A_0=\frac13+\frac23r^2c,
+\]
+and resolve the remaining common corner by
+$r=R^2\rho$, $\sigma=R$.  After removing positive monomial factors,
+the condition polynomial $F$ has multidegree
+$(75,11,2,2,33,7)$ and $799$ terms, while $J$ has multidegree
+$(106,16,1,3,48,8)$ and $4199$ terms.  A guided midpoint tree closes at
+depth eleven with fourteen leaves: six have $J\geq0$ coefficientwise and
+eight have $-F\geq0$ coefficientwise.  This is an exact integral
+Bernstein computation, not a floating diagnostic.  To keep memory bounded,
+the last variable is streamed in eight $F$ slices and nine $J$ slices; the
+remaining slice shapes are respectively
+$76\mathbin\times12\mathbin\times3\mathbin\times3\mathbin\times34$
+and
+$107\mathbin\times17\mathbin\times2\mathbin\times4\mathbin\times49$.
+Dyadic subdivision is replayed by integral de Casteljau additions, so no
+dense six-dimensional rational array is formed.
+
+The analogous $C$-dominant radial chart is now exact.  Keep the same
+$D,W,T$ substitutions, but put
+\[
+ p=1-r^2\bar p,\qquad q=1-r^2\bar q,\qquad
+ A_0=\frac13+\frac23r^2,
+ \qquad r=R^2\rho,\quad\sigma=R.
+\]
+In the order $(R,d,\bar p,\bar q,\rho,u)$, the condition again has
+multidegree $(75,11,2,2,33,7)$ and $799$ terms.  The Jacobian has
+multidegree $(106,16,4,1,48,8)$ and $4199$ terms.  Its exact midpoint
+certificate has $75$ leaves at depth at most $19$: $44$ certify
+$J\geq0$ and $31$ certify $-F\geq0$.  The terminal ratio $u$ needs only
+the split at $1/2$.  Leaves with no $u$ cut are checked on the original
+interval; the others are checked after the appropriate half-interval
+substitution.  Each restricted polynomial is streamed in its terminal
+Bernstein slices, and only five-dimensional integer arrays are subdivided.
+
+For the corresponding $Q$ chart put
+\[
+ p=1-r^2\bar p,\qquad q=1-r^2,\qquad
+ A_0=\frac13+\frac23r^2c,
+ \qquad r=R^2\rho,\quad\sigma=R.
+\]
+The condition has the same multidegree and term count, while $J$ has
+multidegree $(106,16,4,3,48,8)$ and $4199$ terms in
+$(R,d,\bar p,c,\rho,u)$.  Direct subdivision reveals an additional
+equality corner
+\[
+ R=\rho=1,\qquad d=u=\bar p=0,\qquad c=\frac14.
+\]
+It is resolved using the exact identity
+\[
+ K=J-4F,\qquad
+ M=-\left.\frac{\partial^2K}{\partial d\,\partial u}
+       \right|_{R=\rho=1,\ d=u=0},\qquad
+ J=4F+M\left(d-\frac u2\right)^2+E.
+\]
+Here $M$ depends only on $(\bar p,c)$ and has $20$ terms; $E$ has
+$4770$ terms and the same multidegree as $J$.  The squared term removes
+the adverse mixed tangent.  At the equality corner,
+\[
+ M=64,\qquad
+ K=480(1-R)+192(1-\rho)+96\bar p
+   +\frac{640}{3}\left(c-\frac14\right)^2
+   +96d^2-64du+32u^2+\cdots.
+\]
+The exact midpoint certificate has $38$ leaves at depth at most $35$:
+$16$ use $J\geq0$, $11$ use $K\geq0$, $9$ use $-F\geq0$, and $2$
+use both $M\geq0$ and $E\geq0$.  All integral Bernstein slices pass.
+Thus both the $Q$- and $C$-dominant full radial implications are exact.
+For a condition-negative leaf, the checker also enumerates all cube faces
+on which every active Bernstein coefficient vanishes.  The Jacobian
+restricted to each such face is exactly constant and nonnegative (in fact
+zero except at one $C$-chart point, where it is $64/3$).  Consequently
+the certificates include the equality case $F=0$ as well as $F>0$.
+
+The full upper $W$-dominant chart is exact as well.  Use
+\begin{gather*}
+ D=rd,\quad W=r,\quad T=r^2t,\\
+ p=1-r^2\bar p,\quad q=1-r^2\bar q,\quad
+ A_0=\frac13+\frac23r^2c.
+\end{gather*}
+After division by $r^2$, their multidegrees and support sizes are
+\[
+\begin{array}{c|c|r}
+ &\text{multidegree}&\text{terms}\\\hline
+ F&(28,11,3,2,2,2)&799\\
+ J&(40,16,3,4,1,3)&4199
+\end{array}
+\]
+Their radial faces are $-8$ and $8(8t+3)/3$.  In particular the condition
+is strictly negative on $0\leq r\leq1/2$.  The full chart has an exact
+midpoint certificate with $131$ leaves at depth at most $23$: $70$ use
+$-F\geq0$ and $61$ use $J\geq0$.  All condition equality faces pass the
+same exact Jacobian audit.
+
+The opposite infinity chart $V\leq U^2$ now also has an exact full radial
+Jacobian certificate.  In the original coordinates $(U,W,T,p,q,A_0)$,
+$F$ has multidegree $(11,3,3,2,2,2)$ and $356$ terms; $J$ has multidegree
+$(16,5,3,4,1,3)$ and $1094$ terms.  Its complete midpoint tree has $393$
+leaves at depth at most $25$, comprising $218$ condition-negative leaves
+and $175$ Jacobian-positive leaves.  All slices and condition equality
+faces have passed exact verification.
+
+The slope implication on this opposite chart is exact for admissible
+finite interior parameters.  Write $H=h_0+h_1A_0$ and
+$F=f_0+f_1A_0+f_2A_0^2$.  Then
+\[
+\begin{split}
+h_1&=-24TWp(3U+1)(5U+1)(6U+1)^2(7U+1)(U^2W-1),\\
+2f_2&=96T^2Wp^2(3U+1)^2(5U+1)(6U+1)^3(7U+1)(U^2W-1)^2.
+\end{split}
+\]
+Both have the required nonnegative sign.  The endpoint $-F(0)$ has
+nonnegative Bernstein coefficients.  At the $H=0$ root, the cleared
+value factors as
+\[
+-h_1^2F(-h_0/h_1)
+=-48T^2Wp^2(3U+1)^2(5U+1)(6U+1)^3(7U+1)(U^2W-1)^2G,
+\]
+where $G$ is affine in $p$.  Its $p=1$ endpoint satisfies $G\leq0$
+coefficientwise.  At the feasible lower endpoint $p=-h_0/(h_1/p)$,
+the cleared value reduces to a four-variable polynomial.  Blow up
+$(T,q)=(0,0)$ by $q=Tz$ and $T=qz$.  The resulting exact root trees
+have $9$ and $47$ leaves, respectively, at depths at most $8$ and $11$.
+The $A_0=1$ endpoint has exact conditional trees with $991$ and $1731$
+leaves, at depths at most $27$ and $23$.  All their zero faces lie on
+excluded degenerate parameter faces; the root value is strictly negative there, and convexity proves
+$F\geq0\Rightarrow H>0$. The $G(p=1)$ zero faces are only
+$W=0,q=0$, $W=0,q=1$, and $T=q=0$. The $F(0)$ and root-tree
+zero-face audits likewise exclude no face defined by $q=0$ alone.
+Thus the strict implication includes $q=0$ as needed for stationary
+orientation.  This
+statement does not assert the stronger implication on every face of the
+closed compactification.
+
+The full upper $T$-dominant chart is now exact too.  Set
+\begin{gather*}
+D=rd,\quad W=rw,\quad T=r^2,\\
+p=1-r^2\bar p,\quad q=1-r^2\bar q,\quad
+A_0=\frac13+\frac23r^2c.
+\end{gather*}
+After division by $r^2$, $F$ and $J$ have multidegrees
+$(28,11,7,2,2,2)$ and $(40,16,8,4,1,3)$, with $799$ and $4199$ terms.
+The equality corner is
+$r=1,d=w=\bar p=0,\bar q=1,c=1/4$.  Using the same $20$-term
+coefficient $M(\bar p,c)$ as in the $Q$ certificate gives
+\[
+J=4F+M\left(d-\frac w2\right)^2+E.
+\]
+The exact tree has $49$ leaves at depth at most $31$: $15$ use $J$,
+$17$ use $J-4F$, $16$ use $-F$, and one uses both $M$ and $E$.
+All slices and equality faces pass, including one nonconstant face on
+which $J=48(3\bar q+4)$ is nonnegative.
+
+A direct certificate now covers the entire $U^2\leq V$ chart, so the
+secondary $P,Q,C$ complements need no additional covering argument.
+In $(D,W,T,p,q,A_0)$, $F$ has multidegree $(11,7,3,2,2,2)$ and $356$
+terms, while $J$ has multidegree $(16,8,3,4,1,3)$ and $1094$ terms.
+Put
+\[
+\begin{split}
+K&=J-4F,\qquad
+M=-K_{DW}\big|_{T=1,q=0,D=W=0},\\
+J&=4F+M(D-W/2)^2+E,\\
+M&=-16A_0p(2220A_0^2p^3-1190A_0p^3-1170A_0p+161p+456).
+\end{split}
+\]
+The complete tree has $95$ leaves at depth at most $29$: $49$ use
+$-F\geq0$, $35$ use $K\geq0$, $9$ use $J\geq0$, and $2$ use
+$M,E\geq0$. All integer slices and condition-zero-face Jacobian audits
+pass. Together with the opposite chart this proves $F\geq0\Rightarrow
+J\geq0$ throughout both compact cubes.
+
+It remains to orient the stationary root; $S(1)\geq0$ must not be
+assumed without proof. The exact cleared polynomials satisfy
+\[
+                     F(q)=F(0)+q\,C_qH(q),
+\]
+where $H$ is affine in $q$, $C_q$ is independent of $q$, and
+\[
+C_q=\begin{cases}
+(1-T)(3U+1)(13U^3W+3U^2W+12U+2),&V\leq U^2,\\
+(1-T)(3DW+1)(13D^3W+3D^2+12DW+2),&U^2\leq V.
+\end{cases}
+\]
+Both factors are strictly positive for $0<T<1$. Moreover $F(0)$ is a
+positive multiple of $S_0$. Suppose $S=0$ at $0<B_0\leq1$ and
+$S_1\leq0$. Then $S_0=-B_0S_1\geq0$, so the strict slope implication
+at $q=0$ gives $H(0)>0$. If $S_1=0$, the displayed identity at the
+actual $q$ gives $F(q)=F(0)\geq0$ with $H(q)=0$, a contradiction.
+If $S_1<0$, affine dependence gives a root of $H$ between $0$ and the
+actual $q$; there again $F=F(0)\geq0$, contradicting strictness.
+Consequently $S_1>0$, and
+\[
+ S(1)=(1-B_0)S_1\geq0,\qquad
+ R=J/S_1\geq0,\qquad \mathcal G_4=(n+3)PR\geq0.
+\]
+
+\begin{proposition}[Feasible positive interior at level four]
+For every finite $n\geq4$, every feasible positive stationary point of
+\eqref{eq:k4-top-quadratic} satisfying the reduced third-moment child
+bounds has nonnegative parent gap. The proof is an exact algebraic
+certificate; it has not yet been formalized in Lean.
+\end{proposition}
+
+This closes the interior polynomial obligation. A claim for the entire
+uniform renewal cone still requires auditing the reduction of its general
+constrained boundary minima to the special slack faces discussed below.
+The identities and certificate generator are in
+\path{python/check_k4_uniform_interior.py}.  The $P$ checker is
+\path{python/check_k4_p_radial_bernstein_tree.cpp}; the shared streamed
+checker is \path{python/check_k4_radial_bernstein_tree.cpp}, with the
+complete midpoint trees stored in \path{python/certificates/}.
+
+
+There is now an exact result at the fully sharp corner of the reduced cone.
+Put \(a=rA\), \(b=B\), \(c=rC\), \(d=D\), and write \(e,f,g,j\) for the
+aggregated return and terminal moments of orders four and five.  The compact
+recurrence continues as
+\begin{align*}
+ M_4&=4TM_3+6aM_2+4cM_1+e+f,\\
+ M_5&=5TM_4+10aM_3+10cM_2+5eM_1+g+j.
+\end{align*}
+The lower hierarchy and \(T\geq ru\) imply the seven reduced inequalities
+\begin{align*}
+ nTc&\geq(n+1)a^2,&
+ (n+1)ae&\geq(n+2)c^2,&
+ (n+2)cg&\geq(n+3)e^2,\\
+ (n-1)b&\geq nv^2,&
+ nvd&\geq(n+1)b^2,&
+ (n+1)bf&\geq(n+2)d^2,&
+ (n+2)dj&\geq(n+3)f^2.
+\end{align*}
+
+\begin{proposition}[Fully sharp \(k=4\) renewal corner]
+\label{prop:k4-fully-sharp-corner}
+For every \(n\geq4\), if equality holds in all seven displayed reduced
+inequalities, then
+\[
+ (n+3)M_3M_5-(n+4)M_4^2\geq0.
+\]
+\end{proposition}
+
+The exact certificate splits at the Erlang scale \(v=(n-1)T\).  On the chart
+\(T\geq v/(n-1)\), writing \(T=(v+h)/(n-1)\) produces 608 nonnegative power
+coefficients.  On the other chart, write \(v=(n-1)T+h\).  For \(n\geq8\),
+every coefficient is nonnegative except the middle term in
+\[
+ A a^6-BTha^5+CT^2h^2a^4.
+\]
+This quadratic is nonnegative because
+\[
+ 4AC-B^2=
+ 4n^2(n-1)^{11}(n+1)^2(n+2)
+ \bigl(3n^5+29n^4+111n^3+207n^2+182n+132\bigr)>0.
+\]
+The orders \(n=5,6,7\) require respectively four, four, and two elementary
+AM--GM pairings.  For \(n=4\), the regions \(h\leq T\), \(h\geq T\) with
+\(a\leq Th\), and \(h\geq T\) with \(a\geq Th\) have nonnegative
+two-variable Bernstein coefficients.  These checks are exact over
+\(\mathbb Q\) in \path{python/check_k4_uniform_sharp_corner.py}.
+
+The first full one-slack extension of this proposition is also available.
+Write
+\[
+ c=\frac{n+1}{n}\frac{a^2}{T}+s,\qquad s\geq0,
+\]
+and continue to impose equality in the other six reduced inequalities.
+
+\begin{proposition}[Return-third-moment slack face]
+\label{prop:k4-return-third-slack}
+For every \(n\geq4\), the parent gap remains nonnegative for every \(s\geq0\)
+under these assumptions.
+\end{proposition}
+
+Here is a compact description of the exact certificate.  After clearing a
+positive denominator, the gap is a quartic
+\[
+ p_0+p_1s+p_2s^2+p_3s^3+p_4s^4.
+\]
+The constant term is the fully sharp gap above, and
+\[
+ p_4=T^4n^4(n-1)^6(n+2)>0.
+\]
+After positive factors are removed, \(p_3\) is a quadratic in \(a\) with
+positive leading coefficient and nonpositive discriminant for \(n\geq4\).
+The coefficient \(p_2\) has one AM--GM block on each of the two scale charts.
+On the upper chart \(T=(v+h)/(n-1)\), every coefficient of \(p_1\) is
+nonnegative.  On the lower chart \(v=(n-1)T+h\), \(p_1\) is coefficientwise
+nonnegative for \(n=5\); for every \(n\geq6\), its sole negative monomial is a
+multiple of
+\[
+ T^2ha^5s.
+\]
+It is absorbed by one AM--GM pairing using only one eighth of the sharp
+\(a^8\) coefficient and one half of a positive \(T^4h^2a^2s^2\) coefficient.
+The case \(n=4\) has two negative linear monomials; two pairings using one
+sixteenth of their neighboring coefficients leave the three earlier
+Bernstein charts nonnegative.  The complete rational-arithmetic check is in
+\path{python/check_k4_uniform_c_slack.py}.
+
+These two propositions still do not prove the uniform renewal lemma.  Allowing
+slack in the terminal second- and third-moment inequalities (the inequalities
+defining \(b\) and \(d\)) produces two boundary faces and a possible feasible
+interior minimum of the top \((e,f)\)-quadratic.  The common equality boundary,
+the entire return-\(c\)-slack face, and the entire terminal-\(d\)-slack face are
+now settled in the stated sharp-face settings. The feasible positive
+interior minimum is also settled above; the reduction of every general
+constrained boundary minimum to these special faces still requires an audit.
+
+The terminal-\(d\)-slack face reduces to a small four-variable positivity
+problem whose exact certificate is now complete.  Keeping the other six
+bounds sharp, write
+\[
+ a=zT^2,\qquad
+ d=\frac{n+1}{n}\frac{b^2}{v}(1+r),\qquad z,r\geq0.
+\]
+After homogeneity removes \(v\), the variables are \(n-4,T/v,z,r\).
+The only difficult locus found by adaptive Bernstein subdivision is
+\[
+ (n-1)T=v,\qquad z=r=0.
+\]
+If \(h\) denotes the signed deviation from this Erlang scale, the gap has
+positive first-order term
+\[
+ \frac{n^2(n+1)^2(n+2)(n+3)}{(n-1)^7}(z+6r),
+\]
+while the scale deviation begins at order \(h^2\).  This leads to the weighted
+blow-up \(z=h^2Z,\ r=h^2R\).  Three projective charts, according as \(h^2\),
+\(z\), or \(r\) is largest, remove the local singularity.  Numerical
+Bernstein subdivision then certifies every compact chart, but unstructured
+exact subdivision accumulates at equality boundaries.  Weighted blow-ups,
+rather than deeper rectangular subdivision, resolve these accumulations.
+The reproducible exploration is in
+\path{python/probe_k4_uniform_d_slack.py}; the completed exact charts are
+checked by \path{python/check_k4_uniform_d_slack.py}.
+
+The two tail normalizations have been made explicit.  In the \(T\)-dominant
+chart set \(T=1\), \(v=(n-1)q\), \(a=z\), and use the actual slack
+\(D=s/T^3\).  The entire region
+\[
+        0\leq q\leq1,\qquad 0\leq D\leq1
+\]
+is now certified exactly for every \(n\geq4\).  Near the return-only boundary
+the correct ratio is \(R=D/q^3\).  The chart \(D=q^3R\) is coefficientwise
+nonnegative in both the bounded-\(z\) and reciprocal-\(z\) charts.  In the
+complementary chart put \(D=h^3\), \(q=hQ\).  Its corner has positive boundary
+orders \(h^5\) and \(Q^4\), so the two charts
+\[
+ (h,Q)=(t^4H,t^5),\qquad (h,Q)=(t^4,t^5R)
+\]
+are polynomial.  The first is again coefficientwise nonnegative.  In the
+second, the degree drop at \(n=\infty,R=0\) is resolved by
+\(x=1/(n-3)\) and the two ordinary charts \(R=xW\), \(x=RW\).  The only
+remaining projective corner there has coordinates \(U=1/z,W\), whose leading
+orders are \(U^4\) and \(W^4\); its two ordinary blow-up charts close after
+one midpoint split.  All these assertions are exact integer
+power-to-Bernstein computations in
+\path{python/check_k4_uniform_d_slack.py}.
+
+It remains on this \(T\)-normalized half to certify the large-slack tail
+\(D\geq1\).  Its natural weighted normalization is
+\(H=D^{-1/3}\), \(Z=zH^2\), not the ordinary ratio \(z/D\).  Numerical
+Bernstein subdivision finds no negative value in either the bounded-\(Z\) or
+reciprocal-\(Z\) chart.  The singular faces \(H=0\), \(q=0\), and
+\(U=1/Z=0\) are coefficientwise nonnegative.  At the remaining corner
+\(H=Z=0\), the boundary orders are \(H\) and \(Z^2\).  Both weighted charts
+\[
+ (H,Z)=(t^2A,t),\qquad (H,Z)=(t^2,tA)
+\]
+have coefficientwise nonnegative faces at \(t=0\) and \(q=0\).  The formerly
+missing \(A=0\) face of the second chart is the original face \(z=0\), and it
+can also be closed exactly.  After removing the positive factor
+\((N+3)^8(N+4)^2\), where \(N=n-4\), its gap is a quartic in \(D\).  Expanding
+instead in \(E=D-1\), all five \(E\)-coefficients are nonnegative.  The only
+corner not visible in their initial Bernstein arrays is
+\(N=\infty,q=0\); with \(x=1/(N+1)\), the two ordinary charts \(x=qR\) and
+\(q=xR\) certify every coefficient (only the linear \(E\)-coefficient needs
+a dyadic split, into three boxes).  This gives a self-contained exact
+certificate for \(z=0,D\geq1\) in
+\path{python/check_k4_uniform_d_slack_z0.py}.
+
+Their common residual degree staircase at
+\(n=\infty,t=0\) is governed by \(1/n\sim t^3\).  Put \(x=1/(n-3)\) and use
+the two charts \(x=r^3,t=rB\) and \(t=r,x=r^3B\).  All resulting powers of
+\(r\) are multiples of three.  With \(y=r^3\), the lower Newton monomials at
+the next corner are
+\[
+ q^7,\qquad yq^4,\qquad y^2q^2,\qquad y^3.
+\]
+The two Newton slopes give three toric regions \(y\leq q^3\),
+\(q^3\leq y\leq q^2\), and \(y\geq q^2\).  The corresponding monomial charts
+are now explicit.  All of their auxiliary \(B=0\) faces are coefficientwise
+nonnegative; so are all \(A=0\) faces except the one already supplied by the
+\(z=0\) certificate above.  These exact face checks are collected in
+\path{python/check_k4_uniform_d_slack_large_faces.py}.  Thus the remaining
+work initially consisted of the interiors of twelve toric charts, with all accumulating
+boundary faces already proved.  Their unsplit Bernstein arrays still contain
+negative coefficients, so a face-aware decomposition or controlled exact
+subdivision is required; direct rectangular subdivision produces an
+impractically large certificate.
+
+One of those twelve charts is now completely closed.  In the
+\(H\)-dominant, \(t\)-dominant chart with \(y\leq q^3\), all
+negative Bernstein coefficients accumulate at \(q=A=0,\ R=B=1\).  Its next
+Newton terms are
+\[
+ A^4,\qquad A^3q,\qquad A^2q^2,\qquad Aq^3,\qquad q^6.
+\]
+The polynomial has the manifestly positive factor
+\[
+              (1+2BR^3q^3)^8.
+\]
+After removing it, the three regions \(A\leq q^3\),
+\(q^3\leq A\leq q\), and \(q\leq A\) have exact nonnegative Bernstein
+coefficients.  The latter two would create large dense four-dimensional
+tensors, so the conversion is performed one \(B\)-slice at a time.  The
+complete low-memory certificate is
+\path{python/check_k4_uniform_d_slack_large_ht_first.py}.
+
+Two further toric interiors close after the common positive factor
+\((1+2w^6)^8\) is removed.  The \(H\)-dominant, \(x\)-dominant chart with
+\(y\geq q^2\) requires five terminal dyadic boxes and depth at most six; the
+corresponding \(Z\)-dominant, \(x\)-dominant chart requires nine boxes and
+depth at most ten.  Their exact checkers are
+\path{python/check_k4_uniform_d_slack_large_hx_last.py} and
+\path{python/check_k4_uniform_d_slack_large_zx_last.py}.  Thus three of the
+original twelve interiors are complete at this stage.
+
+The \(Z\)-dominant, \(t\)-dominant chart with \(y\leq q^3\) is also
+complete.  After removing
+\((1+2BR^3q^3)^8\), two dyadic splits in \(A\) certify the whole region
+\(1/4\leq A\leq1\); see
+\path{python/check_k4_uniform_d_slack_large_zt_first_large_a.py}.  At \(A=0\)
+the reduced polynomial factors as
+\[
+ q^2R^9B^{10}(1+3BR^3q^3)(1+4BR^3q^3)
+ (1+5BR^3q^3)(1+6BR^3q^3)^2.
+\]
+The nondominated exponent vectors in the order \((A,q,R,B)\) are
+\[
+\begin{split}
+ &(0,2,9,10),(1,1,6,8),(2,0,3,6),(4,1,3,5),\\
+ &(5,0,0,3),(7,1,0,2),(9,2,0,1),(11,3,0,0).
+\end{split}
+\]
+The small-\(A\) tail is a genuine multiscale corner.  Its first comparison
+is \(A\sim qR^3B^2\), and the reason for this scale is especially
+transparent: the first three Newton monomials, including their signs, are
+exactly
+\[
+ q^2R^9B^{10}-2AqR^6B^8+A^2R^3B^6
+   =R^3B^6(A-qR^3B^2)^2.
+\]
+The face factorization, Newton exponents, and leading square are checked
+exactly in
+\path{python/check_k4_uniform_d_slack_large_zt_first_newton.py}.
+
+These scales lead to a short complete cover.  Below the first surface, put
+\(A=qR^3B^2C\) and \(U=1-C\).  The only residual equality corner has Newton
+orders
+\[
+                 U^2,\qquad q^3U,\qquad q^4.
+\]
+The three associated charts \(U\leq q^3\),
+\(q^3\leq U\leq q\), and \(q\leq U\) have exact nonnegative Bernstein
+certificates; only a depth-twelve dyadic refinement of the first chart is
+needed.  This is checked in
+\path{python/check_k4_uniform_d_slack_large_zt_first_lower.py}.
+
+For \(qR^3B^2\leq A\leq RB\), write \(A=RBX\).  The condition becomes
+\(qR^2B\leq X\), and four ordinary projective charts give direct streamed
+Bernstein certificates; see
+\path{python/check_k4_uniform_d_slack_large_zt_first_middle.py}.  Finally,
+\(RB\leq A\) is covered by the two charts \(R\leq A\) and
+\(A\leq R, RB\leq A\), checked in
+\path{python/check_k4_uniform_d_slack_large_zt_first_upper.py}.  Hence four
+of the original twelve toric interiors are now complete and eight remain.
+
+The adjacent \(H\)-dominant, \(t\)-dominant middle chart is likewise
+complete.  Removing \((1+2BQ^6C^3)^8\) leaves the boundary factor
+\[
+                   A^2B^6(A-B^2C)^2\qquad (Q=0).
+\]
+On the side \(A\leq B^2C\), the substitution \(A=B^2CX\), \(U=1-X\)
+has only the transverse Newton orders \(U^2\) and \(Q^6\); the two charts
+at \(U=Q^3\) have nonnegative exact Bernstein coefficients.  Three ordinary
+projective charts cover \(B^2C\leq A\).  The streamed certificate is
+\path{python/check_k4_uniform_d_slack_large_ht_middle.py}.  Thus five of the
+twelve toric interiors are complete and seven remain.
+
+The final \(H\)-dominant, \(t\)-dominant chart is complete as well.
+After removing \((1+2Bw^6)^8\), its boundary factor is
+\[
+                   A^2B^6(AC^2-B^2)^2\qquad (w=0).
+\]
+Four monomial projective charts cover the two sides of \(AC^2=B^2\).
+One chart requires a single dyadic split of its ratio variable; the five
+resulting streamed Bernstein checks are all nonnegative.  See
+\path{python/check_k4_uniform_d_slack_large_ht_last.py}.  Thus six of the
+twelve toric interiors are complete and six remain.  The exploratory transformations are in
+\path{python/probe_k4_uniform_d_slack_large_toric.py}.  In the
+\(Z\)-dominant, \(x\)-dominant chart with \(y\leq q^3\), the Newton boundary
+starts with
+\[
+             R^3(AB^3-qR^3)^2+A^5B^{12}.
+\]
+Five monomial charts give a complete exact certificate on the side
+\(qR^3\leq AB^3\); see
+\path{python/check_k4_uniform_d_slack_large_zx_first_above.py}.  On the
+opposite side put
+\[
+             B=R(1-U),\qquad A=q(1-V).
+\]
+After the common nonnegative factor \(q^2R^9\) is removed, its leading core
+is
+\[
+ (3U+V)^2-12(3U+V)q^3R^3+8q^4R^6.
+\]
+Thus the transverse scale is
+\(\max\{U,V\}\asymp q^2R^3\).  Split into \(V\leq U\) and \(U\leq V\),
+and write \(D=\max\{U,V\}\), with the smaller deficit equal to \(DZ\).  For
+\(D\leq q^2R^3\), put \(D=q^2R^3W\).  The resulting compact chart has a
+direct streamed Bernstein certificate on the three \(R\)-intervals
+\[
+ [0,1/2],\qquad[1/2,3/4],\qquad[3/4,1];
+\]
+only the last needs one midpoint split in \(W\).
+
+For \(q^2R^3\leq D\), five regular monomial charts give a complete cover:
+\[
+\begin{array}{c|c}
+ R\leq D & R=DS,\\
+ R^2\leq D\leq R & R=ST,\quad D=S^2T,\\
+ R^3\leq D\leq R^2 & R=TL,\quad D=T^3L^2,\\
+ qR^3\leq D\leq R^3 & D=R^3L,\quad q=LM,\\
+ q^2R^3\leq D\leq qR^3 & D=R^3M^2N,\quad q=MN.
+\end{array}
+\]
+After division by the corresponding leading monomial, all ten charts (five
+for each deficit ordering) have nonnegative exact Bernstein coefficients.
+The four-dimensional conversions are streamed one final-axis slice at a
+time, and the five large charts are constructed and discarded sequentially.
+The certificate for this side is
+\path{python/check_k4_uniform_d_slack_large_zx_first_below.py}; the wrapper
+\path{python/check_k4_uniform_d_slack_large_zx_first.py} checks both sides.
+Hence the first \(Z\)-dominant, \(x\)-dominant interior is complete: seven of
+the original twelve toric interiors are now closed and five remain.
+
+The corresponding first \(H\)-dominant, \(x\)-dominant interior is now
+complete as well.  The same two-sided projective cover applies after
+canceling the smaller common monomials appropriate to the \(H\)-chart.  On
+the side \(qR^3\leq AB^3\), the five streamed polynomials have only \(751\)
+terms each.  On the opposite side, the two compact charts and ten
+large-deficit charts have \(15948\) terms each; their maximal degrees are
+strictly smaller than those of the \(Z\)-dominant certificate.  Every
+streamed Bernstein coefficient is nonnegative, with the same single
+midpoint split of \(W\) on the top compact \(R\)-interval.  The complete
+low-memory checker is
+\path{python/check_k4_uniform_d_slack_large_hx_first.py}.  Thus eight of the
+twelve toric interiors are complete and four remain.
+
+The middle \(H\)-dominant, \(x\)-dominant interior is now complete too.
+After removing \((1+2Q^6C^3)^8\), every exponent of \(Q\) and \(B\) is a
+multiple of three.  Thus the substitutions
+\[
+                         P=Q^3,\qquad K=B^3
+\]
+reduce the degrees \(267\) and \(183\) in the first attempted certificate to
+\(89\) and \(61\).  At \(P=0\) the compressed polynomial has the exact face
+\[
+                         A^2(AK-C)^2.
+\]
+On \(C\leq AK\), put \(C=AKX\), \(U=1-X\); the two ordinary charts
+\(U=PS\) and \(P=US\) have nonnegative streamed Bernstein coefficients.
+The opposite side is covered without denominators by
+\[
+ A\leq C:\quad A=CX,\qquad
+ C\leq A:\quad C=AY,\quad K=YX.
+\]
+In the first chart one orders the deficits \(1-X\) and \(1-K\), then splits
+their maximum against \(P\).  In the second chart the first residual scale
+is again \(U\sim P\).  Its only further boundary accumulation has face
+\(S^2\) at \(Y=0\), hence the weighted split \(Y\sim S^2\).  The remaining
+Newton boundary is
+\[
+                         R^2,\qquad T^5R,\qquad T^6,
+\]
+so a final split at \(R=T^3\), followed by a square compression of the radial
+variable, regularizes the corner.  Three rational intervals and one shallow
+terminal subdivision close the two far boxes.  The complete low-memory
+certificate is
+\path{python/check_k4_uniform_d_slack_large_hx_middle.py}.
+Consequently nine of the twelve toric interiors are complete.  The three
+remaining ones are the middle \(Z\)-\(x\) chart and the middle and final
+\(Z\)-\(t\) charts.
+
+The middle \(Z\)-dominant, \(x\)-dominant interior is now complete as well.
+The same cube compression gives a (751)-term polynomial of degree
+\((38,53,13,8)\) in \((P,C,A,K)\), but its face is now
+\[
+                              (AK-C)^2.
+\]
+The side \(C\leq AK\) is again covered by \(C=AKX\), \(U=1-X\), and the
+two charts \(U=PS\), \(P=US\).  On the opposite side, the charts \(A=CX\)
+and \(C=AY, K=YX\) give a polynomial cover of \(A\leq C\) and \(C\leq A\),
+respectively.  In the first chart, order (1-X) and (1-K) and compare
+their maximum with \(P\).  Two of the four resulting charts are direct.
+The other two have the Newton boundary
+\[
+                         C^4,\qquad C^3W,\qquad W^2,
+\]
+which is resolved by
+\[
+ W=C^3T,\qquad (C,W)=(LT,LT^3),\qquad C=WT.
+\]
+The low chart uses four rational \(T\)-intervals, the middle chart two
+dyadic intervals, and the high chart is direct.
+
+For \(C\leq A\), the successive scales are \(U\sim P\), \(Y\sim S^2\),
+and \(R\sim T^3\), exactly as in the \(H\)-dominant calculation.  On the
+low \(R\)-chart, \(W\geq1/2\) is direct after three rational intervals.
+After rescaling the remaining half to a unit box, its only unresolved face
+has Newton monomials
+\[
+                         A^4,\qquad A^3W,\qquad W^2,
+\]
+and the three charts
+\[
+ W=A^3T,\qquad (A,W)=(LT,LT^3),\qquad A=WT
+\]
+all have nonnegative streamed Bernstein coefficients.  The opposite
+\(T^3\leq R\) chart closes on two dyadic radial intervals.  The complete
+low-memory checker, with independently selectable sections, is
+\path{python/check_k4_uniform_d_slack_large_zx_middle.py}.  Consequently ten
+of the twelve toric interiors are complete; only the middle and final
+\(Z\)-\(t\) charts remain.
+
+The final \(Z\)-dominant, \(t\)-dominant interior is now complete.  After
+removing \((1+2Bw^6)^8\), its face at \(w=0\) is
+\[
+                         B^6(AC^2-B^2)^2.
+\]
+Four ordinary projective regions cover the two sides of this equality.  The
+only additional accumulation occurs in the \(B\leq C\) region.  After the
+common factor \(X^{10}\) is removed, its equality deficit has the weighted
+scale \(1-Y\asymp w^3\).  The high chart \(w^3\leq1-Y\) is direct.  In the
+low chart the Newton boundary is
+\[
+ S^2,\qquad 8X^2,\qquad -12Cw^3XS,\qquad C^2w^6.
+\]
+Comparing \(S\), \(X\), and \(w^3\) gives a three-way weighted fan.  The
+\(S\)-dominant chart is direct, the \(X\)-dominant chart closes by a
+depth-twelve streamed subdivision, and the \(w^3\)-dominant chart reduces
+to the positive face \(V^2+8U^2+C^2\).  An ordinary three-way fan comparing
+\(U,V,C\) resolves that face; only the \(U\)- and \(C\)-dominant charts need
+depth-twelve subdivision.  The ten independently selectable checks are in
+\path{python/check_k4_uniform_d_slack_large_zt_last.py}.  Consequently eleven
+of the twelve toric interiors are complete; only the middle \(Z\)-\(t\)
+interior remains.
+
+The middle \(Z\)-dominant, \(t\)-dominant interior is complete as well.
+After removing \((1+2BQ^6C^3)^8\), its face at \(Q=0\) is
+\[
+                         B^6(A-B^2C)^2.
+\]
+On \(A\leq B^2C\), put \(A=B^2CX\) and \(U=1-X\).  The far chart
+\(Q^3\leq U\) is direct.  In the near chart \(U\leq Q^3\), the remaining
+Newton boundary is
+\[
+                         C^4,\qquad C^3S,\qquad S^2.
+\]
+The associated low, middle, and high fan charts cover \(S\leq C^3\),
+\(C^3\leq S\leq C\), and \(C\leq S\).  The middle chart closes on the two
+dyadic halves of its radial variable, and the high chart is direct.  In the
+low chart, after the cube compression \(P=Q^3\), the secondary Newton
+support is
+\[
+                         B^2,\qquad CP^2,\qquad C^2.
+\]
+Eight ordinary projective charts compare these three scales.  Their
+four-dimensional Bernstein conversions are streamed one final-axis slice
+at a time; only terminal slices require depth-eighteen subdivision.  The
+opposite side \(B^2C\leq A\) is covered by three ordinary projective charts,
+all direct after their common positive monomial factors are removed.  The
+complete low-memory certificate, with independently selectable sections
+and fixed degree-and-support assertions, is
+\path{python/check_k4_uniform_d_slack_large_zt_middle.py}.
+
+Consequently all twelve toric interiors, together with their previously
+certified boundary faces, are closed.  This completes the \(T\)-normalized
+large-slack tail of the terminal-\(d\)-slack face.
+
+In the
+\(v\)-dominant chart set \(v=1\),
+\(T=q/(n-1)\), \(a=zT^2\), retain the relative slack \(r\), and divide the
+cleared numerator by its common factor \(q^4\).  A further ordinary
+projective split according as \(1\), \(z\), or the slack is largest removes
+the artificial degree drop at infinity.  The central and slack-dominant
+charts are direct.  The return-dominant chart has only the corner
+\(N=q=U=V=0\).  Its Newton facets in \((q,U,V)\) have primitive normals
+\[
+                  (1,2,1),\qquad(2,3,3),\qquad(4,5,5).
+\]
+After ordering \(U,V\), the side \(V\leq U\) is covered by the radial scales
+\(R\asymp q^{3/2}\) and \(R\asymp q^{5/4}\), while the side \(U\leq V\) has a
+homogeneous degree-eight three-way fan.  The infinity faces of these charts
+are resolved by the successive Newton normals \((1,1),(2,5)\), then by a
+homogeneous degree-three fan, the \((2,3)\) face, and finally the
+\((1,4,3)\) face.
+
+The last accumulation occurs in a low-\(t\), \(A\)-dominant ratio chart.  Its
+\((A,R)\)-Newton boundary is
+\[
+                    (0,24),\qquad(1,18),\qquad(2,0),
+\]
+with respective leading coefficients \(1,-2Xt^4,1+X\).  The middle point
+lies strictly above the facet of normal \((12,1)\).  Hence the two weighted
+charts \(A=R^{12}B\) and \(A=D^{12},R=DB\) have positive leading faces
+\(1+B^2(1+X)\) and \(B^{24}+1+X\), respectively, and their exact Bernstein
+certificates close after four and two subdivisions.  The analogous residual
+\(\rho\)-chart has boundary \((0,4),(1,3),(2,0)\) and is closed by the two
+charts associated with the normal \((2,1)\).  Replacing the recurring powers
+\(R^6,\rho^6,t^2\) by new unit-interval variables keeps the largest dense
+certificate small.  Fixed degree-and-support assertions and the complete
+exact checks are in
+\path{python/check_k4_uniform_d_slack_v_tail.py}.
+
+Together with the \(T\)-normalized certificates above, this completes the
+entire terminal-\(d\)-slack boundary face under its six sharp bounds.
+The feasible positive interior minimum is now certified above. Before
+claiming the uniform \(k=4\) renewal lemma, the general boundary reduction
+must still be justified.
+
+The exact constrained-boundary audit keeps the lower moments free.
+Normalize $M_1=1$, put $\alpha=(n+3)/(n+2)$,
+$\beta=(n+2)/(n+1)$, and write
+\[
+ y_0=\beta c/a,\qquad f_0=\beta d/b,\qquad
+ \delta_0=5/(2\alpha).
+\]
+For $Q=\mathcal G_4$ in the ratio coordinates $(y,f)$,
+\[
+ \frac{Q_y}{c}-\frac{Q_f}{d}
+     =2(n+3)P\alpha(y-f+\delta_0).
+\]
+Thus a minimum on $y=y_0$ with $f>f_0$ must have $Q_f=0$ and
+$f-y_0\leq\delta_0$. Its free-coordinate root is
+\[
+ f_e=\frac{2(n+4)(L+cy_0)-5(n+3)PT}
+              {2\{(n+3)P\alpha-(n+4)d\}}.
+\]
+Likewise a minimum on $f=f_0$ with $y>y_0$ has $Q_y=0$ and
+$f_0-y\geq\delta_0$, with root
+\[
+ y_e=\frac{2(n+4)(L+df_0)-5(n+3)P(T+1)}
+              {2\{(n+3)P\alpha-(n+4)c\}}.
+\]
+Both denominators are strictly positive. Completing the two squares is
+exact; the cleared edge-root values have respectively $967$ and $1078$
+terms in $(n,T,a,b,c,d)$. Their conditional nonnegativity under root
+feasibility and the displayed gradient signs remains open, as does the
+general corner $y=y_0,f=f_0$ with simultaneous lower-moment slacks.
+These identities and support assertions are reproducible in
+\path{python/check_k4_uniform_top_boundaries.py}; they are reductions,
+not positivity certificates for the missing faces.
+
+An additive-cone shortcut does not close this gap.  If the moment triple is
+split into its return-only part \(X\) and terminal-response part \(Y\), the
+return-only part satisfies the desired log-convexity inequality, but \(Y\)
+need not.  Already at \(n=4,T=1,v=2,a=s=0\), its corresponding gap is
+\(-819136/243\).  Thus closure of the log-convexity cone under addition cannot
+replace the remaining cross-term analysis.
+
+Monotonicity or convexity in the terminal slack also fails.  For the cleared
+\(T\)-normalized numerator, at \(n=4,q=1,z=3,D=1\) the first \(D\)-derivative
+is \(-1804714429536\).  At \(n=6,q=1,z=11,D=122\), the second derivative is
+\(-490528950000000\).  Consequently the certified face \(D=1\) cannot simply
+be propagated through the large-slack tail by either argument.
+
+One should not try to repeat the next convexity step from the \(k=3\) proof.
+After setting
+\[
+ E=\frac{n+2}{n+1}\frac{C^2}{A},\qquad
+ F=\frac{n+2}{n+1}\frac{D^2}{B},
+\]
+the reduced gap is not convex in \(C,D\).  For example, at
+\[
+ n=4,\quad x=r=u=v=1,\quad A=\frac43,\quad B=2,\quad
+ C=\frac{20}{9},\quad D=5,
+\]
+its Hessian is
+\[
+ \begin{pmatrix}
+  558194/15&-1975/2\\
+  -1975/2&-155882/15
+ \end{pmatrix},
+ \qquad
+ \det=-\frac{348927229057}{900}.
+\]
+The gap itself is nevertheless positive there. The interior stationary
+lemma above is now certified, but nested convexity cannot supply the
+missing general boundary reduction.  All identities and this exact witness are checked by
+\path{python/probe_k4_uniform_renewal.py}.
+
+\section{The acyclic case}
+
+Conjecture~\ref{conj:matrix} has a short proof when the directed graph of the
+off-diagonal entries of \(A\) is acyclic.  Expanding an entry of \(e^{tA}\) by
+directed paths, a path with \(\ell\) off-diagonal edges contributes
+\[
+  t^\ell
+  \int_{\Delta_\ell}
+  \exp\!\left(t\sum_{j=0}^{\ell}x_j a_{i_ji_j}\right)d\mu(x),
+\]
+up to a positive constant.  Since the path is simple, \(\ell\leq s-1\).
+After division by \(t^{s-1}\), every integrand is of the form
+\[
+  t^{-(s-1-\ell)}e^{ct},
+\]
+which is log-convex.  Positive integrals and positive sums of log-convex
+functions are log-convex (by H\"older's inequality).  This recovers the
+triangular result and shows precisely where cycles enter: a cyclic walk may have
+arbitrarily many off-diagonal edges, so the exponent \(s-1-\ell\) is no longer
+nonnegative path by path.
+
+\section{Evidence and completion in dimension three}
+
+The curvature in \eqref{eq:matrix-curvature} was tested numerically on random
+dense and sparse nonnegative matrices through size \(6\), including extreme rate
+ratios, deterministic initial and terminal vectors, directed cycles, and direct
+optimization of the curvature.  No negative value was found; serial acyclic
+chains approach equality.  This is evidence only, not a proof.
+
+In dimension three, Proposition~\ref{prop:three-reduction} makes a search over
+general matrices unnecessary.  Direct optimization of the three canonical
+curvatures over widely separated rates and feedback parameters likewise found
+no negative value.  Taylor-coefficient experiments reveal a more precise
+obstruction: after the shift leading to \eqref{eq:canonical-rate-system}, the
+second and third start states have many manifestly nonnegative coefficient
+groups, whereas the first start has negative monomials beginning in feedback
+degree two.  The full coefficient and the pointwise curvature remain
+nonnegative in all tests.  Thus a proof must group unequal-rate terms (typically
+into expressions involving $(x_i-x_j)^2$); positivity monomial by monomial is
+already false in this reduced chart.
+
+Proposition~\ref{prop:complex-middle} and the real-root divided-difference
+argument settle the middle start for every spectrum; convolution then settles
+the third start.  Proposition~\ref{prop:complex-first} now settles the first
+start throughout the complex-spectrum region as well.  The degree-$60$
+certificate following \eqref{eq:real-root-compact-chart} also settles the
+real-spectrum first start through Perron-normalized time $10$.
+Proposition~\ref{prop:real-first-normalized-complete-logconvex}, the coefficient
+comparison following \eqref{eq:real-first-baseline-coefficient}, and the exact
+low-degree block \eqref{eq:real-first-variance-low-block} settle its unbounded
+tail.
+
+\begin{corollary}[Complete three-state case]
+\label{cor:complete-three-state}
+Conjecture~\ref{conj:matrix} holds for every $3\times3$ nonnegative matrix.
+Consequently, through Proposition~\ref{prop:fisher}, the full moment hierarchy
+holds for every three-state phase-type law.
+\end{corollary}
+
+\paragraph{Formalization status.}
+The Lean development now proves normalized complete-symmetric log-convexity
+for every index.  The exact block covers
+$1\leq n\leq5$, and the transition argument above covers $n\geq6$.
+For the last transition-point estimate, the formal proof uses the simpler
+majorant
+\[
+ b_n\leq\frac{n-1}{n+1}\qquad(n\geq7),
+\]
+deduced from $(1+1/m)^m\leq e<3$; the case $n=6$ is an exact tenth-power
+comparison.  This avoids formalizing the auxiliary real-variable monotonicity
+argument while proving the same bound.  The combined Lean theorem is
+\texttt{normalizedComplete\_logConvex\_all}.  The subsequent weighted
+Chebyshev reduction has also been formalized: all dependence on $u,v$ is
+discharged.  The parameter-free sum in
+\eqref{eq:real-first-baseline-coefficient} is now evaluated in Lean by expanding
+its kernel in the first five falling-factorial polynomials and using the
+binomial falling-factorial moments.  Consequently the formal far-tail
+coefficient theorem has no unevaluated finite-sum hypothesis.
+
+The remaining finite work has since been shortened further.  After restoring
+the constant term $h_1=1+w$, the full corrected-curvature coefficients are
+nonnegative directly: degrees $N=6,7,8$ have short algebraic proofs, degrees
+$N=9,\ldots,14$ use six independent two-variable Bernstein certificates, and
+the general comparison proves every $N\geq15$.  The certificates are isolated
+in separate modules so that they can be checked with bounded peak memory.
+Their assembly is
+\texttt{fullCurvatureCoefficient\_nonneg\_of\_root}.
+
+Absolute convergence and two termwise differentiations are also formalized.
+The full coefficient series is identified with
+\[
+ t^2\{h_1h_1''-(h_1')^2\}+2h_1^2,
+\]
+and summed term by term.  Thus
+\texttt{firstStartCurvature\_nonneg\_of\_root\_all\_time}, and equivalently
+\texttt{normalizedFirstStart\_correctedCurvature3\_nonneg}, proves the
+real-spectrum first start for every $t\geq0$; the former restriction
+$t\geq10$ and the degree-$60$ compact-time certificate are no longer needed.
+
+The normalization back toward the canonical cubic is now partly formalized as
+well.  The file
+\texttt{K3CyclicRealCanonicalBridge.lean} proves amplitude, time-scale, and
+exponential-shift transport, including a version stated with actual first and
+second derivatives.  From Vieta's identities and the canonical sign
+conditions it proves that ordered real roots are nonnegative and that their
+ratios $u=\lambda_1/\lambda_3$, $v=\lambda_2/\lambda_3$ satisfy
+$\sqrt u+\sqrt v\leq1$.  Consequently
+\path{canonicalOrderedRealRoots_firstStart_nonneg} is the checked
+pointwise first-start inequality for every ordered real-root canonical cubic.
+The remaining matrix-exponential identification is now formalized as well.
+The file \texttt{K3CyclicCanonicalMatrixBridge.lean} proves the canonical
+matrix cubic identity, differentiates the actual first coordinate of the
+matrix exponential three times, and invokes uniqueness for the resulting
+scalar cubic ODE.  Its theorem
+\path{canonicalFirst_eq_orderedRealRootSeries} identifies that coordinate
+with the normalized Taylor series, while
+\path{canonicalFirst_orderedRealRoots_correctedCurvature3_nonneg} states the
+real-spectrum certificate directly for the actual first coordinate and its
+actual derivatives.
+
+\begin{sloppypar}
+The complex first start is now complete in Lean.  The lightweight identity
+module \path{K3CyclicComplexFirst.lean} contains the oscillator energy,
+Wronskian factorization, and reduction to
+\eqref{eq:first-oscillator-target}; the certificate and analytic-tail modules
+cover the compact and large-$x$ regions.  Their assembly in
+\path{K3CyclicComplexFirstFull.lean} is
+\path{firstH_correctedCurvature3_nonneg}.  The ODE-uniqueness bridge
+\path{K3CyclicComplexCanonicalFirstBridge.lean} now identifies this normalized
+function with the actual first coordinate of the canonical matrix exponential.
+The theorem
+\path{canonicalFirst_complexPair_correctedCurvature3_nonneg_of_vieta} in
+\path{K3CyclicComplexCanonicalFirstCurvature.lean} transports the certificate
+to that actual coordinate; its compact-domain hypotheses are derived internally
+from the canonical sign conditions and the complex Vieta identities.
+\end{sloppypar}
+
+The coefficient inequality behind the complex middle start is also now
+formalized.  The exact conjugate pairing is proved in
+\path{K3CyclicComplexMiddlePairingReal.lean}.  Separate low-memory Taylor
+modules prove \eqref{eq:middle-J-remainder}, including the sharp third-
+derivative estimate for $(1-it)^2(1+it)^{N-2}$.  The finite Bernstein
+certificate covers $4\leq N\leq24$, while
+\path{K3CyclicComplexMiddleTailCoefficient.lean} combines the analytic tail,
+the numerical domination for $N\geq25$, and the degenerate $\omega=0$
+boundary.  Its theorem
+\path{scalarCurvatureCoefficient_nonneg_all} proves every middle curvature
+coefficient is nonnegative throughout the compact chart.  The EGF and Cauchy-
+product modules \path{K3CyclicComplexMiddleSeries.lean} and
+\path{K3CyclicComplexMiddleCurvatureSeries.lean} now sum those coefficients
+and prove \path{middleRecurrenceCurvature_nonneg}, the analytic-series form of
+\eqref{eq:complex-root-middle-curvature}.  That identification is now complete:
+\path{K3CyclicComplexCanonicalMiddleBridge.lean} differentiates the shifted and
+scaled EGF, matches its cubic ODE and initial data to the actual middle
+coordinate, and transports the stronger curvature inequality.  The separate
+low-memory module \path{K3CyclicComplexCanonicalMiddleChart.lean} proves the
+two square identities giving the exact interval
+\eqref{eq:complex-middle-A-interval}, constructs the compact chart variables
+from the complex Vieta data, and concludes with
+\path{canonicalMiddle_complexPair_middleCurvature3_nonneg}.  Finally,
+\path{K3CyclicCanonicalThird.lean} formalizes the actual third coordinate and
+the driven identities $h_3'=x_3h_2+bh_3$ and
+$h_3''=x_3h_2'+bh_3'$.  The companion module
+\path{K3CyclicCanonicalThirdIntegral.lean} proves the exact variation-of-
+constants formula used above.  The remaining formal work is the general
+convolution log-convexity lemma carrying the stronger middle inequality to the
+third coordinate, followed by the final canonical-to-general matrix reduction.
+
+The paper \emph{Log-Convex Matrix Functions} by Aujla, Rawla, and Vasudeva uses
+``matrix log-convexity'' in a different sense: it studies the functional calculus
+\(A\mapsto f(A)\) for positive-definite Hermitian matrices.  Its main criteria do
+not apply to scalar coefficients \(u^Te^{tA}v\) with a nonsymmetric nonnegative
+matrix \(A\).  Its closure of positive sums of log-convex functions agrees with
+the elementary closure used in the acyclic argument above, but does not prove
+Conjecture~\ref{conj:matrix}.
+
+The paper by Butt, Pe\v{c}ari\'c, and Rehman on exponential convexity of
+Petrovi\'c-type functionals is also about a different class of convexity
+preservers.  It contains no renewal, phase-type, or nonsymmetric semigroup
+result that applies to \eqref{eq:canonical-laplace}.
+
+\end{document}
